@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://drg3jp1lyduvx"
+path="res://.godot/imported/Rhythm TAU OST Finished Mix 1.mp3-02ebe0faa7e41f06aa203dbb0117c85b.mp3str"
+
+[deps]
+
+source_file="res://NoteSpawnerComponent/Test Assets/Rhythm TAU OST Finished Mix 1.mp3"
+dest_files=["res://.godot/imported/Rhythm TAU OST Finished Mix 1.mp3-02ebe0faa7e41f06aa203dbb0117c85b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

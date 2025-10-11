@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://d011trtcheu4c"]
+
+[ext_resource type="Script" uid="uid://cos1bq2x1ak51" path="res://Maestro Component/Scenes/maestro.gd" id="1_f8jjr"]
+[ext_resource type="Script" uid="uid://uuvxqgslof3d" path="res://Maestro Component/Scenes/map_data_container.gd" id="4_obsgy"]
+
+[sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_na6xd"]
+
+[node name="Maestro" type="AudioStreamPlayer"]
+script = ExtResource("1_f8jjr")
+metronomeIsOn = true
+metronomeLeadInBeats = 1
+
+[node name="MapDataContainer" type="Node" parent="."]
+script = ExtResource("4_obsgy")
+
+[node name="FileDialog" type="FileDialog" parent="MapDataContainer"]
+oversampling_override = 1.0
+title = "Open a File"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.mp3, *.ogg ; Audio Files")
+
+[node name="Metronome" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamPolyphonic_na6xd")
+
+[node name="MainSong" type="AudioStreamPlayer" parent="."]
+volume_db = -80.0
