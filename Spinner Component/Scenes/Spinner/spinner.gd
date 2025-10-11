@@ -28,30 +28,15 @@ class_name Player_Spinner
 
 # --- EXPORT VALUES ---
 @export_category("Values")
-@export var bpm:float = 120: 
-	set(value):
-		bpm = value
-		on_bpm_changed(value)
 
-# --- EXPORT STRINGS ---
-@export_category("Strings")
-## The string name of the custom input binding for key 1
-@export var KEY1_INPUT_NAME:String
-## The string name of the custom input binding for key 2
-@export var KEY2_INPUT_NAME:String
-
+var bpm:float
 var secondsPerBeat:float
 var beatsPerSecond:float
 var rotationRadiansPerBeat:float
 ## Fractional value of a rotation that happens in one beat
 var rotationsPerBeat:float = 0.25
 
-func _enter_tree() -> void:
-	pass
-
 func _ready() -> void:
-	secondsPerBeat = 60/bpm
-	beatsPerSecond = bpm/60
 	rotationRadiansPerBeat = TAU * rotationsPerBeat
 
 func _input(_event: InputEvent) -> void:
@@ -60,13 +45,15 @@ func _input(_event: InputEvent) -> void:
 	animate_lazers()
 
 func _process(delta: float) -> void:
-	rotate_spinner(delta)
-	rotate_hit_rings(delta)
-
-func _exit_tree() -> void:
-	pass
+	bpm = CurrentMap.bpm
+	secondsPerBeat = CurrentMap.secondsPerBeat
+	beatsPerSecond = CurrentMap.beatsPerSecond
+	if CurrentMap.mainSongIsPlaying:
+		rotate_spinner(delta)
+		rotate_hit_rings(delta)
 
 # --- CUSTOM FUNCTIONS ---
+
 func on_bpm_changed(value):
 	secondsPerBeat = 60/value
 	beatsPerSecond = value/60
@@ -79,23 +66,23 @@ func rotate_hit_rings(delta:float):
 	hitRing.rotation += (rotationRadiansPerBeat/8)  * (delta / secondsPerBeat)
 
 func animate_lazers():
-	if Input.is_action_pressed(KEY1_INPUT_NAME):
+	if Input.is_action_pressed("KEY1"):
 		lazerLeft.activate_beam(true)
-	if Input.is_action_just_released(KEY1_INPUT_NAME):
+	if Input.is_action_just_released("KEY1"):
 		lazerLeft.activate_beam(false)
-	if Input.is_action_pressed(KEY2_INPUT_NAME):
+	if Input.is_action_pressed("KEY2"):
 		lazerRight.activate_beam(true)
-	if Input.is_action_just_released(KEY2_INPUT_NAME):
+	if Input.is_action_just_released("KEY2"):
 		lazerRight.activate_beam(false)
 
 func sparks():
-	if Input.is_action_pressed(KEY1_INPUT_NAME):
+	if Input.is_action_pressed("KEY1"):
 		sparkLeft.emitting = true
-	if Input.is_action_just_released(KEY1_INPUT_NAME):
+	if Input.is_action_just_released("KEY1"):
 		sparkLeft.emitting = false
-	if Input.is_action_pressed(KEY2_INPUT_NAME):
+	if Input.is_action_pressed("KEY2"):
 		sparkRight.emitting = true
-	if Input.is_action_just_released(KEY2_INPUT_NAME):
+	if Input.is_action_just_released("KEY2"):
 		sparkRight.emitting = false
 
 # Init tween variables for hit node animations
@@ -104,21 +91,21 @@ var twRightNode:Tween
 
 func hit_node_animations():
 	# Key 1 press
-	if Input.is_action_pressed(KEY1_INPUT_NAME):
+	if Input.is_action_pressed("KEY1"):
 		if twLeftNode and twLeftNode.is_running(): twLeftNode.kill()
 		# Left node expand
 		twLeftNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		twLeftNode.tween_property(hitNodeLeft, "scale", Vector2(1.2, 1.2), 0.05)
 
 	# Key 1 release
-	if Input.is_action_just_released(KEY1_INPUT_NAME):
+	if Input.is_action_just_released("KEY1"):
 		if twLeftNode and twLeftNode.is_running(): twLeftNode.kill()
 		# Left node shrink
 		twLeftNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		twLeftNode.tween_property(hitNodeLeft, "scale", Vector2(1.0, 1.0), 0.5)
 
 	# Key 2 press
-	if Input.is_action_pressed(KEY2_INPUT_NAME):
+	if Input.is_action_pressed("KEY2"):
 		if twRightNode and twRightNode.is_running(): twRightNode.kill()
 
 		# Right node expand
@@ -126,7 +113,7 @@ func hit_node_animations():
 		twRightNode.tween_property(hitNodeRight, "scale", Vector2(1.2, 1.2), 0.05)
 
 	# Key 2 release
-	if Input.is_action_just_released(KEY2_INPUT_NAME):
+	if Input.is_action_just_released("KEY2"):
 		if twRightNode and twRightNode.is_running(): twRightNode.kill()
 
 		# Right node shrink
@@ -140,7 +127,7 @@ var twRightBody:Tween
 
 func body_animations():
 	# Key 1 and key 2 press
-	if Input.is_action_pressed(KEY1_INPUT_NAME) or Input.is_action_pressed(KEY2_INPUT_NAME):
+	if Input.is_action_pressed("KEY1") or Input.is_action_pressed("KEY2"):
 		if twBody and twBody.is_running(): twBody.kill()
 
 		# Body Expand
@@ -152,7 +139,7 @@ func body_animations():
 	var matRight = bodyFillRight.material
 
 	# Key 1 press
-	if Input.is_action_just_pressed(KEY1_INPUT_NAME):
+	if Input.is_action_just_pressed("KEY1"):
 		if twLeftBody and twLeftBody.is_running(): twLeftBody.kill()
 
 		# Body left flash
@@ -160,7 +147,7 @@ func body_animations():
 		twLeftBody.tween_property(matLeft, "shader_parameter/brightness", 1.5, 0.05)
 
 	# Key 1 release
-	if Input.is_action_just_released(KEY1_INPUT_NAME):
+	if Input.is_action_just_released("KEY1"):
 		if twBody and twBody.is_running(): twBody.kill()
 		if twLeftBody and twLeftBody.is_running(): twLeftBody.kill()
 
@@ -173,7 +160,7 @@ func body_animations():
 		twBody.tween_property(body, "scale", Vector2(1.0, 1.0), 0.5)
 
 	# Key 2 press
-	if Input.is_action_just_pressed(KEY2_INPUT_NAME):
+	if Input.is_action_just_pressed("KEY2"):
 		if twRightBody and twRightBody.is_running(): twRightBody.kill()
 
 		# Body right flash
@@ -181,7 +168,7 @@ func body_animations():
 		twRightBody.tween_property(matRight, "shader_parameter/brightness", 1.5, 0.05)
 
 	# Key 2 release
-	if Input.is_action_just_released(KEY2_INPUT_NAME):
+	if Input.is_action_just_released("KEY2"):
 		if twBody and twBody.is_running(): twBody.kill()
 		if twRightBody and twRightBody.is_running(): twRightBody.kill()
 

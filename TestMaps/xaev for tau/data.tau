@@ -1,0 +1,20 @@
+[General]
+AudioFileName: audio.mp3
+LeadInBeats: 0.0
+
+[Metadata]
+Title: Test Title
+Artist: Mock Artist
+Creator: LDM
+Version: Easy
+
+[Difficulty]
+HpDrainRate: 1.0
+HitWindow: 0.5
+
+[TimingPoints]
+bpm: 128.0, time: 0.0
+
+[HitObjects]
+1.0, 1.0, -1
+1.2, 1.2, 1

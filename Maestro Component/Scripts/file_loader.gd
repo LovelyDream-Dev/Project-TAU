@@ -7,7 +7,7 @@ var originalAudioFileName:String
 var mapFolderPath:String
 var AudioFileExtension:String
 
-func load_map(folderPath:String, mapData:MapDataContainer, audioPlayer:AudioStreamPlayer, mainSong:AudioStreamPlayer):
+func load_map(folderPath:String, mapData:MapDataContainer, offsetSong:AudioStreamPlayer, mainSong:AudioStreamPlayer):
 	mapData.unload_map()
 	var dir = DirAccess.open(folderPath)
 	if dir == null:
@@ -20,7 +20,7 @@ func load_map(folderPath:String, mapData:MapDataContainer, audioPlayer:AudioStre
 		if not dir.current_is_dir():
 			if fileName.ends_with(".tau"):
 				mapData.tauFilePath = folderPath.path_join(fileName)
-				load_tau_file(mapData.tauFilePath, folderPath, mapData, audioPlayer, mainSong)
+				load_tau_file(mapData.tauFilePath, folderPath, mapData, offsetSong, mainSong)
 		fileName = dir.get_next()
 	dir.list_dir_end()
 	mapData.mapLoaded = true
@@ -56,7 +56,7 @@ func load_tau_file(filePath:String, folderPath:String, mapData:MapDataContainer,
 				load_song(audioFilePath, mapData, audioPlayer, mainSong)
 			elif line.begins_with("LeadInBeats:"):
 				var parts = line.split(":", false, 1) # split into [ "LeadInBeats", value]
-				mapData.LeadInBeats = float(parts[1])
+				mapData.leadInBeats = float(parts[1])
 
 		if inMetadata:
 			if line.begins_with("Title:"):
@@ -98,19 +98,19 @@ func load_tau_file(filePath:String, folderPath:String, mapData:MapDataContainer,
 			var parts = line.split(",")
 			if parts.size() == 3:
 				var hitObject = {
-					"start": float(parts[0].strip_edges()),
-					"end": float(parts[1].strip_edges()),
-					"type": int(parts[2].strip_edges())
+					"startTime": float(parts[0].strip_edges()),
+					"endTime": float(parts[1].strip_edges()),
+					"side": int(parts[2].strip_edges())
 				}
 				mapData.hitObjects.append(hitObject)
 
-func init_new_map(songFilePath:String, mapData:MapDataContainer, audioPlayer:AudioStreamPlayer, mainSong:AudioStreamPlayer):
+func init_new_map(songFilePath:String, mapData:MapDataContainer, offsetSong:AudioStreamPlayer, mainSong:AudioStreamPlayer):
 	originalAudioFileName = songFilePath.get_file().get_basename()
 	AudioFileExtension = songFilePath.get_file().get_extension()
 
 	mapData.audioFileExtension = AudioFileExtension.to_lower()
 
-	load_song(songFilePath, mapData, audioPlayer, mainSong)
+	load_song(songFilePath, mapData, offsetSong, mainSong)
 
 	var userPath:String = "D:/Users/Teren/Godot Projects/Rhythm Maestro/Maestro Component"
 	mapFolderPath = userPath.path_join(originalAudioFileName+AudioFileExtension.to_lower())
@@ -137,15 +137,15 @@ func init_new_map(songFilePath:String, mapData:MapDataContainer, audioPlayer:Aud
 	fileSaver.save_tau_data(tauFilePath, mapData)
 	mapData.newEditorMapInit = true
 
-func load_song(filePath:String, mapData:MapDataContainer, audioPlayer:AudioStreamPlayer, mainSong:AudioStreamPlayer):
+func load_song(filePath:String, mapData:MapDataContainer, offsetSong:AudioStreamPlayer, mainSong:AudioStreamPlayer):
 	var stream:AudioStream
 	if filePath.ends_with(".mp3"):
 		stream = AudioStreamMP3.load_from_file(filePath)
 	elif filePath.ends_with(".ogg"):
 		stream = AudioStreamOggVorbis.load_from_file(filePath)
 	if stream is AudioStreamMP3 or stream is AudioStreamOggVorbis:
-		audioPlayer.stream = stream
-		mainSong.stream = stream
+		offsetSong.stream = stream.duplicate()
+		mainSong.stream = stream.duplicate()
 		mapData.songLength = stream.get_length()
 	else:
 		push_error("Failed to load audio: " + filePath + ". File must be .mp3 or .ogg.")

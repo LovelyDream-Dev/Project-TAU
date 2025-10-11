@@ -1,11 +1,11 @@
 [gd_scene load_steps=20 format=3 uid="uid://7mgaervmad11"]
 
-[ext_resource type="Texture2D" uid="uid://rhndi8ag5i5b" path="res://Spinner Component/Default Images/Body-Fill-Left.png" id="1_tgduj"]
+[ext_resource type="Texture2D" uid="uid://rhndi8ag5i5b" path="res://Default Skin/Body-Fill-Left.png" id="1_tgduj"]
 [ext_resource type="Script" uid="uid://7pgnfdkadf0k" path="res://Spinner Component/Scenes/Spinner/spinner.gd" id="1_wlxnq"]
-[ext_resource type="Texture2D" uid="uid://cy2v22ajdkunm" path="res://Spinner Component/Default Images/Body-Fill-Right.png" id="2_2i3hg"]
-[ext_resource type="Texture2D" uid="uid://3f7lycs11idh" path="res://Spinner Component/Default Images/Spinner-Body.png" id="3_oohy3"]
-[ext_resource type="Texture2D" uid="uid://c308yj1sdyeok" path="res://Spinner Component/Default Images/Hit-Node-Left.png" id="4_jckkb"]
-[ext_resource type="Texture2D" uid="uid://dhmkoqdydwlvg" path="res://Spinner Component/Default Images/Hit-Node-Right.png" id="5_cg6s7"]
+[ext_resource type="Texture2D" uid="uid://cy2v22ajdkunm" path="res://Default Skin/Body-Fill-Right.png" id="2_2i3hg"]
+[ext_resource type="Texture2D" uid="uid://3f7lycs11idh" path="res://Default Skin/Spinner-Body.png" id="3_oohy3"]
+[ext_resource type="Texture2D" uid="uid://c308yj1sdyeok" path="res://Default Skin/Hit-Node-Left.png" id="4_jckkb"]
+[ext_resource type="Texture2D" uid="uid://dhmkoqdydwlvg" path="res://Default Skin/Hit-Node-Right.png" id="5_cg6s7"]
 [ext_resource type="Texture2D" uid="uid://r8d8a0462b4t" path="res://Spinner Component/Default Images/Hit-Ring-Area-Outline.png" id="6_2i3hg"]
 [ext_resource type="Texture2D" uid="uid://sfscdi1uubbd" path="res://Spinner Component/Default Images/Hit-Ring-Area-Body.png" id="7_oohy3"]
 [ext_resource type="Texture2D" uid="uid://ctbkhxnr48m0x" path="res://Spinner Component/Default Images/Detail-Line.png" id="8_cg6s7"]
@@ -57,19 +57,8 @@ shader_parameter/opacity = 0.5
 
 [node name="Spinner" type="Node2D"]
 script = ExtResource("1_wlxnq")
-bpm = 128.0
-KEY1_INPUT_NAME = "KEY1"
-KEY2_INPUT_NAME = "KEY2"
-
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -1325.0
-offset_top = -552.0
-offset_right = 909.0
-offset_bottom = 751.0
-color = Color(0, 0, 0, 1)
 
 [node name="SubRoot" type="Node2D" parent="."]
-scale = Vector2(0.7, 0.7)
 
 [node name="OuterRing" type="Node2D" parent="SubRoot"]
 

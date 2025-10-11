@@ -29,10 +29,6 @@ var notePlacementSide:float
 func _ready() -> void:
 	parent = get_parent()
 
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed(parent.lmbActionName):
-		pass
-
 func _process(_delta: float) -> void:
 	if !parent.inEditor:
 		self.hide()

@@ -27,5 +27,5 @@ func save_tau_data(filePath:String, mapData:MapDataContainer):
 	file.store_line("")
 	file.store_line("[HitObjects]")
 	for obj:Dictionary in mapData.hitObjects:
-		file.store_line(str(obj["start"])+", "+str(obj["end"])+", "+str(obj["type"]))
+		file.store_line(str(obj["startTime"])+", "+str(obj["endTime"])+", "+str(obj["side"]))
 	

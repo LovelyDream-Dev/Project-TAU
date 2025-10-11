@@ -10,7 +10,7 @@ class_name NoteSpawner
 
 @export var minMouseDistance:float = 50.0
 
-@export var radiusInPixels:float = 500.0
+@export var radiusInPixels:float = 450.0
 
 
 ## The speed at which notes scroll
@@ -24,44 +24,33 @@ class_name NoteSpawner
 ## The side that editor beats begin on. [br][br][code]0[/code]: The notes start on the right. [br][br][code]PI[/code]: The notes start on the left.
 @export_range(0,PI,PI) var notePlacementSide:float = PI
 
-@export var lmbActionName:StringName 
-
 @onready var editorFeatures:EditorFeatures = $EditorFeatures
 @onready var noteContainer:Node2D = $NoteContainer
 
 var editorSnapDivisor:int = 2
 # TEMPORARY VALUE: The bpm of my test song
-var bpm:float = 163.0 
+var bpm:float 
 var secondsPerBeat:float
 var beatsPerSecond:float
 var mainSongPosition:float
-
-var testHitTimes:Array = [
-	{"startTime":1.0, "endTime":1.0, "side":-1.0},
-	]
 
 var currentlySpawnedNotes:Array = []
 # The amount of time in seconds a note spawns before its hit time
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:int = 4
 
-func _input(_event: InputEvent) -> void:
-	if !inEditor:
-		if Input.is_action_just_pressed("ui_accept"):
-			$TestSong.play()
-
 func _process(_delta: float) -> void:
-	if beatsPerSecond != bpm/60: beatsPerSecond = bpm/60
-	if secondsPerBeat != 60/bpm: secondsPerBeat = 60/bpm
-	## _TEST SONG, TEMPORARY
-	if $TestSong.playing:
-		mainSongPosition = $TestSong.get_playback_position()
+	bpm = CurrentMap.bpm
+	secondsPerBeat = CurrentMap.secondsPerBeat
+	beatsPerSecond = CurrentMap.beatsPerSecond
+	mainSongPosition = CurrentMap.mainSongPosition
+	if CurrentMap.mapStarted:
 		spawn_notes()
 
 # --- CUSTOM FUNCTIONS ---
 
 func spawn_notes():
-	for dict in testHitTimes:
+	for dict in CurrentMap.hitObjects:
 		var startTime:float = parse_hit_times(dict).startTime
 		var endTime:float = parse_hit_times(dict).endTime
 		var side:int = parse_hit_times(dict).side
@@ -73,8 +62,8 @@ func spawn_notes():
 			var angle = fmod(startBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 			## This variable determines what side the notes spawn from, and the scroll speed.
 			var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
-			var spawnPosition = get_position_along_radius(Vector2(0,0), spawnDistanceFromCenter, spawnDirection * angle)
-			var hitPosition = get_position_along_radius(Vector2(0,0), spawnSide * radiusInPixels, spawnDirection * angle)
+			var spawnPosition = get_position_along_radius(self.position, spawnDistanceFromCenter, spawnDirection * angle)
+			var hitPosition = get_position_along_radius(self.position, spawnSide * radiusInPixels, spawnDirection * angle)
 			var hitObject:HitObject = HitObject.new()
 
 			var hitNoteTexture:Texture  = load("res://Default Skin/hit-note.png")

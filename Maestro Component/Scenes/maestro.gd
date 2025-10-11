@@ -1,4 +1,4 @@
-extends AudioStreamPlayer
+extends Node
 class_name Maestro
 
 signal WHOLE_BEAT
@@ -9,10 +9,11 @@ var fileLoader = FileLoader.new()
 @onready var mapData:MapDataContainer = $MapDataContainer
 @onready var metronome:AudioStreamPlayer = $Metronome
 @onready var mainSong:AudioStreamPlayer = $MainSong
+@onready var offsetSong:AudioStreamPlayer = $OffsetSong
 
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
-@export var offsetInMs:float = 30.0
+@export var offsetInMs:int = 30
 
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 
@@ -22,7 +23,6 @@ var offsetInSeconds:float
 
 var mainSongPosition:float
 var offsetSongPosition:float
-var currentBPM:float
 
 var currentMeasure:int
 var beatsPerMeasure:int = 4
@@ -43,60 +43,66 @@ func _ready() -> void:
 	init_metronome()
 
 func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("SPACE") and mapLoaded:
-		play_songs()
-		pause_songs()
-	if Input.is_action_just_pressed("ENTER"):
-		mapData.select_audio_file_in_file_system()
-		
+	if Input.is_action_just_pressed("SPACE"):
+		if !CurrentMap.mainSongIsPlaying and !CurrentMap.offsetSongIsPlaying:
+			play_songs()
+			CurrentMap.mapStarted = true
+		else:
+			pause_songs()
+	
 
 func _process(_delta: float) -> void:
+	secondsPerBeat = mapData.secondsPerBeat
+	beatsPerSecond = mapData.beatsPerSecond
+	offsetInSeconds = offsetInMs/1000.0
 	mapLoaded = mapData.mapLoaded
-	offsetInSeconds = offsetInMs/1000
 	if !mapLoaded:
-		fileLoader.load_map("res://Maestro Component/TestMap", mapData, self, mainSong)
-		pass
+		fileLoader.load_map("res://TestMaps/xaev for tau/", mapData, offsetSong, mainSong)
+		
+		print("Map Loaded!")
 	else:
-		currentBPM = mapData.bpm
-		secondsPerBeat = mapData.secondsPerBeat
-		beatsPerSecond = mapData.beatsPerSecond
-		leadInBeats = mapData.leadInBeats
-		leadInTime = mapData.leadInTime
-		currentBPM = mapData.bpm
-		if mainSong.playing:
+		if mainSong and mainSong.playing:
 			mainSongPosition = mainSong.get_playback_position()
+			CurrentMap.mainSongPosition = mainSongPosition
 			emit_beat_signals()
-		if self.playing: 
-			offsetSongPosition = self.get_playback_position()
+		if offsetSong and offsetSong.playing: 
+			offsetSongPosition = offsetSong.get_playback_position()
+			CurrentMap.offsetSongPosition = offsetSongPosition
 			emit_offset_beat_signals()
+		CurrentMap.offsetInMs = offsetInMs
+		CurrentMap.mainSongIsPlaying = mainSong.playing
+		CurrentMap.offsetSongIsPlaying = offsetSong.playing
 
 # --- CUSTOM FUNCTIONS ---
 
-
 func play_songs():
+	var isResuming := mainSongPosition > 0 or offsetSongPosition > 0
 	if offsetInMs >= 0:
 		# Positive offset: main (muted) starts immediately, audible starts later
-		if !mainSong.playing and mainSongPosition == 0.0:
+		if !isResuming:
 			mainSong.play()
-			await  get_tree().create_timer(offsetInSeconds).timeout
-			if mainSong.playing: self.play()
-		elif !mainSong.playing and mainSongPosition != 0.0:
+			await get_tree().create_timer(offsetInSeconds).timeout
+			if mainSong.playing: 
+				offsetSong.play()
+		else:
 			mainSong.play(mainSongPosition)
-			self.play(max(mainSongPosition - offsetInSeconds, 0.0))
+			offsetSong.play(max(mainSongPosition - offsetInSeconds, 0.0))
 	else:
 		# Negative offset: audible starts immediately, main (muted) starts later
-		if !self.playing and offsetSongPosition == 0.0:
-			self.play()
+		if !isResuming:
+			offsetSong.play()
 			await  get_tree().create_timer(-offsetInSeconds).timeout
-			if self.playing: mainSong.play()
-		elif !self.playing and offsetSongPosition != 0.0:
-			self.play(offsetSongPosition)
-			mainSong.play(max(mainSongPosition+offsetInSeconds, 0.0))
+			if offsetSong.playing: mainSong.play()
+		else: 
+			offsetSong.play(offsetSongPosition)
+			mainSong.play(max(offsetSongPosition + offsetInSeconds, 0.0))
 
 func pause_songs():
-	if mainSong.playing and self.playing:
+	if mainSong.playing or offsetSong.playing:
+		mainSongPosition = mainSong.get_playback_position()
+		offsetSongPosition = offsetSong.get_playback_position()
 		mainSong.stop()
-		self.stop()
+		offsetSong.stop()
 
 func emit_beat_signals():
 	currentWholeBeat = beatsPerSecond * mainSongPosition

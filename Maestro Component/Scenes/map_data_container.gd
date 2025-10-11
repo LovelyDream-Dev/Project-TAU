@@ -35,9 +35,19 @@ var hitWindow:float = 0.0
 
 func _ready() -> void:
 	parent = get_parent()
+	
 	fileDialog.connect("file_selected", handle_loaded_file)
 
 func _process(_delta: float) -> void:
+	secondsPerBeat = 60/bpm
+	beatsPerSecond = bpm/60
+	CurrentMap.hitObjects = hitObjects
+	CurrentMap.timingPoints = timingPoints
+	CurrentMap.bpm = bpm
+	CurrentMap.secondsPerBeat = secondsPerBeat
+	CurrentMap.beatsPerSecond = beatsPerSecond
+	CurrentMap.leadInBeats = leadInBeats
+	CurrentMap.leadInTime = leadInTime
 	timing_points()
 
 # --- CUSTOM FUNCTIONS ---
@@ -50,7 +60,7 @@ func handle_loaded_file(path:String):
 	if ext not in ["mp3", "ogg"]:
 		push_error("Unsupported audio format: " + ext)
 		return
-	fileLoader.init_new_map(path, self, parent, parent.mutedSong)
+	fileLoader.init_new_map(path, self, parent.offsetSong, parent.mainSong)
 
 func timing_points():
 	if len(timingPoints) == 0:
@@ -59,7 +69,7 @@ func timing_points():
 	for tp in timingPoints:
 		var time = tp["time"]
 		var _bpm = tp["bpm"]
-		if parent.get_playback_position() >= time:
+		if parent.offsetSong.get_playback_position() >= time:
 			bpm = _bpm
 			secondsPerBeat = 60.0/_bpm
 			beatsPerSecond = _bpm/60.0
@@ -72,8 +82,7 @@ func sort_timing_points():
 		elif a["time"] > b["time"]:
 			return 1
 		else:
-			return 0
-)
+			return 0)
 
 func sort_hit_objects():
 	hitObjects.sort_custom(func(a,b): 
@@ -82,8 +91,7 @@ func sort_hit_objects():
 		elif a["start"] > b["start"]:
 			return 1
 		else:
-			return 0
-)
+			return 0)
 
 func unload_map():
 	mapLoaded = false

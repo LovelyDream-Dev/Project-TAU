@@ -5,7 +5,7 @@
 
 [sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_na6xd"]
 
-[node name="Maestro" type="AudioStreamPlayer"]
+[node name="Maestro" type="Node"]
 script = ExtResource("1_f8jjr")
 metronomeIsOn = true
 metronomeLeadInBeats = 1
@@ -25,3 +25,5 @@ stream = SubResource("AudioStreamPolyphonic_na6xd")
 
 [node name="MainSong" type="AudioStreamPlayer" parent="."]
 volume_db = -80.0
+
+[node name="OffsetSong" type="AudioStreamPlayer" parent="."]
