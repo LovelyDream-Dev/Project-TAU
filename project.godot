@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 CurrentMap="*res://Auotoloads/CurrentMap.gd"
-GlobalInput="*res://Auotoloads/GlobalInput.gd"
 
 [input]
 

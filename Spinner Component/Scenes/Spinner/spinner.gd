@@ -1,5 +1,5 @@
 extends Node2D
-class_name Player_Spinner
+class_name Spinner
 
 @onready var subRoot:Node2D = $SubRoot 
 @onready var anchor:Node2D = $SubRoot/Anchor
@@ -26,9 +26,6 @@ class_name Player_Spinner
 @onready var outerRing:Node2D = $SubRoot/OuterRing
 @onready var hitRing:Node2D = $SubRoot/HitRing
 
-# --- EXPORT VALUES ---
-@export_category("Values")
-
 var bpm:float
 var secondsPerBeat:float
 var beatsPerSecond:float
@@ -36,15 +33,20 @@ var rotationRadiansPerBeat:float
 ## Fractional value of a rotation that happens in one beat
 var rotationsPerBeat:float = 0.25
 
+var maestro:Maestro
+
 func _ready() -> void:
 	rotationRadiansPerBeat = TAU * rotationsPerBeat
 
 func _input(_event: InputEvent) -> void:
+	#handle_input_timing()
 	hit_node_animations()
 	body_animations()
 	animate_lazers()
 
 func _process(delta: float) -> void:
+	maestro = (get_parent() as MapWorld).maestro
+	handle_input_timing()
 	bpm = CurrentMap.bpm
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
@@ -54,9 +56,36 @@ func _process(delta: float) -> void:
 
 # --- CUSTOM FUNCTIONS ---
 
-func on_bpm_changed(value):
-	secondsPerBeat = 60/value
-	beatsPerSecond = value/60
+func handle_input_timing():
+	var mainSongPosition = CurrentMap.mainSongPosition
+	var hitWindowInSeconds = CurrentMap.hitWindowInSeconds
+	# Handle hit logic only for the most recent note
+	if CurrentMap.activeNotes.is_empty():
+		return
+
+	var currentNote: HitObject = CurrentMap.activeNotes.front()
+	var startTime = currentNote.startTime
+
+	if absf(mainSongPosition - startTime) < hitWindowInSeconds:
+		if currentNote.side == -1 and Input.is_action_just_pressed("KEY1"):
+			on_note_hit(currentNote)
+		elif currentNote.side == 1 and Input.is_action_just_pressed("KEY2"):
+			on_note_hit(currentNote)
+
+	# Handle misses separately
+	for hitObject:HitObject in CurrentMap.activeNotes.duplicate():
+		var endTime = hitObject.endTime
+		if mainSongPosition > endTime + hitWindowInSeconds and !hitObject.missed:
+			hitObject.missed = true
+			hitObject.kill_note()
+
+func on_note_hit(hitObject:HitObject):
+	hitObject.missed = false
+	hitObject.kill_note()
+	# Play the hitsound with offset compensation
+	if maestro.offsetInMs > 0:
+		await get_tree().create_timer(maestro.offsetInSeconds).timeout
+	maestro.hitSound.play()
 
 func rotate_spinner(delta:float):
 	anchor.rotation += rotationRadiansPerBeat  * (delta / secondsPerBeat)

@@ -78,7 +78,7 @@ func load_tau_file(filePath:String, folderPath:String, mapData:MapDataContainer,
 				mapData.hpDrainRate = float(parts[1])
 			if line.begins_with("HitWindow:"):
 				var parts = line.split(":", false, 1)
-				mapData.hitWindow = float(parts[1])
+				mapData.hitWindowInSeconds = float(parts[1])/1000
 
 		# Format for timing points in the tau file: "bpm: value, time: value"
 		# Format for timing points as a dictionary: {"bpm" : value, "time" : value} 

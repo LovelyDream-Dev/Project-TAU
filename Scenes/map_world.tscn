@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwlqwvsdycaxf"]
+[gd_scene load_steps=5 format=3 uid="uid://cwlqwvsdycaxf"]
 
+[ext_resource type="Script" uid="uid://bsogk4ey3m1ml" path="res://Scenes/map_world.gd" id="1_1ld1p"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Spinner Component/Scenes/Spinner/spinner.tscn" id="1_jns38"]
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://NoteSpawnerComponent/Scenes/NoteSpawner/note_spawner.tscn" id="2_7tn0v"]
 [ext_resource type="PackedScene" uid="uid://d011trtcheu4c" path="res://Maestro Component/Scenes/maestro.tscn" id="3_g7os0"]
 
 [node name="MapWorld" type="Node2D"]
+script = ExtResource("1_1ld1p")
 
 [node name="BackgroundColor" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(1920, 1080)

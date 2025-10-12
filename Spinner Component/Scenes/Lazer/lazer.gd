@@ -39,6 +39,8 @@ func activate_beam(activate:bool):
 	if beamtw and beamtw.is_running(): beamtw.kill()
 	beamtw = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT).parallel()
 	if activate:
+		beam.modulate.a = 1
 		beamtw.tween_property(beam, "width", beamWidth, 0.025)
 	else:
-		beamtw.tween_property(beam, "width", 0, 0.05)
+		beamtw.tween_property(beam, "width", 0, 0.2)
+		beamtw.tween_property(beam, "modulate:a", 0, 0.15)

@@ -10,6 +10,7 @@ var fileLoader = FileLoader.new()
 @onready var metronome:AudioStreamPlayer = $Metronome
 @onready var mainSong:AudioStreamPlayer = $MainSong
 @onready var offsetSong:AudioStreamPlayer = $OffsetSong
+@onready var hitSound:AudioStreamPlayer = $HitSound
 
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
@@ -101,6 +102,8 @@ func pause_songs():
 	if mainSong.playing or offsetSong.playing:
 		mainSongPosition = mainSong.get_playback_position()
 		offsetSongPosition = offsetSong.get_playback_position()
+		CurrentMap.mainSongPosition = mainSongPosition
+		CurrentMap.offsetSongIsPlaying = offsetSongPosition
 		mainSong.stop()
 		offsetSong.stop()
 

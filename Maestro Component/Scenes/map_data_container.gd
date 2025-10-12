@@ -31,7 +31,7 @@ var creator:String = ""
 var version:String = ""
 
 var hpDrainRate:float = 0.0
-var hitWindow:float = 0.0
+var hitWindowInSeconds:float = 0.0
 
 func _ready() -> void:
 	parent = get_parent()
@@ -48,6 +48,8 @@ func _process(_delta: float) -> void:
 	CurrentMap.beatsPerSecond = beatsPerSecond
 	CurrentMap.leadInBeats = leadInBeats
 	CurrentMap.leadInTime = leadInTime
+	CurrentMap.hitWindowInSeconds = hitWindowInSeconds
+	CurrentMap.hpDrainRate = hpDrainRate
 	timing_points()
 
 # --- CUSTOM FUNCTIONS ---
@@ -105,6 +107,6 @@ func unload_map():
 	creator = ""
 	version = ""
 	hpDrainRate = 0.0
-	hitWindow = 0.0
+	hitWindowInSeconds = 0.0
 	hitObjects.clear()
 	timingPoints.clear()

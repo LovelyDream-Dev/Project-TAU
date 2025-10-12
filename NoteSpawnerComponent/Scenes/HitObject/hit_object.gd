@@ -21,6 +21,10 @@ var side:int
 ## The center that the note will move towards and look at.
 var center:Vector2
 
+var isPressed:bool
+var isDying:bool
+var missed:bool
+
 func _enter_tree() -> void:
 	noteContainerParent = get_parent()
 	var hitNote = Sprite2D.new()
@@ -37,3 +41,20 @@ func _enter_tree() -> void:
 
 func set_hold_note():
 	pass
+
+func kill_note():
+	isDying = true
+	if !missed:
+		var tw = create_tween().set_ease(Tween.EASE_OUT_IN).set_trans(Tween.TRANS_LINEAR).parallel()
+		tw.tween_property(self, "modulate", Color(Color.GREEN, 0), 0.5)
+		CurrentMap.activeNotes.erase(self)
+		await tw.finished
+		self.queue_free()
+	else: 
+		var tw = create_tween().set_ease(Tween.EASE_OUT_IN).set_trans(Tween.TRANS_LINEAR).parallel()
+		tw.tween_property(self, "modulate", Color(Color.RED, 0), 0.5)
+		CurrentMap.activeNotes.erase(self)
+		await tw.finished
+		self.queue_free()
+
+	

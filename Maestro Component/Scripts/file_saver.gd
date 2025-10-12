@@ -19,7 +19,7 @@ func save_tau_data(filePath:String, mapData:MapDataContainer):
 	file.store_line("")
 	file.store_line("[Difficulty]")
 	file.store_line("HpDrainRate: "+str(mapData.hpDrainRate))
-	file.store_line("HitWindow: "+str(mapData.hitWindow))
+	file.store_line("HitWindow: "+str(mapData.hitWindow*1000))
 	file.store_line("")
 	file.store_line("[TimingPoints]")
 	for tp:Dictionary in mapData.timingPoints:

@@ -64,8 +64,8 @@ func spawn_notes():
 			var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
 			var spawnPosition = get_position_along_radius(self.position, spawnDistanceFromCenter, spawnDirection * angle)
 			var hitPosition = get_position_along_radius(self.position, spawnSide * radiusInPixels, spawnDirection * angle)
-			var hitObject:HitObject = HitObject.new()
 
+			var hitObject:HitObject = HitObject.new()
 			var hitNoteTexture:Texture  = load("res://Default Skin/hit-note.png")
 			var hitNoteOutlineTexture:Texture = load("res://Default Skin/hit-note-outline.png")
 			hitObject.hitNoteTexture = hitNoteTexture
@@ -80,6 +80,7 @@ func spawn_notes():
 			tw.tween_property(hitObject as HitObject, "position", hitPosition, startTime-mainSongPosition)
 			noteContainer.add_child(hitObject)
 			currentlySpawnedNotes.append(startTime)
+			CurrentMap.activeNotes.append(hitObject)
 
 func get_beat_from_song_position(songPosition:float) -> float:
 	return songPosition * beatsPerSecond

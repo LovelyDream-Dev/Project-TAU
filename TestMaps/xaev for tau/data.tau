@@ -10,7 +10,7 @@ Version: Easy
 
 [Difficulty]
 HpDrainRate: 1.0
-HitWindow: 0.5
+HitWindow: 64
 
 [TimingPoints]
 bpm: 128.0, time: 0.0

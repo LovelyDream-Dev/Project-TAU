@@ -2,6 +2,7 @@ extends Node
 
 var mapStarted:bool
 
+var activeNotes:Array = []
 var hitObjects:Array = []
 var timingPoints:Array = []
 var rotationPoints:Array = []
@@ -20,4 +21,4 @@ var mainSongIsPlaying:bool
 var offsetSongIsPlaying:bool
 
 var hpDrainRate:float = 0.0
-var hitWindow:float = 0.0
+var hitWindowInSeconds:float = 0.0
