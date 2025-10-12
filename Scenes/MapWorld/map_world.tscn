@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwlqwvsdycaxf"]
+
+[ext_resource type="Script" uid="uid://bsogk4ey3m1ml" path="res://Scenes/MapWorld/map_world.gd" id="1_npqcn"]
+[ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Components/Spinner Component/Scenes/Spinner/spinner.tscn" id="2_0rmcv"]
+[ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Components/NoteSpawnerComponent/Scenes/NoteSpawner/note_spawner.tscn" id="3_46fyy"]
+[ext_resource type="PackedScene" uid="uid://d011trtcheu4c" path="res://Components/Maestro Component/Scenes/maestro.tscn" id="4_dxyen"]
+
+[node name="MapWorld" type="Node2D"]
+script = ExtResource("1_npqcn")
+
+[node name="BackgroundColor" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Spinner" parent="." node_paths=PackedStringArray("maestro") instance=ExtResource("2_0rmcv")]
+maestro = NodePath("../Maestro")
+
+[node name="NoteSpawner" parent="." instance=ExtResource("3_46fyy")]
+debugLine = false
+
+[node name="Maestro" parent="." instance=ExtResource("4_dxyen")]
+metronomeIsOn = false

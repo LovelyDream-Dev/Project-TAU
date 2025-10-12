@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://jqt7if5lbnrm"]
+
+[ext_resource type="Texture2D" uid="uid://cft3yk67jargu" path="res://Components/Spinner Component/Default Images/Spark-Texture.png" id="1_81ig8"]
+
+[sub_resource type="Curve" id="Curve_6m3n4"]
+_limits = [-5.0, 5.0, 0.0, 1.0]
+_data = [Vector2(0, 4.887641), 0.0, 0.0, 0, 0, Vector2(1, 0.39325857), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bbjeh"]
+curve = SubResource("Curve_6m3n4")
+
+[sub_resource type="Curve" id="Curve_bg2cf"]
+_limits = [0.0, 15.730347, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 3.004675), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_jaicl"]
+curve = SubResource("Curve_bg2cf")
+
+[sub_resource type="Curve" id="Curve_bbjeh"]
+_data = [Vector2(0, 0.34831464), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bg2cf"]
+curve = SubResource("Curve_bbjeh")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_81ig8"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(15, 1, 1)
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 49.999996
+linear_accel_max = 99.99999
+linear_accel_curve = SubResource("CurveTexture_bbjeh")
+radial_accel_min = 65.0
+radial_accel_max = 99.99999
+radial_accel_curve = SubResource("CurveTexture_jaicl")
+damping_min = 30.000002
+damping_max = 83.968
+scale_curve = SubResource("CurveTexture_bg2cf")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+texture_filter = 4
+rotation = 1.5707964
+amount = 100
+texture = ExtResource("1_81ig8")
+lifetime = 0.49
+process_material = SubResource("ParticleProcessMaterial_81ig8")

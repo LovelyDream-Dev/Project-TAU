@@ -1,0 +1,142 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhi8nlbytnk8v"]
+
+[ext_resource type="PackedScene" uid="uid://d011trtcheu4c" path="res://Components/Maestro Component/Scenes/maestro.tscn" id="1_3ysjy"]
+[ext_resource type="Texture2D" uid="uid://b0bc5xxs8ysgb" path="res://TestMaps/xaev for tau/WallpaperDog-10731419.png" id="1_kvxkh"]
+[ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
+[ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/time_line.tscn" id="2_dftp8"]
+[ext_resource type="AudioStream" uid="uid://cg0uq4wapiked" path="res://Audio Files/Metronome Click.wav" id="3_6172c"]
+[ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Components/Spinner Component/Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvxkh"]
+bg_color = Color(0.01778223, 0.10000802, 0.1589123, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.29803923)
+shadow_size = 16
+shadow_offset = Vector2(0, 8)
+
+[node name="Editor" type="Control"]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ub1o7")
+
+[node name="Maestro" parent="." instance=ExtResource("1_3ysjy")]
+metronomeStream = ExtResource("3_6172c")
+
+[node name="BackgroundImage" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_kvxkh")
+expand_mode = 1
+
+[node name="BaseBackground" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13333334, 0.17254902, 0.2, 0.7607843)
+
+[node name="PlayField" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(960, 540)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -480.0
+offset_right = 480.0
+offset_bottom = 540.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 0.49803922)
+
+[node name="SpinnerControl" type="Control" parent="PlayField"]
+custom_minimum_size = Vector2(960, 540)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Spinner" parent="PlayField/SpinnerControl" node_paths=PackedStringArray("maestro") instance=ExtResource("5_wwoqk")]
+position = Vector2(480, 270)
+scale = Vector2(0.5, 0.5)
+maestro = NodePath("../../../Maestro")
+inEditor = true
+
+[node name="LeftPanelMarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 32
+
+[node name="LeftPanel" type="Panel" parent="LeftPanelMarginContainer"]
+custom_minimum_size = Vector2(384, 720)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
+
+[node name="RightPanelMarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -480.0
+offset_bottom = 784.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 32
+
+[node name="RightPanel" type="Panel" parent="RightPanelMarginContainer"]
+custom_minimum_size = Vector2(384, 720)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
+
+[node name="TimelineMarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(1920, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_top = -40.0
+offset_right = 960.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 32
+
+[node name="TimeLinePanel" type="Panel" parent="TimelineMarginContainer"]
+custom_minimum_size = Vector2(1920, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Timeline" parent="TimelineMarginContainer/TimeLinePanel" instance=ExtResource("2_dftp8")]
+clip_contents = true
+custom_minimum_size = Vector2(1920, 100)
+layout_mode = 0
+backgroundColor = Color(0.03137255, 0.14117648, 0.21568628, 0.6862745)

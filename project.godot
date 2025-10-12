@@ -11,13 +11,21 @@ config_version=5
 [application]
 
 config/name="Project TAU"
-run/main_scene="uid://cwlqwvsdycaxf"
+run/main_scene="uid://dhi8nlbytnk8v"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 CurrentMap="*res://Auotoloads/CurrentMap.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="viewport"
 
 [input]
 
