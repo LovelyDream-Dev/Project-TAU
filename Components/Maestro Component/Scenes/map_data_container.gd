@@ -75,7 +75,7 @@ func timing_points():
 			bpm = _bpm
 			secondsPerBeat = 60.0/_bpm
 			beatsPerSecond = _bpm/60.0
-			leadInTime = beatsPerSecond * leadInBeats
+			leadInTime = secondsPerBeat * leadInBeats
 
 func sort_timing_points():
 	timingPoints.sort_custom(func(a,b): 

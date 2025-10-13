@@ -12,10 +12,12 @@ var fileLoader = FileLoader.new()
 @onready var offsetSong:AudioStreamPlayer = $OffsetSong
 @onready var hitSound:AudioStreamPlayer = $HitSound
 
+@export var timeline:Timeline
 @export var metronomeStream:AudioStream
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
 @export var offsetInMs:int = 30
+@export var inEditor:bool
 
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 
@@ -58,6 +60,8 @@ func _input(_event: InputEvent) -> void:
 	
 
 func _process(_delta: float) -> void:
+	leadInBeats = CurrentMap.leadInBeats
+	leadInTime = CurrentMap.leadInTime
 	secondsPerBeat = mapData.secondsPerBeat
 	beatsPerSecond = mapData.beatsPerSecond
 	offsetInSeconds = offsetInMs/1000.0
@@ -71,13 +75,16 @@ func _process(_delta: float) -> void:
 	else:
 		CurrentMap.mapLoaded = true
 		if mainSong and mainSong.playing:
-			mainSongPosition = mainSong.get_playback_position()
+			mainSongPosition = mainSong.get_playback_position() 
 			CurrentMap.mainSongPosition = mainSongPosition
+			if inEditor:
+				CurrentMap.manualSongPosition = timeline.scrollContainer.scroll_horizontal / timeline.pixelsPerSecond
 			emit_beat_signals()
 		if offsetSong and offsetSong.playing: 
 			offsetSongPosition = offsetSong.get_playback_position()
 			CurrentMap.offsetSongPosition = offsetSongPosition
 			emit_offset_beat_signals()
+
 		CurrentMap.offsetInMs = offsetInMs
 		CurrentMap.mainSongIsPlaying = mainSong.playing
 		CurrentMap.offsetSongIsPlaying = offsetSong.playing

@@ -28,7 +28,7 @@ func _process(_delta: float) -> void:
 		on_scroll_changed()
 
 func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColor:Color, rounded:bool):
-	var xPosition = rootNode.get_timeline_position_x_from_song_position(BeatTime)
+	var xPosition = rootNode.get_timeline_position_x_from_song_position(BeatTime) + scrollContainer.playHeadOffset
 	var yCenter = rootNode.position.y + (rootNode.get_rect().size.y/2)
 	
 	#  \/ --- BEAT TICK CULLING WITH MARGIN --- \/

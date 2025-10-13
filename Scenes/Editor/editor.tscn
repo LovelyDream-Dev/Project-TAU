@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=9 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="PackedScene" uid="uid://d011trtcheu4c" path="res://Components/Maestro Component/Scenes/maestro.tscn" id="1_3ysjy"]
 [ext_resource type="Texture2D" uid="uid://b0bc5xxs8ysgb" path="res://TestMaps/xaev for tau/WallpaperDog-10731419.png" id="1_kvxkh"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/time_line.tscn" id="2_dftp8"]
 [ext_resource type="AudioStream" uid="uid://cg0uq4wapiked" path="res://Audio Files/Metronome Click.wav" id="3_6172c"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Components/Spinner Component/Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
+[ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Components/NoteSpawnerComponent/Scenes/NoteSpawner/note_spawner.tscn" id="6_1xg6d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvxkh"]
 bg_color = Color(0.01778223, 0.10000802, 0.1589123, 1)
@@ -27,8 +28,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ub1o7")
 
-[node name="Maestro" parent="." instance=ExtResource("1_3ysjy")]
+[node name="Maestro" parent="." node_paths=PackedStringArray("timeline") instance=ExtResource("1_3ysjy")]
+timeline = NodePath("../TimelineMarginContainer/TimeLinePanel/Timeline")
 metronomeStream = ExtResource("3_6172c")
+inEditor = true
 
 [node name="BackgroundImage" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(1920, 1080)
@@ -51,8 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.13333334, 0.17254902, 0.2, 0.7607843)
 
-[node name="PlayField" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(960, 540)
+[node name="PlayFieldMarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -61,22 +63,29 @@ offset_left = -480.0
 offset_right = 480.0
 offset_bottom = 540.0
 grow_horizontal = 2
+theme_override_constants/margin_top = 64
+
+[node name="PlayFieldBackground" type="ColorRect" parent="PlayFieldMarginContainer"]
+custom_minimum_size = Vector2(960, 540)
+layout_mode = 2
 color = Color(0, 0, 0, 0.49803922)
 
-[node name="SpinnerControl" type="Control" parent="PlayField"]
+[node name="SpinnerControl" type="Control" parent="PlayFieldMarginContainer"]
 custom_minimum_size = Vector2(960, 540)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
-[node name="Spinner" parent="PlayField/SpinnerControl" node_paths=PackedStringArray("maestro") instance=ExtResource("5_wwoqk")]
+[node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl" node_paths=PackedStringArray("maestro") instance=ExtResource("5_wwoqk")]
 position = Vector2(480, 270)
 scale = Vector2(0.5, 0.5)
 maestro = NodePath("../../../Maestro")
 inEditor = true
+
+[node name="NoteSpawnerControl" type="Control" parent="PlayFieldMarginContainer"]
+layout_mode = 2
+
+[node name="NoteSpawner" parent="PlayFieldMarginContainer/NoteSpawnerControl" instance=ExtResource("6_1xg6d")]
+position = Vector2(480, 270)
+scale = Vector2(0.7, 0.7)
 
 [node name="LeftPanelMarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(480, 0)

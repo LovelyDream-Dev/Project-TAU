@@ -54,7 +54,6 @@ func spawn_notes():
 		var startTime:float = parse_hit_times(dict).startTime
 		var endTime:float = parse_hit_times(dict).endTime
 		var side:int = parse_hit_times(dict).side
-	
 		# Check if the note hit time is within the spawn window and if the note is not already spawned
 		if abs(mainSongPosition - startTime) < spawnWindowInSeconds and startTime not in currentlySpawnedNotes:
 			# Calculate values needed for note spawning and set the values within the note

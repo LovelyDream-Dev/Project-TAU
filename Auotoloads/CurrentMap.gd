@@ -15,6 +15,7 @@ var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
+var manualSongPosition:float = 0.0
 var leadInBeats:float = 0.0
 var leadInTime:float = 0.0
 var offsetInMs:int
@@ -38,6 +39,7 @@ func clear_map():
 	beatsPerSecond = 0.0
 	mainSongPosition = 0.0
 	offsetSongPosition = 0.0
+	manualSongPosition = 0.0
 	leadInBeats = 0.0
 	leadInTime = 0.0
 	offsetInMs = 0

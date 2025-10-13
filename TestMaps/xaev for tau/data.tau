@@ -1,6 +1,6 @@
 [General]
 AudioFileName: audio.mp3
-LeadInBeats: 0.0
+LeadInBeats: 1.0
 
 [Metadata]
 Title: Test Title

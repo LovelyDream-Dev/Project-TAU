@@ -159,7 +159,7 @@ func _process(_delta: float) -> void:
 	beatsPerSecond = CurrentMap.beatsPerSecond
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	pixelsPerBeat = secondsPerBeat * pixelsPerSecond
-	totalWholeBeats = floori(beatsPerSecond * songLengthInSeconds)
+	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + CurrentMap.leadInTime))
 
 	queue_redraw()
 	select_notes_by_drag()
