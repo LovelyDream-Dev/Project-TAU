@@ -25,9 +25,9 @@ signal SNAP_DIVISOR_CHANGED
 
 @export_category("Values")
 ## The height of the beat ticks
-@export var tickHeight:float
+@export var tickHeight:float = 80.0
 ## The width of the beat ticks
-@export var tickWidth:float
+@export var tickWidth:float = 4
 ## If it is true, the rectanlge that is used for tick and timeline note culling will be drawn.
 @export var showCullingRect:bool
 ## Determines margin around the culling rectangle that ticks and timeline notes will actually cull at.
@@ -38,7 +38,7 @@ signal SNAP_DIVISOR_CHANGED
 		snapDivisor = value
 		_on_snap_divisor_changed()
 ## How many pixels represent one second on the timeline, directly affects timeline length and spacing between ticks
-@export var pixelsPerSecond:float = 250
+@export var pixelsPerSecond:float = 500.0
 
 @export_category("Booleans")
 ## If the tick ends are rounded
@@ -47,12 +47,6 @@ signal SNAP_DIVISOR_CHANGED
 @export var timelinePlacement:bool = true
 ## If it is set to true, the scroll bar will be hidden
 @export var hideScrollBar:bool
-
-@export_category("Strings") 
-## String name of your Left Mouse Button input action. Required for timeline placement
-@export var lmbActionName:String
-## String name of your Right Mouse Button input action. Required for timeline placement
-@export var rmbActionName:String
 
 @export_category("Textures")
 ## Texture of the note that will be placed on the timeline
@@ -124,10 +118,10 @@ func _input(event: InputEvent) -> void:
 			if get_if_clicked_outside_of_selected_note() == true:
 				deselect_notes(null)
 
-	if Input.is_action_just_pressed(lmbActionName):
+	if Input.is_action_just_pressed("LMB"):
 		start_note_drag()
 
-	if Input.is_action_pressed(lmbActionName):
+	if Input.is_action_pressed("LMB"):
 		drag_notes()
 		if get_tree().get_node_count_in_group("selectedNotes") == 0:
 			if !dragSelectStarted:
@@ -137,7 +131,7 @@ func _input(event: InputEvent) -> void:
 			if dragSelectStarted:
 				deselect_notes(null)
 
-	if Input.is_action_just_released(lmbActionName):
+	if Input.is_action_just_released("LMB"):
 		end_note_drag()
 		dragSelectStarted = false
 

@@ -10,15 +10,11 @@ signal OFFSET_WHOLE_BEAT
 @onready var editorOffsetSong:AudioStreamPlayer = $EditorOffsetSong
 @onready var hitSound:AudioStreamPlayer = $HitSound
 
-@export var timeline:Timeline
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
 
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
-
-var mainSongPosition:float
-var offsetSongPosition:float
 
 var currentMeasure:int
 var beatsPerMeasure:int = 4
@@ -62,23 +58,31 @@ func _process(_delta: float) -> void:
 	beatsPerSecond = CurrentMap.beatsPerSecond
 
 	if mainSong and mainSong.playing:
-		mainSongPosition = mainSong.get_playback_position() 
-		CurrentMap.mainSongPosition = mainSongPosition
-		if CurrentMap.inEditor:
-			CurrentMap.manualSongPosition = timeline.scrollContainer.scroll_horizontal / timeline.pixelsPerSecond
+		CurrentMap.mainSongPosition = mainSong.get_playback_position() 
 		emit_beat_signals()
 	if offsetSong and offsetSong.playing: 
-		offsetSongPosition = offsetSong.get_playback_position()
-		CurrentMap.offsetSongPosition = offsetSongPosition
+		CurrentMap.offsetSongPosition = offsetSong.get_playback_position()
 		emit_offset_beat_signals()
+	if editorOffsetSong and editorOffsetSong.playing:
+		CurrentMap.editorOffsetSongPosition = editorOffsetSong.get_playback_position()
+		
 
-		CurrentMap.mainSongIsPlaying = mainSong.playing
-		CurrentMap.offsetSongIsPlaying = offsetSong.playing
+	CurrentMap.mainSongIsPlaying = mainSong.playing
+	CurrentMap.offsetSongIsPlaying = offsetSong.playing
+	CurrentMap.editorOffsetSongIsPlaying = editorOffsetSong.playing
 
 # --- CUSTOM FUNCTIONS ---
 
 func play_songs():
-	var isResuming := mainSongPosition > 0 or offsetSongPosition > 0
+	var isResuming := CurrentMap.mainSongPosition > 0 or CurrentMap.offsetSongPosition > 0
+
+	# Manage lead in time
+	if CurrentMap.leadInTime > 0:
+		editorOffsetSong.play()
+		await get_tree().create_timer(CurrentMap.leadInTime).timeout
+		editorOffsetSong.stop()
+		CurrentMap.editorOffsetSongPosition = 0.0
+
 	if PlayerData.offsetInMs >= 0:
 		# Positive offset: main (muted) starts immediately, audible starts later
 		if !isResuming:
@@ -87,8 +91,8 @@ func play_songs():
 			if mainSong.playing: 
 				offsetSong.play()
 		else:
-			mainSong.play(mainSongPosition)
-			offsetSong.play(max(mainSongPosition - (PlayerData.offsetInMs/1000.0), 0.0))
+			mainSong.play(CurrentMap.mainSongPosition)
+			offsetSong.play(max(CurrentMap.mainSongPosition - (PlayerData.offsetInMs/1000.0), 0.0))
 	else:
 		# Negative offset: audible starts immediately, main (muted) starts later
 		if !isResuming:
@@ -96,28 +100,26 @@ func play_songs():
 			await  get_tree().create_timer(-(PlayerData.offsetInMs/1000.0)).timeout
 			if offsetSong.playing: mainSong.play()
 		else: 
-			offsetSong.play(offsetSongPosition)
-			mainSong.play(max(offsetSongPosition + (PlayerData.offsetInMs/1000.0), 0.0))
+			offsetSong.play(CurrentMap.offsetSongPosition)
+			mainSong.play(max(CurrentMap.offsetSongPosition + (PlayerData.offsetInMs/1000.0), 0.0))
 
 func pause_songs():
 	if mainSong.playing or offsetSong.playing:
-		mainSongPosition = mainSong.get_playback_position()
-		offsetSongPosition = offsetSong.get_playback_position()
-		CurrentMap.mainSongPosition = mainSongPosition
-		CurrentMap.offsetSongIsPlaying = offsetSongPosition
+		CurrentMap.mainSongPosition = mainSong.get_playback_position()
+		CurrentMap.offsetSongPosition = offsetSong.get_playback_position()
 		mainSong.stop()
 		offsetSong.stop()
 
 func emit_beat_signals():
-	currentWholeBeat = beatsPerSecond * mainSongPosition
-	while mainSongPosition >= nextWholeBeat:
+	currentWholeBeat = beatsPerSecond * CurrentMap.mainSongPosition
+	while CurrentMap.mainSongPosition >= nextWholeBeat:
 		var beatIndex = int(round(nextWholeBeat * beatsPerSecond))
 		WHOLE_BEAT.emit(beatIndex)
 		get_measure(beatIndex)
 		nextWholeBeat += secondsPerBeat
 
 func emit_offset_beat_signals():
-	while offsetSongPosition >= nextOffsetWholeBeat:
+	while CurrentMap.offsetSongPosition >= nextOffsetWholeBeat:
 		var beatIndex = int(round(nextOffsetWholeBeat * beatsPerSecond))
 		OFFSET_WHOLE_BEAT.emit(beatIndex)
 		nextOffsetWholeBeat += secondsPerBeat

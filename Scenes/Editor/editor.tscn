@@ -130,7 +130,7 @@ grow_vertical = 0
 theme_override_constants/margin_bottom = 32
 
 [node name="TimeLinePanel" type="Panel" parent="TimelineMarginContainer"]
-custom_minimum_size = Vector2(1920, 100)
+custom_minimum_size = Vector2(1920, 150)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -139,4 +139,7 @@ size_flags_vertical = 4
 clip_contents = true
 custom_minimum_size = Vector2(1920, 100)
 layout_mode = 0
+offset_bottom = 200.0
 backgroundColor = Color(0.03137255, 0.14117648, 0.21568628, 0.6862745)
+tickHeight = 120.0
+pixelsPerSecond = 300.0
