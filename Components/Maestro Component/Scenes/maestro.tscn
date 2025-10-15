@@ -20,6 +20,3 @@ stream = ExtResource("3_v1n8r")
 volume_db = -80.0
 
 [node name="OffsetSong" type="AudioStreamPlayer" parent="."]
-
-[node name="EditorOffsetSong" type="AudioStreamPlayer" parent="."]
-volume_db = -80.0

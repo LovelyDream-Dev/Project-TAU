@@ -1,5 +1,7 @@
 extends Node
 
+var globalMapTimeInSeconds:float
+
 var maestro:Maestro = MaestroSingleton
 
 var inEditor:bool
@@ -18,13 +20,12 @@ var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
-var editorOffsetSongPosition:float = 0.0
+var scrolledSongPosition:float = 0.0
 var leadInBeats:float = 0.0
 var leadInTime:float = 0.0
 
 var mainSongIsPlaying:bool
 var offsetSongIsPlaying:bool
-var editorOffsetSongIsPlaying:bool
 var editorMapInit:bool
 
 var hpDrainRate:float = 0.0
@@ -37,20 +38,27 @@ var creator:String
 var version:String
 var audioFileExtension:String
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if !mapLoaded:
 		return
 
+	if mapStarted:
+		globalMapTimeInSeconds += delta
+	
 	timing_points()
 	secondsPerBeat = 60/bpm
 	beatsPerSecond = bpm/60
 
 # --- CUSTOM FUNCTIONS ---
 
-
-
 func start_map():
-	pass
+	maestro.play_songs()
+	mapStarted = true
+
+func stop_map():
+	maestro.pause_songs()
+	mapStarted = false
+
 # NEEDS FILEDIALOG "fileloaded" SIGNAL. CURRENTLY UNUSED
 func handle_loaded_file(path:String):
 	var ext := path.get_extension().to_lower()
@@ -102,12 +110,10 @@ func unload_map():
 	beatsPerSecond = 0.0
 	mainSongPosition = 0.0
 	offsetSongPosition = 0.0
-	editorOffsetSongPosition = 0.0
 	leadInBeats = 0.0
 	leadInTime = 0.0
 	mainSongIsPlaying = false
 	offsetSongIsPlaying = false
-	editorOffsetSongIsPlaying = false
 	hpDrainRate = 0.0
 	hitWindowInSeconds = 0.0
 	tauFilePath = ""
@@ -117,3 +123,4 @@ func unload_map():
 	version = ""
 	audioFileExtension = ""
 	editorMapInit = false
+	scrolledSongPosition = 0.0

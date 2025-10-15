@@ -152,6 +152,5 @@ func load_song(filePath:String):
 		CurrentMap.songLengthInSeconds = stream.get_length()
 		maestro.offsetSong.stream = stream.duplicate()
 		maestro.mainSong.stream = stream.duplicate()
-		maestro.editorOffsetSong.stream = stream.duplicate()
 	else:
 		push_error("Failed to load audio: " + filePath + ". File must be .mp3 or .ogg.")

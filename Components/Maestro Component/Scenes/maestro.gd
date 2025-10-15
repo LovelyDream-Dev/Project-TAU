@@ -7,7 +7,6 @@ signal OFFSET_WHOLE_BEAT
 @onready var metronome:AudioStreamPlayer = $Metronome
 @onready var mainSong:AudioStreamPlayer = $MainSong
 @onready var offsetSong:AudioStreamPlayer = $OffsetSong
-@onready var editorOffsetSong:AudioStreamPlayer = $EditorOffsetSong
 @onready var hitSound:AudioStreamPlayer = $HitSound
 
 @export var metronomeIsOn:bool = false
@@ -36,16 +35,15 @@ func _ready() -> void:
 	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
 	mapFilePath = "res://TestMaps/xaev for tau/"
-	OFFSET_WHOLE_BEAT.connect(play_metronome)
+	#OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("SPACE"):
 		if !CurrentMap.mainSongIsPlaying and !CurrentMap.offsetSongIsPlaying:
-			play_songs()
-			CurrentMap.mapStarted = true
+			CurrentMap.start_map()
 		else:
-			pause_songs()
+			CurrentMap.stop_map()
 	
 
 func _process(_delta: float) -> void:
@@ -63,45 +61,31 @@ func _process(_delta: float) -> void:
 	if offsetSong and offsetSong.playing: 
 		CurrentMap.offsetSongPosition = offsetSong.get_playback_position()
 		emit_offset_beat_signals()
-	if editorOffsetSong and editorOffsetSong.playing:
-		CurrentMap.editorOffsetSongPosition = editorOffsetSong.get_playback_position()
 		
 
 	CurrentMap.mainSongIsPlaying = mainSong.playing
 	CurrentMap.offsetSongIsPlaying = offsetSong.playing
-	CurrentMap.editorOffsetSongIsPlaying = editorOffsetSong.playing
 
 # --- CUSTOM FUNCTIONS ---
 
 func play_songs():
-	var isResuming := CurrentMap.mainSongPosition > 0 or CurrentMap.offsetSongPosition > 0
+	var offsetSeconds := PlayerData.offsetInMs / 1000.0
+	var globalMapTimeInSeconds = CurrentMap.globalMapTimeInSeconds
 
-	# Manage lead in time
-	if CurrentMap.leadInTime > 0:
-		editorOffsetSong.play()
-		await get_tree().create_timer(CurrentMap.leadInTime).timeout
-		editorOffsetSong.stop()
-		CurrentMap.editorOffsetSongPosition = 0.0
-
-	if PlayerData.offsetInMs >= 0:
+	if offsetSeconds >= 0:
 		# Positive offset: main (muted) starts immediately, audible starts later
-		if !isResuming:
-			mainSong.play()
-			await get_tree().create_timer(PlayerData.offsetInMs/1000.0).timeout
-			if mainSong.playing: 
-				offsetSong.play()
-		else:
-			mainSong.play(CurrentMap.mainSongPosition)
-			offsetSong.play(max(CurrentMap.mainSongPosition - (PlayerData.offsetInMs/1000.0), 0.0))
+		mainSong.play(globalMapTimeInSeconds)
+		await get_tree().create_timer(offsetSeconds).timeout
+		if mainSong.playing:
+			offsetSong.play(max(globalMapTimeInSeconds - offsetSeconds, 0.0))
 	else:
 		# Negative offset: audible starts immediately, main (muted) starts later
-		if !isResuming:
-			offsetSong.play()
-			await  get_tree().create_timer(-(PlayerData.offsetInMs/1000.0)).timeout
-			if offsetSong.playing: mainSong.play()
-		else: 
-			offsetSong.play(CurrentMap.offsetSongPosition)
-			mainSong.play(max(CurrentMap.offsetSongPosition + (PlayerData.offsetInMs/1000.0), 0.0))
+		offsetSong.play(globalMapTimeInSeconds)
+		await get_tree().create_timer(-offsetSeconds).timeout
+		if offsetSong.playing:
+			mainSong.play(max(globalMapTimeInSeconds + offsetSeconds, 0.0))
+
+
 
 func pause_songs():
 	if mainSong.playing or offsetSong.playing:
