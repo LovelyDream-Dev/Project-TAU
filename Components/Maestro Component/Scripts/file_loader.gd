@@ -102,8 +102,8 @@ func load_tau_file(filePath:String, folderPath:String):
 			var parts = line.split(",")
 			if parts.size() == 3:
 				var hitObject = {
-					"startTime": float(parts[0].strip_edges()),
-					"endTime": float(parts[1].strip_edges()),
+					"hitTime": float(parts[0].strip_edges()),
+					"releaseTime": float(parts[1].strip_edges()),
 					"side": int(parts[2].strip_edges())
 				}
 				CurrentMap.hitObjects.append(hitObject)

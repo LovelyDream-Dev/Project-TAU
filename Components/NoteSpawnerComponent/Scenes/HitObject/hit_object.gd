@@ -6,14 +6,21 @@ var noteContainerParent:Node2D
 var hitNoteTexture:Texture = null
 var hitNoteOutlineTexture:Texture = null
 
+var spawnPosition:Vector2
+var hitPosition:Vector2
+
+var mapTimeNow:float
+
 ## The ID of the hold note. If [member endBeat] is greater than [member startBeat], the note becomes a hold note.
 var holdNoteID:int
 
+var spawnTime:float
+
 ## The time that the note is meant to be hit on. If it is less than [member endBeat], the note will be a hold note.
-var startTime:float
+var hitTime:float
 
 ## The time that the note is meant to be released on. If it is greater than [member startBeat], the note will be a hold note.
-var endTime:float
+var releaseTime:float
 
 ## The side that the note is meant to be hit by. [br][code]-1[/code]: The note is hit by the left side. [br][code]1[/code]: The note is hit by the right side.
 var side:int
@@ -26,6 +33,7 @@ var isDying:bool
 var missed:bool
 
 func _enter_tree() -> void:
+	mapTimeNow = CurrentMap.globalMapTimeInSeconds
 	noteContainerParent = get_parent()
 	var hitNote = Sprite2D.new()
 	var hitNoteOutline = Sprite2D.new()
@@ -38,6 +46,22 @@ func _enter_tree() -> void:
 	self.add_child(hitNoteOutline)
 	self.add_child(hitNote)
 	self.look_at(center)
+
+func _process(_delta: float) -> void:
+	animate_self()
+
+func animate_self():
+	if spawnTime == null or hitTime == null:
+		return
+
+	var travelDuraton = hitTime - spawnTime
+	if travelDuraton <= 0.0:
+		global_position = hitPosition
+		return
+
+	var t = (mapTimeNow - spawnTime) / travelDuraton
+	t = clampf(t, 0.0, 1.0)
+	global_position = spawnPosition.lerp(hitPosition, t)
 
 func set_hold_note():
 	pass

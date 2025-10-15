@@ -58,14 +58,14 @@ func _process(_delta: float) -> void:
 
 func spawn_notes():
 	for dict in CurrentMap.hitObjects:
-		var startTime:float = parse_hit_times(dict).startTime
-		var endTime:float = parse_hit_times(dict).endTime
+		var hitTime:float = parse_hit_times(dict).hitTime
+		var releaseTime:float = parse_hit_times(dict).releaseTime
 		var side:int = parse_hit_times(dict).side
 		# Check if the note hit time is within the spawn window and if the note is not already spawned
-		if abs(CurrentMap.globalMapTimeInSeconds - startTime) < spawnWindowInSeconds and startTime not in currentlySpawnedNotes:
+		if abs(CurrentMap.globalMapTimeInSeconds - hitTime) < spawnWindowInSeconds and hitTime not in currentlySpawnedNotes:
 			# Calculate values needed for note spawning and set the values within the note
-			var startBeat = startTime * beatsPerSecond
-			var angle = fmod(startBeat, beatsPerRotation) * (TAU/beatsPerRotation)
+			var hitBeat = hitTime * beatsPerSecond
+			var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 			## This variable determines what side the notes spawn from, and the scroll speed.
 			var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
 			var spawnPosition = get_position_along_radius(self.global_position, spawnDistanceFromCenter, spawnDirection * angle)
@@ -78,14 +78,15 @@ func spawn_notes():
 			hitObject.hitNoteOutlineTexture = hitNoteOutlineTexture
 
 			hitObject.center = self.global_position
-			hitObject.startTime = startTime
-			hitObject.endTime = endTime
+			hitObject.spawnTime = hitTime - spawnWindowInSeconds
+			hitObject.hitTime = hitTime
+			hitObject.releaseTime = releaseTime
 			hitObject.side = side
-			hitObject.global_position = spawnPosition
-			var tw = create_tween().set_ease(Tween.EASE_OUT_IN).set_trans(Tween.TRANS_LINEAR).parallel()
-			tw.tween_property(hitObject as HitObject, "global_position", hitPosition, startTime-mainSongPosition)
+			hitObject.position = spawnPosition
+			hitObject.spawnPosition = spawnPosition
+			hitObject.hitPosition = hitPosition
 			noteContainer.add_child(hitObject)
-			currentlySpawnedNotes.append(startTime)
+			currentlySpawnedNotes.append(releaseTime)
 			CurrentMap.activeNotes.append(hitObject)
 
 func get_beat_from_song_position(songPosition:float) -> float:
@@ -93,8 +94,8 @@ func get_beat_from_song_position(songPosition:float) -> float:
 
 func parse_hit_times(dict:Dictionary):
 	var ParsedHitObject = HitObjectParser.new()
-	ParsedHitObject.startTime = dict["startTime"]
-	ParsedHitObject.endTime = dict["endTime"]
+	ParsedHitObject.hitTime = dict["hitTime"]
+	ParsedHitObject.releaseTime = dict["releaseTime"]
 	ParsedHitObject.side = dict["side"] 
 	return ParsedHitObject
 
