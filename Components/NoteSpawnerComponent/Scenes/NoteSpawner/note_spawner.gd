@@ -3,8 +3,6 @@ class_name NoteSpawner
 
 ## The color of the circle that notes are placed on in the editor
 @export var circleColor:Color = Color("f44c4f")
-
-@export var inEditor:bool = false
 	
 @export var debugLine:bool = false
 

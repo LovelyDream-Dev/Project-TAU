@@ -1,9 +1,6 @@
 extends Node2D
 class_name Spinner
 
-@export var maestro:Maestro
-@export var inEditor:bool
-
 @onready var subRoot:Node2D = $SubRoot 
 @onready var anchor:Node2D = $SubRoot/Anchor
 
@@ -29,6 +26,8 @@ class_name Spinner
 @onready var outerRing:Node2D = $SubRoot/OuterRing
 @onready var hitRing:Node2D = $SubRoot/HitRing
 
+var maestro:Maestro = MaestroSingleton
+
 var bpm:float
 var secondsPerBeat:float
 var beatsPerSecond:float
@@ -40,7 +39,7 @@ func _ready() -> void:
 	rotationRadiansPerBeat = TAU * rotationsPerBeat
 
 func _input(_event: InputEvent) -> void:
-	if inEditor:
+	if CurrentMap.inEditor:
 		return
 
 	handle_input_timing()

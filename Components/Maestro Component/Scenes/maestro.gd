@@ -4,26 +4,18 @@ class_name Maestro
 signal WHOLE_BEAT
 signal OFFSET_WHOLE_BEAT
 
-var fileLoader = FileLoader.new()
-
-@onready var mapData:MapDataContainer = $MapDataContainer
 @onready var metronome:AudioStreamPlayer = $Metronome
 @onready var mainSong:AudioStreamPlayer = $MainSong
 @onready var offsetSong:AudioStreamPlayer = $OffsetSong
+@onready var editorOffsetSong:AudioStreamPlayer = $EditorOffsetSong
 @onready var hitSound:AudioStreamPlayer = $HitSound
 
 @export var timeline:Timeline
-@export var metronomeStream:AudioStream
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
-@export var offsetInMs:int = 30
-@export var inEditor:bool
 
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
-
-var mapLoaded:bool
-
-var offsetInSeconds:float
+var metronomeClick:AudioStream
 
 var mainSongPosition:float
 var offsetSongPosition:float
@@ -45,6 +37,7 @@ var leadInBeats:float
 var mapFilePath:StringName
 
 func _ready() -> void:
+	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
 	mapFilePath = "res://TestMaps/xaev for tau/"
 	OFFSET_WHOLE_BEAT.connect(play_metronome)
@@ -60,32 +53,25 @@ func _input(_event: InputEvent) -> void:
 	
 
 func _process(_delta: float) -> void:
+	if !CurrentMap.mapLoaded:
+		return
+
 	leadInBeats = CurrentMap.leadInBeats
 	leadInTime = CurrentMap.leadInTime
-	secondsPerBeat = mapData.secondsPerBeat
-	beatsPerSecond = mapData.beatsPerSecond
-	offsetInSeconds = offsetInMs/1000.0
-	mapLoaded = mapData.mapLoaded
-	if CurrentMap.offsetInMs != offsetInMs:
-		CurrentMap.offsetInMs = offsetInMs
+	secondsPerBeat = CurrentMap.secondsPerBeat
+	beatsPerSecond = CurrentMap.beatsPerSecond
 
-	if !mapLoaded:
-		fileLoader.load_map(mapFilePath, mapData, offsetSong, mainSong)
-		print("Map Loaded!")
-	else:
-		CurrentMap.mapLoaded = true
-		if mainSong and mainSong.playing:
-			mainSongPosition = mainSong.get_playback_position() 
-			CurrentMap.mainSongPosition = mainSongPosition
-			if inEditor:
-				CurrentMap.manualSongPosition = timeline.scrollContainer.scroll_horizontal / timeline.pixelsPerSecond
-			emit_beat_signals()
-		if offsetSong and offsetSong.playing: 
-			offsetSongPosition = offsetSong.get_playback_position()
-			CurrentMap.offsetSongPosition = offsetSongPosition
-			emit_offset_beat_signals()
+	if mainSong and mainSong.playing:
+		mainSongPosition = mainSong.get_playback_position() 
+		CurrentMap.mainSongPosition = mainSongPosition
+		if CurrentMap.inEditor:
+			CurrentMap.manualSongPosition = timeline.scrollContainer.scroll_horizontal / timeline.pixelsPerSecond
+		emit_beat_signals()
+	if offsetSong and offsetSong.playing: 
+		offsetSongPosition = offsetSong.get_playback_position()
+		CurrentMap.offsetSongPosition = offsetSongPosition
+		emit_offset_beat_signals()
 
-		CurrentMap.offsetInMs = offsetInMs
 		CurrentMap.mainSongIsPlaying = mainSong.playing
 		CurrentMap.offsetSongIsPlaying = offsetSong.playing
 
@@ -93,25 +79,25 @@ func _process(_delta: float) -> void:
 
 func play_songs():
 	var isResuming := mainSongPosition > 0 or offsetSongPosition > 0
-	if offsetInMs >= 0:
+	if PlayerData.offsetInMs >= 0:
 		# Positive offset: main (muted) starts immediately, audible starts later
 		if !isResuming:
 			mainSong.play()
-			await get_tree().create_timer(offsetInSeconds).timeout
+			await get_tree().create_timer(PlayerData.offsetInMs/1000.0).timeout
 			if mainSong.playing: 
 				offsetSong.play()
 		else:
 			mainSong.play(mainSongPosition)
-			offsetSong.play(max(mainSongPosition - offsetInSeconds, 0.0))
+			offsetSong.play(max(mainSongPosition - (PlayerData.offsetInMs/1000.0), 0.0))
 	else:
 		# Negative offset: audible starts immediately, main (muted) starts later
 		if !isResuming:
 			offsetSong.play()
-			await  get_tree().create_timer(-offsetInSeconds).timeout
+			await  get_tree().create_timer(-(PlayerData.offsetInMs/1000.0)).timeout
 			if offsetSong.playing: mainSong.play()
 		else: 
 			offsetSong.play(offsetSongPosition)
-			mainSong.play(max(offsetSongPosition + offsetInSeconds, 0.0))
+			mainSong.play(max(offsetSongPosition + (PlayerData.offsetInMs/1000.0), 0.0))
 
 func pause_songs():
 	if mainSong.playing or offsetSong.playing:
@@ -151,4 +137,4 @@ func play_metronome(beatIndex:int):
 		var offsetBeat:int = beatIndex - metronomeLeadInBeats
 		if offsetBeat > -1:
 			var pitch = 2.0 ** (2.0/12.0) if offsetBeat % 4 == 0 else 1.0
-			polyphonicMetronome.play_stream(metronomeStream, 0.0, 0.0, pitch)
+			polyphonicMetronome.play_stream(metronomeClick, 0.0, 0.0, pitch)

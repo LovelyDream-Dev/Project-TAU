@@ -1,7 +1,5 @@
 extends Node2D
 
-@onready var camera = get_viewport().get_camera_2d()
-
 @export var rootNode:Timeline
 @export var scrollContainer:ScrollContainer
 
@@ -16,7 +14,6 @@ var showCullingRect:bool
 func _process(_delta: float) -> void:
 	cullingMargin = rootNode.cullingMargin
 	showCullingRect = rootNode.showCullingRect
-
 	if !initialTicksDrawn and rootNode.get_if_ticks_are_drawable():
 		queue_redraw()
 		initialTicksDrawn = true

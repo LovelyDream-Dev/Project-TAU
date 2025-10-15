@@ -30,7 +30,7 @@ func _ready() -> void:
 	parent = get_parent()
 
 func _process(_delta: float) -> void:
-	if !parent.inEditor:
+	if !CurrentMap.inEditor:
 		self.hide()
 		return
 
@@ -49,7 +49,7 @@ func _process(_delta: float) -> void:
 		get_circle_position_from_beat(parent.position, currentMouseBeatOnCircle)
 
 func _draw() -> void:
-	if !parent.inEditor:
+	if !CurrentMap.inEditor:
 		return
 	draw_circle(parent.position, radiusInPixels, circleColor, false, 4.0, true)
 	if parent.debugLine:

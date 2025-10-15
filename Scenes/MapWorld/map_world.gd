@@ -3,4 +3,4 @@ class_name MapWorld
 
 @onready var spinner:Spinner = $Spinner
 @onready var noteSpawner:NoteSpawner = $NoteSpawner
-@onready var maestro:Maestro = $Maestro
+@onready var maestro:Maestro = MaestroSingleton
