@@ -4,7 +4,7 @@ var globalMapTimeInSeconds:float
 
 var maestro:Maestro = MaestroSingleton
 
-var inEditor:bool
+var inEditor:bool = true
 var mapLoaded:bool
 var mapStarted:bool
 
@@ -20,7 +20,6 @@ var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
-var scrolledSongPosition:float = 0.0
 var leadInBeats:float = 0.0
 var leadInTime:float = 0.0
 
@@ -123,4 +122,3 @@ func unload_map():
 	version = ""
 	audioFileExtension = ""
 	editorMapInit = false
-	scrolledSongPosition = 0.0

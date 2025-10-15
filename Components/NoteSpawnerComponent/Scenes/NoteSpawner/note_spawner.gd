@@ -25,6 +25,8 @@ class_name NoteSpawner
 @onready var editorFeatures:EditorFeatures = $EditorFeatures
 @onready var noteContainer:Node2D = $NoteContainer
 
+var center:Vector2 = self.global_position
+
 var editorSnapDivisor:int = 2
 # TEMPORARY VALUE: The bpm of my test song
 var bpm:float 
@@ -37,12 +39,19 @@ var currentlySpawnedNotes:Array = []
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:int = 4
 
+func _ready() -> void:
+	if CurrentMap.inEditor:
+		radiusInPixels *= 0.5
+
 func _process(_delta: float) -> void:
 	bpm = CurrentMap.bpm
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
 	mainSongPosition = CurrentMap.mainSongPosition
-	if CurrentMap.mapStarted:
+	if !CurrentMap.inEditor:
+		if CurrentMap.mapStarted:
+			spawn_notes()
+	else:
 		spawn_notes()
 
 # --- CUSTOM FUNCTIONS ---
@@ -53,14 +62,14 @@ func spawn_notes():
 		var endTime:float = parse_hit_times(dict).endTime
 		var side:int = parse_hit_times(dict).side
 		# Check if the note hit time is within the spawn window and if the note is not already spawned
-		if abs(mainSongPosition - startTime) < spawnWindowInSeconds and startTime not in currentlySpawnedNotes:
+		if abs(CurrentMap.globalMapTimeInSeconds - startTime) < spawnWindowInSeconds and startTime not in currentlySpawnedNotes:
 			# Calculate values needed for note spawning and set the values within the note
 			var startBeat = startTime * beatsPerSecond
 			var angle = fmod(startBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 			## This variable determines what side the notes spawn from, and the scroll speed.
 			var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
-			var spawnPosition = get_position_along_radius(self.position, spawnDistanceFromCenter, spawnDirection * angle)
-			var hitPosition = get_position_along_radius(self.position, spawnSide * radiusInPixels, spawnDirection * angle)
+			var spawnPosition = get_position_along_radius(self.global_position, spawnDistanceFromCenter, spawnDirection * angle)
+			var hitPosition = get_position_along_radius(self.global_position, spawnSide * radiusInPixels, spawnDirection * angle)
 
 			var hitObject:HitObject = HitObject.new()
 			var hitNoteTexture:Texture  = load("res://Default Skin/hit-note.png")
@@ -68,13 +77,13 @@ func spawn_notes():
 			hitObject.hitNoteTexture = hitNoteTexture
 			hitObject.hitNoteOutlineTexture = hitNoteOutlineTexture
 
-			hitObject.center = self.position
+			hitObject.center = self.global_position
 			hitObject.startTime = startTime
 			hitObject.endTime = endTime
 			hitObject.side = side
-			hitObject.position = spawnPosition
+			hitObject.global_position = spawnPosition
 			var tw = create_tween().set_ease(Tween.EASE_OUT_IN).set_trans(Tween.TRANS_LINEAR).parallel()
-			tw.tween_property(hitObject as HitObject, "position", hitPosition, startTime-mainSongPosition)
+			tw.tween_property(hitObject as HitObject, "global_position", hitPosition, startTime-mainSongPosition)
 			noteContainer.add_child(hitObject)
 			currentlySpawnedNotes.append(startTime)
 			CurrentMap.activeNotes.append(hitObject)

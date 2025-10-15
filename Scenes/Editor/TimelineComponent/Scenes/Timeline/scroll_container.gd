@@ -30,8 +30,6 @@ func _process(delta: float) -> void:
 			manuallyScrolling = false
 			scrollTimer = 0.15
 
-	CurrentMap.scrolledSongPosition = self.scroll_horizontal / rootNode.pixelsPerSecond
-	
 	if get_if_scroll_changed():
 		SCROLL_CHANGED.emit()
 

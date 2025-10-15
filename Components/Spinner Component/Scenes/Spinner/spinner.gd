@@ -32,6 +32,7 @@ var bpm:float
 var secondsPerBeat:float
 var beatsPerSecond:float
 var rotationRadiansPerBeat:float
+var rotationRadiansPerSecond:float
 ## Fractional value of a rotation that happens in one beat
 var rotationsPerBeat:float = 0.25
 
@@ -47,13 +48,18 @@ func _input(_event: InputEvent) -> void:
 	body_animations()
 	animate_lazers()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
+	rotationRadiansPerSecond = rotationRadiansPerBeat / CurrentMap.secondsPerBeat
 	bpm = CurrentMap.bpm
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
-	if CurrentMap.mainSongIsPlaying:
-		rotate_spinner(delta)
-		rotate_hit_rings(delta)
+	if !CurrentMap.inEditor:
+		if CurrentMap.mainSongIsPlaying:
+			rotate_spinner()
+			rotate_hit_rings()
+	else:
+		rotate_spinner()
+		rotate_hit_rings()
 
 # --- CUSTOM FUNCTIONS ---
 
@@ -88,12 +94,12 @@ func on_note_hit(hitObject:HitObject):
 		await get_tree().create_timer(CurrentMap.offsetInMs/1000.0).timeout
 	maestro.hitSound.play()
 
-func rotate_spinner(delta:float):
-	anchor.rotation += rotationRadiansPerBeat  * (delta / secondsPerBeat)
+func rotate_spinner():
+	anchor.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
 
-func rotate_hit_rings(delta:float):
-	outerRing.rotation += (rotationRadiansPerBeat/4)  * (delta / secondsPerBeat)
-	hitRing.rotation += (rotationRadiansPerBeat/8)  * (delta / secondsPerBeat)
+func rotate_hit_rings():
+	outerRing.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
+	hitRing.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
 
 func animate_lazers():
 	if Input.is_action_pressed("KEY1"):

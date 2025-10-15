@@ -19,7 +19,7 @@ var beatPositions:Array = [1.0, 1.5, 2.0]
 
 var parent:NoteSpawner
 
-var mousePos:Vector2
+var localMousePos:Vector2
 var closestCirclePositionToMouse:Vector2
 var currentMouseBeatOnCircle:float
 var distanceFromCircleToMouse:float
@@ -36,30 +36,30 @@ func _process(_delta: float) -> void:
 
 	queue_redraw()
 	if !self.visible: self.show()
-	mousePos = get_global_mouse_position()
+	localMousePos = get_local_mouse_position()
 	notePlacementSide = parent.notePlacementSide
 	editorSnapDivisor = parent.editorSnapDivisor
 	notePlacementDirection = parent.notePlacementDirection
 	circleColor = parent.circleColor
 	radiusInPixels = parent.radiusInPixels
 	minMouseDistance = parent.minMouseDistance
-	get_closest_circle_position_to_mouse(parent.position)
-	get_beat_from_circle_position(parent.position)
+	get_closest_circle_position_to_mouse(parent.center)
+	get_beat_from_circle_position(parent.center)
 	if distanceFromCircleToMouse <= minMouseDistance:
-		get_circle_position_from_beat(parent.position, currentMouseBeatOnCircle)
+		get_circle_position_from_beat(parent.center, currentMouseBeatOnCircle)
 
 func _draw() -> void:
 	if !CurrentMap.inEditor:
 		return
-	draw_circle(parent.position, radiusInPixels, circleColor, false, 4.0, true)
+	draw_circle(parent.center, radiusInPixels, circleColor, false, 4.0, true)
 	if parent.debugLine:
-		if mousePos and closestCirclePositionToMouse:
-			draw_line(mousePos, closestCirclePositionToMouse, Color.WHEAT)
+		if localMousePos and closestCirclePositionToMouse:
+			draw_line(localMousePos, closestCirclePositionToMouse, Color.WHITE)
 
 func get_closest_circle_position_to_mouse(center:Vector2):
-	var vector = mousePos - center
+	var vector = localMousePos - center
 	closestCirclePositionToMouse = center + vector.normalized() * radiusInPixels
-	distanceFromCircleToMouse = mousePos.distance_to(closestCirclePositionToMouse)
+	distanceFromCircleToMouse = localMousePos.distance_to(closestCirclePositionToMouse)
 
 func get_beat_from_circle_position(center:Vector2):
 	var angle = atan2(closestCirclePositionToMouse.y - center.y, closestCirclePositionToMouse.x - center.x) + notePlacementSide # PI flips the spawn side
