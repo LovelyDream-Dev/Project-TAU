@@ -98,8 +98,8 @@ func rotate_spinner():
 	anchor.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
 
 func rotate_hit_rings():
-	outerRing.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
-	hitRing.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
+	outerRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * -1 * 0.5
+	hitRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * 0.5
 
 func animate_lazers():
 	if Input.is_action_pressed("KEY1"):

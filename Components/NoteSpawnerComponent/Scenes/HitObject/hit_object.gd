@@ -9,8 +9,6 @@ var hitNoteOutlineTexture:Texture = null
 var spawnPosition:Vector2
 var hitPosition:Vector2
 
-var mapTimeNow:float
-
 ## The ID of the hold note. If [member endBeat] is greater than [member startBeat], the note becomes a hold note.
 var holdNoteID:int
 
@@ -33,7 +31,6 @@ var isDying:bool
 var missed:bool
 
 func _enter_tree() -> void:
-	mapTimeNow = CurrentMap.globalMapTimeInSeconds
 	noteContainerParent = get_parent()
 	var hitNote = Sprite2D.new()
 	var hitNoteOutline = Sprite2D.new()
@@ -59,7 +56,7 @@ func animate_self():
 		global_position = hitPosition
 		return
 
-	var t = (mapTimeNow - spawnTime) / travelDuraton
+	var t = (CurrentMap.globalMapTimeInSeconds - spawnTime) / travelDuraton
 	t = clampf(t, 0.0, 1.0)
 	global_position = spawnPosition.lerp(hitPosition, t)
 
