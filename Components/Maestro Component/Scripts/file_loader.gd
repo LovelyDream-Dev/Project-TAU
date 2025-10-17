@@ -90,8 +90,8 @@ func load_tau_file(filePath:String, folderPath:String):
 			var parts = line.split(",")
 			if parts.size() == 2:
 				var timingPoint = {
-					"bpm": float(parts[0].substr(4).strip_edges()),
-					"time": float(parts[1].substr(5).strip_edges())
+					"time": float(parts[0].substr(5).strip_edges()),
+					"bpm": float(parts[1].substr(4).strip_edges())
 				}
 				CurrentMap.timingPoints.append(timingPoint)
 

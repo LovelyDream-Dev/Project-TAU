@@ -23,9 +23,9 @@ func save_tau_data(filePath:String):
 	file.store_line("")
 	file.store_line("[TimingPoints]")
 	for tp:Dictionary in CurrentMap.timingPoints:
-		file.store_line("bpm: "+ str(tp["bpm"])+", "+"time: "+str(tp["time"]))
+		file.store_line("time: "+str(tp["time"])+","+"bpm: "+ str(tp["bpm"]))
 	file.store_line("")
 	file.store_line("[HitObjects]")
 	for obj:Dictionary in CurrentMap.hitObjects:
-		file.store_line(str(obj["hitTime"])+", "+str(obj["releaseTime"])+", "+str(obj["side"]))
+		file.store_line(str(obj["hitTime"])+","+str(obj["releaseTime"])+","+str(obj["side"]))
 	

@@ -37,6 +37,12 @@ var creator:String
 var version:String
 var audioFileExtension:String
 
+func _ready() -> void:
+	if hitObjects.size() > 0:
+		sort_hit_objects()
+	if timingPoints.size() > 0:
+		sort_timing_points()
+
 func _process(delta: float) -> void:
 	if !mapLoaded:
 		return
@@ -89,9 +95,9 @@ func sort_timing_points():
 
 func sort_hit_objects():
 	hitObjects.sort_custom(func(a,b): 
-		if a["start"] < b["start"]:
+		if a["startTime"] < b["startTime"]:
 			return -1
-		elif a["start"] > b["start"]:
+		elif a["startTime"] > b["startTime"]:
 			return 1
 		else:
 			return 0)

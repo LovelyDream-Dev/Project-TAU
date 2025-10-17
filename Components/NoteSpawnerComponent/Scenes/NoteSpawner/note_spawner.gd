@@ -34,10 +34,12 @@ var secondsPerBeat:float
 var beatsPerSecond:float
 var mainSongPosition:float
 
-var currentlySpawnedNotes:Array = []
 # The amount of time in seconds a note spawns before its hit time
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:int = 4
+
+## The index of the next hitObject to be spawned.
+var nextHitObjectIndex:int = 0
 
 func _ready() -> void:
 	if CurrentMap.inEditor:
@@ -50,23 +52,24 @@ func _process(_delta: float) -> void:
 	mainSongPosition = CurrentMap.mainSongPosition
 	if !CurrentMap.inEditor:
 		if CurrentMap.mapStarted:
-			spawn_notes()
+			spawn_gameplay_hit_objects(CurrentMap.hitObjects)
 	else:
-		spawn_notes()
+		spawn_editor_hit_objects(CurrentMap.hitObjects)
 
 # --- CUSTOM FUNCTIONS ---
 
-func spawn_notes():
-	for dict in CurrentMap.hitObjects:
+## Spawns hit objects during gameplay. See [member spawn_editor_hit_objects()] for spawning hit objects in the editor.
+func spawn_gameplay_hit_objects(hitObjectArray:Array):
+	while nextHitObjectIndex < hitObjectArray.size():
+		var dict:Dictionary = hitObjectArray[nextHitObjectIndex]
 		var hitTime:float = parse_hit_times(dict).hitTime
 		var releaseTime:float = parse_hit_times(dict).releaseTime
 		var side:int = parse_hit_times(dict).side
-		# Check if the note hit time is within the spawn window and if the note is not already spawned
-		if abs(CurrentMap.globalMapTimeInSeconds - hitTime) < spawnWindowInSeconds and hitTime not in currentlySpawnedNotes:
-			# Calculate values needed for note spawning and set the values within the note
+		var spawnTime:float = hitTime - spawnWindowInSeconds
+
+		if CurrentMap.globalMapTimeInSeconds >= spawnTime:
 			var hitBeat = hitTime * beatsPerSecond
 			var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
-			## This variable determines what side the notes spawn from, and the scroll speed.
 			var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
 			var spawnPosition = get_position_along_radius(self.global_position, spawnDistanceFromCenter, spawnDirection * angle)
 			var hitPosition = get_position_along_radius(self.global_position, spawnSide * radiusInPixels, spawnDirection * angle)
@@ -76,18 +79,31 @@ func spawn_notes():
 			var hitNoteOutlineTexture:Texture = load("res://Default Skin/hit-note-outline.png")
 			hitObject.hitNoteTexture = hitNoteTexture
 			hitObject.hitNoteOutlineTexture = hitNoteOutlineTexture
-
-			hitObject.center = self.global_position
-			hitObject.spawnTime = hitTime - spawnWindowInSeconds
-			hitObject.hitTime = hitTime
-			hitObject.releaseTime = releaseTime
-			hitObject.side = side
 			hitObject.position = spawnPosition
 			hitObject.spawnPosition = spawnPosition
 			hitObject.hitPosition = hitPosition
+			hitObject.center = self.global_position
+			hitObject.spawnTime = spawnTime
+			hitObject.hitTime = hitTime
+			hitObject.releaseTime = releaseTime
+			hitObject.side = side
 			noteContainer.add_child(hitObject)
-			currentlySpawnedNotes.append(releaseTime)
 			CurrentMap.activeNotes.append(hitObject)
+			nextHitObjectIndex += 1
+
+## Spawns hit objects in the editor. See [member spawn_gameplay_hit_objects()] for spawning hit objects during gameplay.
+func spawn_editor_hit_objects(hitObjectArray:Array):
+	for dict in hitObjectArray:
+		var hitTime:float = parse_hit_times(dict).hitTime 
+		var spawnTime:float = hitTime - spawnWindowInSeconds
+		if should_hit_object_be_spawned(hitTime, spawnTime):
+			pass
+
+func should_hit_object_be_spawned(hitTime:float, spawnTime:float) -> bool:
+	var mapTime:float = CurrentMap.globalMapTimeInSeconds
+	if (mapTime >= spawnTime) and (mapTime <= hitTime):
+		return true
+	return false
 
 func get_beat_from_song_position(songPosition:float) -> float:
 	return songPosition * beatsPerSecond
