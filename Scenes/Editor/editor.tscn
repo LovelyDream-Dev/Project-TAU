@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=7 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/time_line.tscn" id="2_dftp8"]
+[ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/Spinner/spinner.tscn" id="5_wwoqk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvxkh"]
@@ -71,6 +72,14 @@ layout_mode = 2
 [node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl" instance=ExtResource("5_wwoqk")]
 position = Vector2(480, 270)
 scale = Vector2(0.5, 0.5)
+
+[node name="HitObjectContainerControl" type="Control" parent="PlayFieldMarginContainer"]
+clip_contents = true
+layout_mode = 2
+
+[node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
+position = Vector2(480, 270)
+timeline = NodePath("../../../TimelineMarginContainer/TimeLinePanel/Timeline")
 
 [node name="LeftPanelMarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(480, 0)

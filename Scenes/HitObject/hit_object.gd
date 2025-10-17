@@ -47,20 +47,20 @@ func _enter_tree() -> void:
 func _process(_delta: float) -> void:
 	if spawnTime == null or hitTime == null:
 		return
+	
+	animate_self()
 
-	var mapTime:float = CurrentMap.globalMapTimeInSeconds
-	if mapTime <= hitTime and mapTime >= spawnTime:
-		animate_self()
 
 func animate_self():
-	var travelDuraton = hitTime - spawnTime
-	if travelDuraton <= 0.0:
-		global_position = hitPosition
-		return
+	GameData.mtween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, (hitTime-spawnTime))
+	GameData.mtween.mtween_property(self, "scale",Vector2(2.0, 2.0), Vector2(1.0, 1.0), spawnTime, (hitTime-spawnTime))
+	GameData.mtween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, (hitTime-spawnTime))
 
-	var t = (CurrentMap.globalMapTimeInSeconds - spawnTime) / travelDuraton
-	t = clampf(t, 0.0, 1.0)
-	global_position = spawnPosition.lerp(hitPosition, t)
+func is_active():
+	if CurrentMap.globalMapTimeInSeconds <= spawnTime or CurrentMap.globalMapTimeInSeconds >= hitTime:
+		CurrentMap.activeNotes.erase(self)
+	else:
+		CurrentMap.activeNotes.append(self)
 
 func set_hold_note():
 	pass

@@ -34,6 +34,7 @@ var rotationRadiansPerSecond:float
 var rotationsPerBeat:float = 0.25
 
 func _ready() -> void:
+	CurrentMap.READY_TO_SPAWN_HIT_OBJECTS.connect(on_spinner_ready)
 	rotationRadiansPerBeat = TAU * rotationsPerBeat
 
 func _process(_delta: float) -> void:
@@ -46,6 +47,11 @@ func _process(_delta: float) -> void:
 		rotate_hit_rings()
 
 # --- CUSTOM FUNCTIONS ---
+
+## When [member CurrentMap] is ready to spawn hit notes on load time, this is called via signals to let [member CurrentMap] know the spinner is loaded. 
+func on_spinner_ready():
+	CurrentMap.center = self.global_position
+	CurrentMap.spinnerLoaded = true
 
 func rotate_spinner():
 	anchor.rotation = rotationRadiansPerSecond * (CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime)

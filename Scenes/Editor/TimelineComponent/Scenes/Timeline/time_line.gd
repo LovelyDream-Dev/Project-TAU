@@ -78,7 +78,7 @@ var secondsPerBeat:float
 ## How many whole beats are in a second
 var beatsPerSecond:float
 ## How many pixels are in a whole beat on the timeline
-var pixelsPerBeat 
+var pixelsPerBeat:float
 
 # --- SNAPPING VARIABLES ---
 # The position of the mouse in beats on the timeline
@@ -94,6 +94,9 @@ var snapInterval:float
 
 # The local position of the mouse in pixels on the timeline
 var mouseTimelinePosition:float
+
+## Whether the [member ScrollContainer] of the timeline is being manually scrolled by the player
+var manuallyScrolling:bool
 
 # --- DRAGGING VARIABLES ---
 
@@ -148,6 +151,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
+	manuallyScrolling = scrollContainer.manuallyScrolling
 	if !CurrentMap.mapLoaded:
 		return
 

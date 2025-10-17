@@ -1,5 +1,6 @@
 extends Node
 
+signal READY_TO_SPAWN_HIT_OBJECTS
 signal SPAWN_HIT_OBJECT
 
 var fileLoader = FileLoader.new()
@@ -10,7 +11,7 @@ var globalMapTimeInSeconds:float
 
 var maestro:Maestro = MaestroSingleton
 
-var inEditor:bool 
+var inEditor:bool
 var mapLoaded:bool
 var mapStarted:bool
 
@@ -44,6 +45,7 @@ var version:String
 var audioFileExtension:String
 
 # --- HIT OBJECT VARIABLES ---
+var spinnerLoaded:bool
 var center:Vector2
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:float = 4
@@ -51,10 +53,11 @@ var spawnSide:int = -1
 var rotationDirection:int = 1
 var radiusInPixels = 450.0
 var scrollSpeed = GameData.playerData.scrollSpeed
-var spawnedNotes:Array = []
-
+var initialObjectsSpawned:bool
 
 func _ready() -> void:
+	if inEditor:
+		radiusInPixels/=2
 	if hitObjects.size() > 0:
 		sort_hit_objects()
 	if timingPoints.size() > 0:
@@ -67,9 +70,16 @@ func _process(delta: float) -> void:
 		timing_points()
 		secondsPerBeat = 60/bpm
 		beatsPerSecond = bpm/60
-		for dict in hitObjects:
-			spawn_hit_object(dict)
 		return
+
+	timing_points()
+	if !spinnerLoaded:
+		READY_TO_SPAWN_HIT_OBJECTS.emit()
+	else:
+		if !initialObjectsSpawned:
+			for dict in hitObjects:
+				spawn_hit_object(dict)
+			initialObjectsSpawned = true
 
 	if !mapLoaded: mapLoaded = true 
 
@@ -101,7 +111,7 @@ func spawn_hit_object(dict:Dictionary):
 	hitObject.position = spawnPosition
 	hitObject.spawnPosition = spawnPosition
 	hitObject.hitPosition = hitPosition
-	hitObject.center = center
+	hitObject.center = Vector2(480.0, 270.0)
 	hitObject.spawnTime = spawnTime
 	hitObject.hitTime = hitTime
 	hitObject.releaseTime = releaseTime
@@ -122,7 +132,7 @@ func get_position_along_circumference(circleCenter:Vector2, circleRadius:float, 
 	return circleCenter + Vector2(cos(angle), sin(angle)) * circleRadius
 
 func start_map():
-	#maestro.play_songs()
+	maestro.play_songs()
 	mapStarted = true
 
 func stop_map():
