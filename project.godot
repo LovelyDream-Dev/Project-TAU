@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Project TAU"
-run/main_scene="uid://cwlqwvsdycaxf"
+run/main_scene="uid://dhi8nlbytnk8v"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://Images/icon.svg"
 

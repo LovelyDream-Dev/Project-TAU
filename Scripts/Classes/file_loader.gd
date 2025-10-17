@@ -24,7 +24,6 @@ func load_map(folderPath:String):
 			if fileName.ends_with(".tau"):
 				CurrentMap.tauFilePath = folderPath.path_join(fileName)
 				load_tau_file(CurrentMap.tauFilePath, folderPath)
-				CurrentMap.mapLoaded = true
 		fileName = dir.get_next()
 	dir.list_dir_end()
 	
@@ -84,8 +83,8 @@ func load_tau_file(filePath:String, folderPath:String):
 				var parts = line.split(":", false, 1)
 				CurrentMap.hitWindowInSeconds = float(parts[1])/1000
 
-		# Format for timing points in the tau file: "bpm: value, time: value"
-		# Format for timing points as a dictionary: {"bpm" : value, "time" : value} 
+		# Format for timing points in the tau file: "time: value, bpm: value"
+		# Format for timing points as a dictionary: {"time": value,"bpm": value} 
 		if inTimingPoints:
 			var parts = line.split(",")
 			if parts.size() == 2:

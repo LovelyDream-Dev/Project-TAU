@@ -144,6 +144,9 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventMouseMotion:
 			mouseTimelinePosition = scrollContainer.make_input_local(event).position.x + scrollContainer.scroll_horizontal
 
+
+
+
 func _process(_delta: float) -> void:
 	if !CurrentMap.mapLoaded:
 		return
@@ -173,6 +176,9 @@ func _process(_delta: float) -> void:
 	get_quarter_beat_times()
 	get_eighth_beat_times()
 	get_sixteenth_beat_times()
+
+
+
 
 func _draw() -> void:
 	if dragSelectStarted:
@@ -341,35 +347,30 @@ func set_control_heights():
 
 func get_whole_beat_times():
 	if wholeBeatTimes.is_empty() and beatsPerSecond:
-		wholeBeatTimes.clear()
 		for beatIndex in range(totalWholeBeats):
 			var beatTime = float(beatIndex)/beatsPerSecond
 			wholeBeatTimes.append(beatTime)
 
 func get_half_beat_times():
 	if halfBeatTimes.is_empty() and beatsPerSecond:
-		halfBeatTimes.clear()
 		for beatIndex in range(totalWholeBeats*2):
 			var beatTime = float(beatIndex*.5)/beatsPerSecond
 			halfBeatTimes.append(beatTime)
 
 func get_quarter_beat_times():
 	if quarterBeatTimes.is_empty() and beatsPerSecond:
-		quarterBeatTimes.clear()
 		for beatIndex in range(totalWholeBeats*4):
 			var beatTime = float(beatIndex)/(beatsPerSecond*4)
 			quarterBeatTimes.append(beatTime)
 
 func get_eighth_beat_times():
 	if eighthBeatTimes.is_empty() and beatsPerSecond:
-		eighthBeatTimes.clear()
 		for beatIndex in range(totalWholeBeats*8):
 			var beatTime = float(beatIndex)/(beatsPerSecond*8)
 			eighthBeatTimes.append(beatTime)
 
 func get_sixteenth_beat_times():
 	if sixteenthBeatTimes.is_empty() and beatsPerSecond:
-		sixteenthBeatTimes.clear()
 		for beatIndex in range(totalWholeBeats*16):
 			var beatTime = float(beatIndex)/(beatsPerSecond*16)
 			sixteenthBeatTimes.append(beatTime)

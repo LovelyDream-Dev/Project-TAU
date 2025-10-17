@@ -1,6 +1,10 @@
 extends Node
 
-signal NOTE_HIT
+signal SPAWN_HIT_OBJECT
+
+var fileLoader = FileLoader.new()
+
+# --- MAP VARIABLES ---
 
 var globalMapTimeInSeconds:float
 
@@ -39,6 +43,17 @@ var creator:String
 var version:String
 var audioFileExtension:String
 
+# --- HIT OBJECT VARIABLES ---
+var center:Vector2
+var spawnWindowInSeconds:float = 1.0
+var beatsPerRotation:float = 4
+var spawnSide:int = -1
+var rotationDirection:int = 1
+var radiusInPixels = 450.0
+var scrollSpeed = GameData.playerData.scrollSpeed
+var spawnedNotes:Array = []
+
+
 func _ready() -> void:
 	if hitObjects.size() > 0:
 		sort_hit_objects()
@@ -46,20 +61,68 @@ func _ready() -> void:
 		sort_timing_points()
 
 func _process(delta: float) -> void:
-	if !mapLoaded:
+	if !is_map_loaded():
+		var path = "user://maps/xaev for tau"
+		fileLoader.load_map(path)
+		timing_points()
+		secondsPerBeat = 60/bpm
+		beatsPerSecond = bpm/60
+		for dict in hitObjects:
+			spawn_hit_object(dict)
 		return
+
+	if !mapLoaded: mapLoaded = true 
 
 	if mapStarted:
 		globalMapTimeInSeconds += delta
 	
-	timing_points()
-	secondsPerBeat = 60/bpm
-	beatsPerSecond = bpm/60
+	
+	
 
 # --- CUSTOM FUNCTIONS ---
 
+func spawn_hit_object(dict:Dictionary):
+	var hitTime:float = parse_hit_times(dict).hitTime
+	var releaseTime:float = parse_hit_times(dict).releaseTime
+	var side:int = parse_hit_times(dict).side
+	var spawnTime:float = hitTime - spawnWindowInSeconds
+
+	var hitBeat = hitTime * beatsPerSecond
+	var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
+	var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
+	var spawnPosition = get_position_along_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
+	var hitPosition = get_position_along_circumference(center, spawnSide * radiusInPixels, rotationDirection * angle)
+
+	var hitObject:HitObject = HitObject.new()
+	var hitNoteTexture:Texture  = load("res://Skins/Default Skin/hit-note.png")
+	var hitNoteOutlineTexture:Texture = load("res://Skins/Default Skin/hit-note-outline.png")
+	hitObject.hitNoteTexture = hitNoteTexture
+	hitObject.hitNoteOutlineTexture = hitNoteOutlineTexture
+	hitObject.position = spawnPosition
+	hitObject.spawnPosition = spawnPosition
+	hitObject.hitPosition = hitPosition
+	hitObject.center = center
+	hitObject.spawnTime = spawnTime
+	hitObject.hitTime = hitTime
+	hitObject.releaseTime = releaseTime
+	hitObject.side = side
+	SPAWN_HIT_OBJECT.emit(hitObject)
+
+func get_beat_from_song_position(songPosition:float) -> float:
+	return songPosition * beatsPerSecond
+
+func parse_hit_times(dict:Dictionary):
+	var ParsedHitObject = HitObjectParser.new()
+	ParsedHitObject.hitTime = dict["hitTime"]
+	ParsedHitObject.releaseTime = dict["releaseTime"]
+	ParsedHitObject.side = dict["side"] 
+	return ParsedHitObject
+
+func get_position_along_circumference(circleCenter:Vector2, circleRadius:float, angle:float):
+	return circleCenter + Vector2(cos(angle), sin(angle)) * circleRadius
+
 func start_map():
-	maestro.play_songs()
+	#maestro.play_songs()
 	mapStarted = true
 
 func stop_map():
@@ -80,13 +143,16 @@ func timing_points():
 	for tp in timingPoints:
 		var time = tp["time"]
 		var _bpm = tp["bpm"]
-		if maestro.offsetSong.get_playback_position() >= time:
+		if globalMapTimeInSeconds >= time:
 			bpm = _bpm
 			secondsPerBeat = 60.0/_bpm
 			beatsPerSecond = _bpm/60.0
-			leadInTime = secondsPerBeat * leadInBeats
+		leadInTime = leadInBeats * secondsPerBeat
 
 func sort_timing_points():
+	if timingPoints.size() == 0:
+		return
+
 	timingPoints.sort_custom(func(a,b): 
 		if a["time"] < b["time"]:
 			return -1
@@ -103,6 +169,14 @@ func sort_hit_objects():
 			return 1
 		else:
 			return 0)
+
+func is_map_loaded():
+	sort_timing_points()
+	if songLengthInSeconds > 0.0 and timingPoints[0]["bpm"] > 0.0:
+		return true
+	else: 
+		return false
+
 
 func unload_map():
 	mapLoaded = false

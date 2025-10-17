@@ -41,18 +41,14 @@ func _process(_delta: float) -> void:
 	bpm = CurrentMap.bpm
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
-	if !CurrentMap.inEditor:
-		if CurrentMap.mainSongIsPlaying:
-			rotate_spinner()
-			rotate_hit_rings()
-	else:
-		#rotate_spinner()
+	if CurrentMap.mapLoaded:
+		rotate_spinner()
 		rotate_hit_rings()
 
 # --- CUSTOM FUNCTIONS ---
 
 func rotate_spinner():
-	anchor.rotation = rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds
+	anchor.rotation = rotationRadiansPerSecond * (CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime)
 
 func rotate_hit_rings():
 	outerRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * -1 * 0.5

@@ -18,6 +18,7 @@ func _input(_event: InputEvent) -> void:
 	var mapTime:float
 	if CurrentMap.globalMapTimeInSeconds:
 		mapTime = CurrentMap.globalMapTimeInSeconds
+
 	# --- GAME KEYS ---
 	# --- KEY 1 ---
 	if Input.is_action_just_pressed("KEY1"):
