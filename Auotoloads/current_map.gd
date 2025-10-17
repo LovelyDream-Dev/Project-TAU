@@ -1,10 +1,12 @@
 extends Node
 
+signal NOTE_HIT
+
 var globalMapTimeInSeconds:float
 
 var maestro:Maestro = MaestroSingleton
 
-var inEditor:bool = true
+var inEditor:bool 
 var mapLoaded:bool
 var mapStarted:bool
 

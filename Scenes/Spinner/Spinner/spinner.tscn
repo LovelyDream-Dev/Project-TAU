@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://7mgaervmad11"]
+[gd_scene load_steps=18 format=3 uid="uid://7mgaervmad11"]
 
 [ext_resource type="Texture2D" uid="uid://rhndi8ag5i5b" path="res://Skins/Default Skin/Body-Fill-Left.png" id="1_tgduj"]
 [ext_resource type="Script" uid="uid://7pgnfdkadf0k" path="res://Scenes/Spinner/Spinner/spinner.gd" id="1_wlxnq"]
@@ -10,10 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://sfscdi1uubbd" path="res://Images/Spinner/Hit-Ring-Area-Body.png" id="7_oohy3"]
 [ext_resource type="Texture2D" uid="uid://ctbkhxnr48m0x" path="res://Images/Spinner/Detail-Line.png" id="8_cg6s7"]
 [ext_resource type="Texture2D" uid="uid://b2erbxo8ogs38" path="res://Images/Spinner/Hit-Ring.png" id="8_jckkb"]
+[ext_resource type="Script" uid="uid://crug1xcx54nr4" path="res://Scenes/Spinner/Spinner/hit_nodes.gd" id="9_meqpe"]
 [ext_resource type="Texture2D" uid="uid://bkl50tp08xlaw" path="res://Images/Spinner/Node-Divider.png" id="11_lxa6x"]
-[ext_resource type="PackedScene" uid="uid://d0tpd5yx7pcyj" path="res://Scenes/Spinner/Lazer/lazer.tscn" id="12_c56w7"]
-[ext_resource type="Shader" uid="uid://ckqoyjc8vvbsn" path="res://Scenes/Spinner/Lazer/dashedline.gdshader" id="13_2pbpi"]
-[ext_resource type="PackedScene" uid="uid://jqt7if5lbnrm" path="res://Scenes/Spinner/Spark Particles/spark_particles.tscn" id="14_mq1n8"]
+[ext_resource type="Texture2D" uid="uid://c2nn4ao3c018l" path="res://Skins/Default Skin/Cursor.png" id="13_xbnr6"]
 
 [sub_resource type="Shader" id="Shader_lxa6x"]
 code = "shader_type canvas_item;
@@ -44,16 +43,6 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mq1n8"]
 shader = SubResource("Shader_c56w7")
 shader_parameter/brightness = 1.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_b00cp"]
-shader = ExtResource("13_2pbpi")
-shader_parameter/frequency = 0.5
-shader_parameter/amplitude = 1000.0
-shader_parameter/speed = 10.0
-shader_parameter/direction = -1.0
-shader_parameter/color1 = Color(0.52906674, 0.5290667, 0.5290667, 1)
-shader_parameter/color2 = Color(0, 0, 0, 0)
-shader_parameter/opacity = 0.5
 
 [node name="Spinner" type="Node2D"]
 script = ExtResource("1_wlxnq")
@@ -110,6 +99,7 @@ texture = ExtResource("2_2i3hg")
 texture = ExtResource("3_oohy3")
 
 [node name="HitNodes" type="Node2D" parent="SubRoot/Anchor"]
+script = ExtResource("9_meqpe")
 
 [node name="HitNodeLeft" type="Sprite2D" parent="SubRoot/Anchor/HitNodes"]
 position = Vector2(-52, 0)
@@ -122,48 +112,12 @@ texture = ExtResource("5_cg6s7")
 [node name="NodeDivider" type="Sprite2D" parent="SubRoot/Anchor/HitNodes"]
 texture = ExtResource("11_lxa6x")
 
-[node name="Lazers" type="Node2D" parent="SubRoot/Anchor"]
+[node name="Cursors" type="Node2D" parent="SubRoot/Anchor"]
 
-[node name="LazerLeft" parent="SubRoot/Anchor/Lazers" instance=ExtResource("12_c56w7")]
-position = Vector2(-100, 0)
-rotation = 3.1415927
-dashColor = Color(0.52906674, 0.5290667, 0.5290667, 1)
-beamColor = Color(0.40392157, 0.52156866, 0.75686276, 1)
-dashWidth = 5.0
-dashDirection = -1.0
-dashOpacity = 0.5
-
-[node name="Dashes" parent="SubRoot/Anchor/Lazers/LazerLeft" index="0"]
-material = SubResource("ShaderMaterial_b00cp")
-width = 5.0
-
-[node name="Beam" parent="SubRoot/Anchor/Lazers/LazerLeft" index="1"]
-default_color = Color(0.40392157, 0.52156866, 0.75686276, 1)
-
-[node name="LazerRight" parent="SubRoot/Anchor/Lazers" instance=ExtResource("12_c56w7")]
-position = Vector2(100, 0)
-dashColor = Color(0.5294118, 0.5294118, 0.5294118, 1)
-beamColor = Color(0.90588236, 0.27058825, 0.41960785, 1)
-dashWidth = 5.0
-dashDirection = -1.0
-dashOpacity = 0.5
-
-[node name="Dashes" parent="SubRoot/Anchor/Lazers/LazerRight" index="0"]
-position = Vector2(-8.571428, 0)
-width = 5.0
-
-[node name="Beam" parent="SubRoot/Anchor/Lazers/LazerRight" index="1"]
-default_color = Color(0.90588236, 0.27058825, 0.41960785, 1)
-
-[node name="SparkLeft" parent="SubRoot/Anchor/Lazers" instance=ExtResource("14_mq1n8")]
+[node name="CursorLeft" type="Sprite2D" parent="SubRoot/Anchor/Cursors"]
 position = Vector2(-450, 0)
-scale = Vector2(0.5, 0.5)
-emitting = false
+texture = ExtResource("13_xbnr6")
 
-[node name="SparkRight" parent="SubRoot/Anchor/Lazers" instance=ExtResource("14_mq1n8")]
+[node name="CursorRight" type="Sprite2D" parent="SubRoot/Anchor/Cursors"]
 position = Vector2(450, 0)
-scale = Vector2(0.5, 0.5)
-emitting = false
-
-[editable path="SubRoot/Anchor/Lazers/LazerLeft"]
-[editable path="SubRoot/Anchor/Lazers/LazerRight"]
+texture = ExtResource("13_xbnr6")

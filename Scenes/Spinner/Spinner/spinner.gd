@@ -14,13 +14,10 @@ class_name Spinner
 @onready var hitNodeLeft:Sprite2D = $SubRoot/Anchor/HitNodes/HitNodeLeft
 @onready var hitNodeRight:Sprite2D = $SubRoot/Anchor/HitNodes/HitNodeRight
 
-# --- LAZERS ---
-@onready var lazerLeft:Visual_Lazer = $SubRoot/Anchor/Lazers/LazerLeft
-@onready var lazerRight:Visual_Lazer = $SubRoot/Anchor/Lazers/LazerRight
-
-# --- SPARKS ---
-@onready var sparkLeft:GPUParticles2D = $SubRoot/Anchor/Lazers/SparkLeft
-@onready var sparkRight:GPUParticles2D = $SubRoot/Anchor/Lazers/SparkRight
+# --- CURSORS ---
+@onready var cursors:Node2D = $SubRoot/Anchor/Cursors
+@onready var cursorLeft:Sprite2D = $SubRoot/Anchor/Cursors/CursorLeft
+@onready var cursorRight:Sprite2D = $SubRoot/Anchor/Cursors/CursorRight
 
 # --- HITRING ---
 @onready var outerRing:Node2D = $SubRoot/OuterRing
@@ -49,7 +46,7 @@ func _process(_delta: float) -> void:
 			rotate_spinner()
 			rotate_hit_rings()
 	else:
-		rotate_spinner()
+		#rotate_spinner()
 		rotate_hit_rings()
 
 # --- CUSTOM FUNCTIONS ---
@@ -60,118 +57,3 @@ func rotate_spinner():
 func rotate_hit_rings():
 	outerRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * -1 * 0.5
 	hitRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * 0.5
-
-func animate_lazers():
-	if Input.is_action_pressed("KEY1"):
-		lazerLeft.activate_beam(true)
-	if Input.is_action_just_released("KEY1"):
-		lazerLeft.activate_beam(false)
-	if Input.is_action_pressed("KEY2"):
-		lazerRight.activate_beam(true)
-	if Input.is_action_just_released("KEY2"):
-		lazerRight.activate_beam(false)
-
-func sparks():
-	if Input.is_action_pressed("KEY1"):
-		sparkLeft.emitting = true
-	if Input.is_action_just_released("KEY1"):
-		sparkLeft.emitting = false
-	if Input.is_action_pressed("KEY2"):
-		sparkRight.emitting = true
-	if Input.is_action_just_released("KEY2"):
-		sparkRight.emitting = false
-
-# Init tween variables for hit node animations
-var twLeftNode:Tween
-var twRightNode:Tween
-
-func hit_node_animations():
-	# Key 1 press
-	if Input.is_action_pressed("KEY1"):
-		if twLeftNode and twLeftNode.is_running(): twLeftNode.kill()
-		# Left node expand
-		twLeftNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twLeftNode.tween_property(hitNodeLeft, "scale", Vector2(1.2, 1.2), 0.05)
-
-	# Key 1 release
-	if Input.is_action_just_released("KEY1"):
-		if twLeftNode and twLeftNode.is_running(): twLeftNode.kill()
-		# Left node shrink
-		twLeftNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twLeftNode.tween_property(hitNodeLeft, "scale", Vector2(1.0, 1.0), 0.5)
-
-	# Key 2 press
-	if Input.is_action_pressed("KEY2"):
-		if twRightNode and twRightNode.is_running(): twRightNode.kill()
-
-		# Right node expand
-		twRightNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twRightNode.tween_property(hitNodeRight, "scale", Vector2(1.2, 1.2), 0.05)
-
-	# Key 2 release
-	if Input.is_action_just_released("KEY2"):
-		if twRightNode and twRightNode.is_running(): twRightNode.kill()
-
-		# Right node shrink
-		twRightNode = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twRightNode.tween_property(hitNodeRight, "scale", Vector2(1.0, 1.0), 0.5)
-
-# Init tween variables for body animations
-var twBody:Tween
-var twLeftBody:Tween
-var twRightBody:Tween
-
-func body_animations():
-	# Key 1 and key 2 press
-	if Input.is_action_pressed("KEY1") or Input.is_action_pressed("KEY2"):
-		if twBody and twBody.is_running(): twBody.kill()
-
-		# Body Expand
-		twBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twBody.tween_property(body, "scale", Vector2(1.05, 1.05), 0.05)
-
-	# Shader materials
-	var matLeft = bodyFillLeft.material
-	var matRight = bodyFillRight.material
-
-	# Key 1 press
-	if Input.is_action_just_pressed("KEY1"):
-		if twLeftBody and twLeftBody.is_running(): twLeftBody.kill()
-
-		# Body left flash
-		twLeftBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twLeftBody.tween_property(matLeft, "shader_parameter/brightness", 1.5, 0.05)
-
-	# Key 1 release
-	if Input.is_action_just_released("KEY1"):
-		if twBody and twBody.is_running(): twBody.kill()
-		if twLeftBody and twLeftBody.is_running(): twLeftBody.kill()
-
-		# Body left dim
-		twLeftBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twLeftBody.tween_property(matLeft, "shader_parameter/brightness", 1.0, 0.1)
-
-		# Body shrink 
-		twBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twBody.tween_property(body, "scale", Vector2(1.0, 1.0), 0.5)
-
-	# Key 2 press
-	if Input.is_action_just_pressed("KEY2"):
-		if twRightBody and twRightBody.is_running(): twRightBody.kill()
-
-		# Body right flash
-		twRightBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twRightBody.tween_property(matRight, "shader_parameter/brightness", 1.5, 0.05)
-
-	# Key 2 release
-	if Input.is_action_just_released("KEY2"):
-		if twBody and twBody.is_running(): twBody.kill()
-		if twRightBody and twRightBody.is_running(): twRightBody.kill()
-
-		# Body right dim
-		twRightBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twRightBody.tween_property(matRight, "shader_parameter/brightness", 1.0, 0.1)
-
-		# Body Shrink
-		twBody = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-		twBody.tween_property(body, "scale", Vector2(1.0, 1.0), 0.5)
