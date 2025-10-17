@@ -1,3 +1,0 @@
-extends Node
-
-var offsetInMs:int = 30 # 30 IS A TEMPORARY VALUE, IT IS JUST MY OWN OFFSET, REMOVE IT LATER

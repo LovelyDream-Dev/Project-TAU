@@ -12,6 +12,8 @@ signal OFFSET_WHOLE_BEAT
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
 
+var playerData:PlayerData = GameData.playerData
+
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
 
@@ -69,7 +71,7 @@ func _process(_delta: float) -> void:
 # --- CUSTOM FUNCTIONS ---
 
 func play_songs():
-	var offsetSeconds := PlayerData.offsetInMs / 1000.0
+	var offsetSeconds := playerData.offsetInMs / 1000.0
 	var globalMapTimeInSeconds = CurrentMap.globalMapTimeInSeconds
 
 	if offsetSeconds >= 0:
