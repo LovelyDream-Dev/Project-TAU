@@ -4,18 +4,18 @@ class_name TimelineNote
 var hitNoteSprite := Sprite2D.new() 
 var hitNoteOutlineSprite := Sprite2D.new()  
 
-var hitNoteTexture:Texture = null
-var hitNoteOutlineTexture:Texture = null
+var hitObjectTexture:Texture = null
+var hitObjectOutlineTexture:Texture = null
 
 var leftColor:Color = Color("924CF4")
 var rightColor = Color("F44C4F")
 var highlightColor = Color("F6FF00")
 
 var currentPositionX:float
-var startBeat:float
-var endBeat:float:
+var hitBeat:float
+var releaseBeat:float:
 	set(value):
-		endBeat = value
+		releaseBeat = value
 		on_slider_length_change()
 
 var startPos:Vector2
@@ -28,16 +28,14 @@ var isSelected:bool:
 		on_if_selected_changed(value)
 
 func _enter_tree() -> void:
-	if hitNoteTexture != null:
-		hitNoteSprite.texture = hitNoteTexture
-		hitNoteSprite.scale = Vector2(0.25, 0.25)
+	if hitObjectTexture != null:
+		hitNoteSprite.texture = hitObjectTexture
 		self.add_child(hitNoteSprite)
-		hitNoteTexture = null
-	if hitNoteOutlineTexture != null:
-		hitNoteOutlineSprite.texture = hitNoteOutlineTexture
-		hitNoteOutlineSprite.scale = Vector2(0.25, 0.25)
+		hitObjectTexture = null
+	if hitObjectOutlineTexture != null:
+		hitNoteOutlineSprite.texture = hitObjectOutlineTexture
 		self.add_child(hitNoteOutlineSprite)
-		hitNoteOutlineSprite = null
+		hitObjectOutlineTexture = null
 
 	if side == -1:
 		hitNoteSprite.modulate = leftColor
@@ -67,7 +65,7 @@ func on_slider_length_change():
 
 func draw_slider():
 	# Don't intialize slider if the end beat is the same or less than the start beat
-	if endBeat <= startBeat:
+	if releaseBeat <= hitBeat:
 		return
 
 	var sliderStartPos = self.to_local(self.position)

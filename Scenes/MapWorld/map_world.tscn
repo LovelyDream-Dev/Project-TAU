@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwlqwvsdycaxf"]
 
 [ext_resource type="Script" uid="uid://bsogk4ey3m1ml" path="res://Scenes/MapWorld/map_world.gd" id="1_npqcn"]
-[ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/Spinner/spinner.tscn" id="2_0rmcv"]
+[ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="2_0rmcv"]
 
 [node name="MapWorld" type="Node2D"]
 script = ExtResource("1_npqcn")

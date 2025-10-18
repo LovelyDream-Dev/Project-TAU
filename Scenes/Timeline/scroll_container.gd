@@ -6,7 +6,7 @@ var maestro:Maestro = MaestroSingleton
 
 @export var rootNode:Timeline
 var lastScrollX:float = 0
-var playHeadOffset:float = 500.0
+var playheadOffset:float = 500.0
 var manuallyScrolling:bool:
 	set(value):
 		manuallyScrolling = value
@@ -49,7 +49,8 @@ func get_if_scroll_changed() -> bool:
 
 func handle_scroll():
 	if CurrentMap.mapStarted:
-			self.scroll_horizontal = int((CurrentMap.globalMapTimeInSeconds + CurrentMap.leadInTime) * rootNode.pixelsPerSecond)
+		print(abs(CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime))
+		self.scroll_horizontal = int(abs(CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime) * rootNode.pixelsPerSecond)
 
 func on_manual_scroll(value):
 	if value == false:

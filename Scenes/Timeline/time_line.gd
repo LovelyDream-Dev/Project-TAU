@@ -98,6 +98,9 @@ var mouseTimelinePosition:float
 ## Whether the [member ScrollContainer] of the timeline is being manually scrolled by the player
 var manuallyScrolling:bool
 
+## The notes that are currently on the timeline
+var activeTimelineNotes:Array
+
 # --- DRAGGING VARIABLES ---
 
 var dragSelectStartPosition:Vector2
@@ -151,10 +154,12 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
+	queue_redraw()
 	manuallyScrolling = scrollContainer.manuallyScrolling
 	if !CurrentMap.mapLoaded:
 		return
 
+	# set some important values
 	songLengthInSeconds = CurrentMap.songLengthInSeconds
 	bpm = CurrentMap.bpm
 	beatsPerSecond = CurrentMap.beatsPerSecond
@@ -162,19 +167,25 @@ func _process(_delta: float) -> void:
 	pixelsPerBeat = secondsPerBeat * pixelsPerSecond
 	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + CurrentMap.leadInTime))
 
-	queue_redraw()
+	# manage drag selection
 	select_notes_by_drag()
 
+	# manage snapping
 	mouseBeatPosition = (mouseTimelinePosition / pixelsPerBeat) 
 	get_snapped_position()
 	set_control_heights()
+
+	# Hide the scroll bar on the scroll container
 	if hideScrollBar and scrollContainer.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_SHOW_NEVER:
 		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	elif !hideScrollBar and scrollContainer.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_SHOW_NEVER:
 		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
-		
+
+	# Set the timeline background
 	baseControl.custom_minimum_size.x = get_timeline_length_from_song_length()
 	baseControl.color = backgroundColor
+	place_timeline_notes()
+	
 	get_whole_beat_times()
 	get_half_beat_times()
 	get_quarter_beat_times()
@@ -276,18 +287,28 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 
 
 ## Places notes on the timeline at the correct position using [member beat].
-func place_timeline_note(startBeat:float, endBeat:float):
-	var startPos = get_timeline_position_from_beat(startBeat)
-	var endPos = get_timeline_position_from_beat(endBeat)
-	var timelineNote:TimelineNote = TimelineNote.new()
-	timelineNote.startBeat = startBeat
-	timelineNote.endBeat = endBeat
-	timelineNote.startPos = startPos
-	timelineNote.endPos = endPos
-	timelineNote.currentPositionX = startPos.x
-	timelineNote.position = startPos
-	timelineNote.hitNoteTexture = load("res://icon.svg")
-	noteContainer.add_child(timelineNote)
+func place_timeline_notes():
+	for dict in CurrentMap.hitObjects:
+		if activeTimelineNotes.size() < CurrentMap.hitObjects.size():
+			var hitTime = dict["hitTime"]
+			var releaseTime = dict["releaseTime"]
+			var side = dict["side"]
+			var hitBeat:float = hitTime * beatsPerSecond
+			var releaseBeat:float = releaseTime * beatsPerSecond
+			var startPos = get_timeline_position_from_beat(hitBeat)
+			var endPos = get_timeline_position_from_beat(releaseBeat)
+			var timelineNote:TimelineNote = TimelineNote.new()
+			timelineNote.hitBeat = hitBeat
+			timelineNote.releaseBeat = releaseBeat
+			timelineNote.startPos = startPos
+			timelineNote.endPos = endPos
+			timelineNote.currentPositionX = startPos.x
+			timelineNote.position = startPos
+			timelineNote.side = side
+			timelineNote.hitObjectTexture = load("res://Skins/Default Skin/hit-note.png")
+			timelineNote.hitObjectOutlineTexture = load("res://Skins/Default Skin/hit-note-outline.png")
+			noteContainer.add_child(timelineNote)
+			activeTimelineNotes.append(timelineNote)
 
 
 # ----- TIMELINE POSITION FUNCTIONS -----
@@ -312,7 +333,7 @@ func cull_notes():
 			timelineNote.process_mode = Node.PROCESS_MODE_INHERIT
 
 func get_timeline_position_from_beat(beat:float) -> Vector2:
-	var posx = beat * pixelsPerBeat
+	var posx = beat * pixelsPerBeat + scrollContainer.playheadOffset
 	var posy = self.get_rect().size.y/2
 	return Vector2(posx, posy)
 

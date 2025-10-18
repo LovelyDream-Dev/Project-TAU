@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bybn6e8ggh00o"]
 
-[ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/time_line.gd" id="1_vkty0"]
-[ext_resource type="Script" uid="uid://7w8grgon3jya" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/beat_ticks.gd" id="2_1xed5"]
+[ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Timeline/time_line.gd" id="1_vkty0"]
+[ext_resource type="Script" uid="uid://7w8grgon3jya" path="res://Scenes/Timeline/beat_ticks.gd" id="2_1xed5"]
 [ext_resource type="Texture2D" uid="uid://dmvaqtjquryqk" path="res://Images/icon.svg" id="2_gk61m"]
-[ext_resource type="Script" uid="uid://cw4ldwcrwobik" path="res://Scenes/Editor/TimelineComponent/Scenes/Timeline/scroll_container.gd" id="3_rnvyw"]
+[ext_resource type="Script" uid="uid://cw4ldwcrwobik" path="res://Scenes/Timeline/scroll_container.gd" id="3_rnvyw"]
 
 [node name="Timeline" type="Control"]
 z_index = 3
