@@ -49,21 +49,27 @@ func _process(_delta: float) -> void:
 		return
 	
 	animate_self()
+	is_active()
 
-
+# --- ANIMATIONS ---
 func animate_self():
+	spawn_animation()
+	hitAnimation()
+
+func spawn_animation():
 	GameData.mtween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, (hitTime-spawnTime))
 	GameData.mtween.mtween_property(self, "scale",Vector2(2.0, 2.0), Vector2(1.0, 1.0), spawnTime, (hitTime-spawnTime))
 	GameData.mtween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, (hitTime-spawnTime))
 
+func hitAnimation():
+	GameData.mtween.mtween_property(self, "modulate", Color(1,1,1,1), Color(Color.GREEN, 0), hitTime, 0.5)
+
+## Checks to see if the hitObject should be active and removes or adds it to CurrentMap.activeNotes accordingly.
 func is_active():
 	if CurrentMap.globalMapTimeInSeconds <= spawnTime or CurrentMap.globalMapTimeInSeconds >= hitTime:
 		CurrentMap.activeNotes.erase(self)
 	else:
 		CurrentMap.activeNotes.append(self)
-
-func set_hold_note():
-	pass
 
 func kill_note():
 	isDying = true

@@ -1,8 +1,6 @@
 extends Control
 class_name Editor
 
-var fileLoader = FileLoader.new() # TEMPORARY
-
 @export var timeline:Timeline
 @export var spinner:Spinner
 

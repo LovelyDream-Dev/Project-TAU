@@ -54,7 +54,7 @@ func on_spinner_ready():
 	CurrentMap.spinnerLoaded = true
 
 func rotate_spinner():
-	anchor.rotation = rotationRadiansPerSecond * (CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime)
+	anchor.rotation = rotationRadiansPerSecond *  CurrentMap.globalMapTimeInSeconds
 
 func rotate_hit_rings():
 	outerRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * -1 * 0.5
