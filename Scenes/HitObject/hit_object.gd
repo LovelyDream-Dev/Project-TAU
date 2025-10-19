@@ -58,7 +58,6 @@ func animate_self():
 
 func spawn_animation():
 	GameData.mtween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, (hitTime-spawnTime))
-	GameData.mtween.mtween_property(self, "scale",Vector2(2.0, 2.0), Vector2(1.0, 1.0), spawnTime, (hitTime-spawnTime))
 	GameData.mtween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, (hitTime-spawnTime))
 
 func hitAnimation():

@@ -4,23 +4,12 @@ class_name Spinner
 @onready var subRoot:Node2D = $SubRoot 
 @onready var anchor:Node2D = $SubRoot/Anchor
 
-# --- BODY ---
-@onready var body:Node2D = $SubRoot/Anchor/Body
-@onready var bodyFillLeft:Sprite2D = $SubRoot/Anchor/Body/BodyFillLeft
-@onready var bodyFillRight:Sprite2D = $SubRoot/Anchor/Body/BodyFillRight
-
-# --- HITNODES ---
-@onready var hitNodes:Node2D = $SubRoot/Anchor/HitNodes
-@onready var hitNodeLeft:Sprite2D = $SubRoot/Anchor/HitNodes/HitNodeLeft
-@onready var hitNodeRight:Sprite2D = $SubRoot/Anchor/HitNodes/HitNodeRight
-
 # --- CURSORS ---
 @onready var cursors:Node2D = $SubRoot/Anchor/Cursors
 @onready var cursorLeft:Sprite2D = $SubRoot/Anchor/Cursors/CursorLeft
 @onready var cursorRight:Sprite2D = $SubRoot/Anchor/Cursors/CursorRight
 
 # --- HITRING ---
-@onready var outerRing:Node2D = $SubRoot/OuterRing
 @onready var hitRing:Node2D = $SubRoot/HitRing
 
 var maestro:Maestro = MaestroSingleton
@@ -34,6 +23,8 @@ var rotationRadiansPerSecond:float
 var rotationsPerBeat:float = 0.25
 
 func _ready() -> void:
+	cursorLeft.modulate = Color("924CF4")
+	cursorRight.modulate = Color("F44C4F")
 	CurrentMap.READY_TO_SPAWN_HIT_OBJECTS.connect(on_spinner_ready)
 	rotationRadiansPerBeat = TAU * rotationsPerBeat
 
@@ -44,7 +35,7 @@ func _process(_delta: float) -> void:
 	beatsPerSecond = CurrentMap.beatsPerSecond
 	if CurrentMap.mapLoaded:
 		rotate_spinner()
-		rotate_hit_rings()
+		rotate_hit_ring()
 
 # --- CUSTOM FUNCTIONS ---
 
@@ -56,6 +47,5 @@ func on_spinner_ready():
 func rotate_spinner():
 	anchor.rotation = rotationRadiansPerSecond *  CurrentMap.globalMapTimeInSeconds
 
-func rotate_hit_rings():
-	outerRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * -1 * 0.5
-	hitRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * 0.5
+func rotate_hit_ring():
+	hitRing.rotation = (rotationRadiansPerSecond * CurrentMap.globalMapTimeInSeconds) * 0.1

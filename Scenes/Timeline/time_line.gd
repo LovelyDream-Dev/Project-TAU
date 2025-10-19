@@ -99,7 +99,7 @@ var mouseTimelinePosition:float
 var manuallyScrolling:bool
 
 ## The notes that are currently on the timeline
-var activeTimelineNotes:Array
+var timelineNotes:Array
 
 # --- DRAGGING VARIABLES ---
 
@@ -287,7 +287,7 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 ## Places notes on the timeline at the correct position using [member beat].
 func place_timeline_notes():
 	for dict in CurrentMap.hitObjects:
-		if activeTimelineNotes.size() < CurrentMap.hitObjects.size():
+		if timelineNotes.size() < CurrentMap.hitObjects.size():
 			var hitTime = dict["hitTime"]
 			var releaseTime = dict["releaseTime"]
 			var side = dict["side"]
@@ -303,10 +303,9 @@ func place_timeline_notes():
 			timelineNote.currentPositionX = startPos.x
 			timelineNote.position = startPos
 			timelineNote.side = side
-			timelineNote.hitObjectTexture = load("res://Skins/Default Skin/hit-note.png")
-			timelineNote.hitObjectOutlineTexture = load("res://Skins/Default Skin/hit-note-outline.png")
+			timelineNote.hitObjectTexture = load("res://Images/Timeline/timeline-note.png")
 			noteContainer.add_child(timelineNote)
-			activeTimelineNotes.append(timelineNote)
+			timelineNotes.append(timelineNote)
 
 
 # ----- TIMELINE POSITION FUNCTIONS -----

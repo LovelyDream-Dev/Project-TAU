@@ -5,7 +5,6 @@ var hitNoteSprite := Sprite2D.new()
 var hitNoteOutlineSprite := Sprite2D.new()  
 
 var hitObjectTexture:Texture = null
-var hitObjectOutlineTexture:Texture = null
 
 var leftColor:Color = Color("924CF4")
 var rightColor = Color("F44C4F")
@@ -32,10 +31,6 @@ func _enter_tree() -> void:
 		hitNoteSprite.texture = hitObjectTexture
 		self.add_child(hitNoteSprite)
 		hitObjectTexture = null
-	if hitObjectOutlineTexture != null:
-		hitNoteOutlineSprite.texture = hitObjectOutlineTexture
-		self.add_child(hitNoteOutlineSprite)
-		hitObjectOutlineTexture = null
 
 	if side == -1:
 		hitNoteSprite.modulate = leftColor
