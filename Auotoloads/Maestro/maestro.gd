@@ -40,13 +40,6 @@ func _ready() -> void:
 	#OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
 
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("SPACE"):
-		if !CurrentMap.mainSongIsPlaying and !CurrentMap.offsetSongIsPlaying:
-			CurrentMap.start_map()
-		else:
-			CurrentMap.stop_map()
-	
 
 func _process(_delta: float) -> void:
 	if !CurrentMap.mapLoaded:
@@ -70,7 +63,7 @@ func _process(_delta: float) -> void:
 # --- CUSTOM FUNCTIONS ---
 
 func play_songs():
-	var offsetSeconds := playerData.offsetInMs / 1000.0
+	var offsetSeconds:float = playerData.offsetInMs / 1000.0
 	var globalMapTimeInSeconds = CurrentMap.globalMapTimeInSeconds
 
 	if offsetSeconds >= 0:

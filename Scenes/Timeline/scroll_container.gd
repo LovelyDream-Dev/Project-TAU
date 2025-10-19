@@ -22,6 +22,7 @@ func _input(event: InputEvent) -> void:
 				manuallyScrolling = true
 
 func _process(delta: float) -> void:
+	queue_redraw()
 	self.custom_minimum_size = rootNode.get_rect().size
 
 	# Handle getting if manual scroll stopped

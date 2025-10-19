@@ -365,9 +365,9 @@ func set_control_heights():
 func set_base_control_length():
 	var leadInMS = CurrentMap.LeadInTimeMS
 	var lastTickTime:float = sixteenthBeatTimes.back()
-	var lastTickPositionX:float = ((lastTickTime + leadInMS) * pixelsPerSecond)
-	baseControl.custom_minimum_size.x = lastTickPositionX
-	baseControl.size.x = lastTickPositionX
+	var lastTickPositionX:float = ((lastTickTime + (leadInMS)) * pixelsPerSecond)
+	baseControl.custom_minimum_size.x = lastTickPositionX + 1920.0
+	baseControl.size.x = lastTickPositionX + 1920.0
 
 # ----- BEAT TIME FUNCTIONS -----
 

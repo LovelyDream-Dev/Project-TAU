@@ -14,6 +14,7 @@ var maestro:Maestro = MaestroSingleton
 var inEditor:bool
 var mapLoaded:bool
 var mapStarted:bool
+var mapFinished:bool
 
 var activeNotes:Array = []
 var hitObjects:Array = []
@@ -56,7 +57,15 @@ var initialObjectsSpawned:bool
 
 func _ready() -> void:
 	if inEditor:
+		InputManager.KEY_SPACE_PRESSED.connect(start_and_stop_map)
 		radiusInPixels/=2
+	else:
+		if InputManager.KEY_SPACE_PRESSED.is_connected(start_and_stop_map):
+			InputManager.KEY_SPACE_PRESSED.disconnect(start_and_stop_map)
+
+	maestro.mainSong.finished.connect(on_sonngs_finished)
+	maestro.offsetSong.finished.connect(on_sonngs_finished)
+	
 	if hitObjects.size() > 0:
 		sort_hit_objects()
 	if timingPoints.size() > 0:
@@ -71,6 +80,7 @@ func _process(delta: float) -> void:
 		beatsPerSecond = bpm/60
 		return
 
+	if !mapLoaded: mapLoaded = true 
 	timing_points()
 	if !spinnerLoaded:
 		READY_TO_SPAWN_HIT_OBJECTS.emit()
@@ -80,7 +90,7 @@ func _process(delta: float) -> void:
 				spawn_hit_object(dict)
 			initialObjectsSpawned = true
 
-	if !mapLoaded: mapLoaded = true 
+	# Stop global song time if the song reached its end
 
 	if mapStarted:
 		globalMapTimeInSeconds += delta
@@ -130,13 +140,24 @@ func parse_hit_times(dict:Dictionary):
 func get_position_along_circumference(circleCenter:Vector2, circleRadius:float, angle:float):
 	return circleCenter + Vector2(cos(angle), sin(angle)) * circleRadius
 
-func start_map():
-	maestro.play_songs()
-	mapStarted = true
+func start_and_stop_map(_mapTime = null):
+	if mapStarted:
+		maestro.pause_songs()
+		mapStarted = false
+	else:
+		if mapFinished:
+			mapFinished = false
+			globalMapTimeInSeconds = 0.0
+		maestro.play_songs()
+		mapStarted = true
 
-func stop_map():
-	maestro.pause_songs()
+func on_sonngs_finished():
 	mapStarted = false
+	maestro.pause_songs()
+	mainSongPosition = 0.0
+	offsetSongPosition = 0.0
+	mapFinished = true
+
 
 # NEEDS FILEDIALOG "fileloaded" SIGNAL. CURRENTLY UNUSED
 func handle_loaded_file(path:String):
