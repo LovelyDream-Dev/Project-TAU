@@ -27,8 +27,7 @@ var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
-var leadInBeats:float = 0.0
-var leadInTime:float = 0.0
+var LeadInTimeMS:int = 0
 
 var mainSongIsPlaying:bool
 var offsetSongIsPlaying:bool
@@ -157,7 +156,6 @@ func timing_points():
 			bpm = _bpm
 			secondsPerBeat = 60.0/_bpm
 			beatsPerSecond = _bpm/60.0
-		leadInTime = leadInBeats * secondsPerBeat
 
 func sort_timing_points():
 	if timingPoints.size() == 0:
@@ -201,8 +199,7 @@ func unload_map():
 	beatsPerSecond = 0.0
 	mainSongPosition = 0.0
 	offsetSongPosition = 0.0
-	leadInBeats = 0.0
-	leadInTime = 0.0
+	LeadInTimeMS = 0
 	mainSongIsPlaying = false
 	offsetSongIsPlaying = false
 	hpDrainRate = 0.0

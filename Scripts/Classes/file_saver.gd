@@ -9,7 +9,7 @@ func save_tau_data(filePath:String):
 
 	file.store_line("[General]")
 	file.store_line("AudioFileName: audio."+CurrentMap.audioFileExtension)
-	file.store_line("LeadInBeats: "+ str(CurrentMap.leadInBeats))
+	file.store_line("LeadInTimeMS: "+ str(CurrentMap.LeadInTimeMS))
 	file.store_line("")
 	file.store_line("[Metadata]")
 	file.store_line("Title: "+CurrentMap.title)

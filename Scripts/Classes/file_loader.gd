@@ -57,9 +57,9 @@ func load_tau_file(filePath:String, folderPath:String):
 				var parts = line.split(":", false, 1) # split into [ "AudioFileName", " song.mp3" ]
 				var audioFilePath = folderPath.path_join(parts[1].strip_edges())
 				load_song(audioFilePath)
-			elif line.begins_with("LeadInBeats:"):
-				var parts = line.split(":", false, 1) # split into [ "LeadInBeats", value]
-				CurrentMap.leadInBeats = float(parts[1])
+			elif line.begins_with("LeadInTimeMS:"):
+				var parts = line.split(":", false, 1) # split into [ "LeadInTimeMS", value]
+				CurrentMap.LeadInTimeMS = float(parts[1])
 
 		if inMetadata:
 			if line.begins_with("Title:"):

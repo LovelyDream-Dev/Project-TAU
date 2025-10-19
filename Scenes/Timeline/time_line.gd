@@ -165,7 +165,7 @@ func _process(_delta: float) -> void:
 	beatsPerSecond = CurrentMap.beatsPerSecond
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	pixelsPerBeat = secondsPerBeat * pixelsPerSecond
-	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + CurrentMap.leadInTime))
+	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + (CurrentMap.LeadInTimeMS/1000.0)))
 
 	# manage drag selection
 	select_notes_by_drag()
@@ -181,9 +181,6 @@ func _process(_delta: float) -> void:
 	elif !hideScrollBar and scrollContainer.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_SHOW_NEVER:
 		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
 
-	# Set the timeline background
-	baseControl.custom_minimum_size.x = get_timeline_length_from_song_length()
-	baseControl.color = backgroundColor
 	place_timeline_notes()
 	
 	get_whole_beat_times()
@@ -192,6 +189,7 @@ func _process(_delta: float) -> void:
 	get_eighth_beat_times()
 	get_sixteenth_beat_times()
 
+	set_base_control_length()
 
 
 
@@ -344,13 +342,10 @@ func get_snapped_position():
 	snappedPixel = snappedBeat * pixelsPerBeat
 	snappedSongPosition = snappedBeat * secondsPerBeat
 
-func get_timeline_length_from_song_length() -> float: 
-	return songLengthInSeconds * pixelsPerSecond
-
 ## Uses [method valueInSeconds] to find the related pixel position on the timeline. [br]Returns [code]0.0[/code] if [method valueInSeconds] is greater than [method songLengthInSeconds].
 func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
 	if valueinSeconds <= songLengthInSeconds:
-		return valueinSeconds * pixelsPerSecond
+		return ((valueinSeconds + (CurrentMap.LeadInTimeMS/1000.0)) * pixelsPerSecond) + scrollContainer.playheadOffset
 	else: 
 		return 0.0
 	
@@ -367,6 +362,12 @@ func set_control_heights():
 		baseControl.custom_minimum_size.y = self.size.y
 		baseControl.size.y = self.size.y
 
+func set_base_control_length():
+	var leadInMS = CurrentMap.LeadInTimeMS
+	var lastTickTime:float = sixteenthBeatTimes.back()
+	var lastTickPositionX:float = ((lastTickTime + leadInMS) * pixelsPerSecond)
+	baseControl.custom_minimum_size.x = lastTickPositionX
+	baseControl.size.x = lastTickPositionX
 
 # ----- BEAT TIME FUNCTIONS -----
 
@@ -405,7 +406,6 @@ func get_if_ticks_are_drawable() -> bool:
 	if secondsPerBeat != 0.0 and beatsPerSecond != 0.0:
 		return true
 	else: return false
-
 
 # ----- SIGNAL FUNCTIONS -----
 

@@ -28,7 +28,7 @@ var nextOffsetWholeBeat:float
 var secondsPerBeat:float
 var beatsPerSecond:float
 
-var leadInTime:float
+var LeadInTimeMS:int
 var leadInBeats:float
 
 var mapFilePath:StringName
@@ -52,8 +52,7 @@ func _process(_delta: float) -> void:
 	if !CurrentMap.mapLoaded:
 		return
 
-	leadInBeats = CurrentMap.leadInBeats
-	leadInTime = CurrentMap.leadInTime
+	LeadInTimeMS = CurrentMap.LeadInTimeMS
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
 
