@@ -3,6 +3,7 @@ extends ScrollContainer
 signal SCROLL_CHANGED
 
 var maestro:Maestro = MaestroSingleton
+var elapsedLeadInTime:float
 
 @export var rootNode:Timeline
 var lastScrollX:float = 0
@@ -49,8 +50,12 @@ func get_if_scroll_changed() -> bool:
 
 func handle_scroll():
 	if CurrentMap.mapStarted:
-		print(abs(CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime))
-		self.scroll_horizontal = int(abs(CurrentMap.globalMapTimeInSeconds - CurrentMap.leadInTime) * rootNode.pixelsPerSecond)
+		# Use elapsedLeadInTime to manage lead in time with scrolling
+		GameData.mtween.mtween_property(self, "elapsedLeadInTime", 0.0, CurrentMap.leadInTime, 0.0, abs(CurrentMap.leadInTime))
+		if abs(elapsedLeadInTime) < abs(CurrentMap.leadInTime):
+			self.scroll_horizontal = int(abs(elapsedLeadInTime) * rootNode.pixelsPerSecond)
+		else:
+			self.scroll_horizontal = int(abs(CurrentMap.globalMapTimeInSeconds) * rootNode.pixelsPerSecond)
 
 func on_manual_scroll(value):
 	if value == false:

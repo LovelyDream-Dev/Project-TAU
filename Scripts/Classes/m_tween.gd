@@ -13,6 +13,10 @@ func mtween_property(target:Object, property:StringName, startValue, endValue, s
 			currentValue = startValue.lerp(endValue, progress)
 		TYPE_COLOR:
 			currentValue = startValue.lerp(endValue, progress)
+		TYPE_INT:
+			currentValue = lerp(startValue, endValue, progress)
+		TYPE_FLOAT:
+			currentValue = lerp(startValue, endValue, progress)
 		_:
 			currentValue = lerp(startValue, endValue, progress)
 
