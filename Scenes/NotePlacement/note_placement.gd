@@ -35,25 +35,25 @@ func _process(_delta: float) -> void:
 	editorSnapDivisor = GameData.playerData.editorSnapDivisor
 	rotationDirection = CurrentMap.rotationDirection
 	radiusInPixels = CurrentMap.radiusInPixels
-	get_closest_circle_position_to_mouse(CurrentMap.center)
-	get_beat_from_circle_position(CurrentMap.center)
+	get_closest_circle_position_to_mouse()
+	get_beat_from_circle_position()
 	if distanceFromCircleToMouse <= minMouseDistance:
-		get_circle_position_from_beat(CurrentMap.center, currentMouseBeatOnCircle)
+		get_circle_position_from_beat(currentMouseBeatOnCircle)
 
 func _draw() -> void:
 	if !CurrentMap.inEditor:
 		return
-	draw_circle(CurrentMap.center, radiusInPixels, circleColor, false, 4.0, true)
+	draw_circle(Vector2.ZERO, radiusInPixels, circleColor, false, 4.0, true)
 	if localMousePos and closestCirclePositionToMouse:
 		draw_line(localMousePos, closestCirclePositionToMouse, Color.WHITE)
 
-func get_closest_circle_position_to_mouse(center:Vector2):
-	var vector = localMousePos - center
-	closestCirclePositionToMouse = center + vector.normalized() * radiusInPixels
+func get_closest_circle_position_to_mouse():
+	var vector = localMousePos - Vector2.ZERO
+	closestCirclePositionToMouse = Vector2.ZERO + vector.normalized() * radiusInPixels
 	distanceFromCircleToMouse = localMousePos.distance_to(closestCirclePositionToMouse)
 
-func get_beat_from_circle_position(center:Vector2):
-	var angle = atan2(closestCirclePositionToMouse.y - center.y, closestCirclePositionToMouse.x - center.x) + notePlacementSide # PI flips the spawn side
+func get_beat_from_circle_position():
+	var angle = atan2(closestCirclePositionToMouse.y - Vector2.ZERO.y, closestCirclePositionToMouse.x - Vector2.ZERO.x) + notePlacementSide # PI flips the spawn side
 	var normalizedAngle = fposmod(rotationDirection * angle, TAU)
 	var value = normalizedAngle / TAU * 4
 	value = snappedf(value,1.0/float(editorSnapDivisor))
@@ -62,10 +62,10 @@ func get_beat_from_circle_position(center:Vector2):
 		value = 0.0
 	currentMouseBeatOnCircle = value
 
-func get_circle_position_from_beat(center:Vector2, beat:float):
+func get_circle_position_from_beat(beat:float):
 	var angle = ((beat * TAU / 4) / rotationDirection) + notePlacementSide
-	var posx = center.x + radiusInPixels * cos(angle)
-	var posy = center.y + radiusInPixels * sin(angle)
+	var posx = Vector2.ZERO.x + radiusInPixels * cos(angle)
+	var posy = Vector2.ZERO.y + radiusInPixels * sin(angle)
 	currentCirclePositionFromBeat = Vector2(posx, posy)
 
 func place_note():

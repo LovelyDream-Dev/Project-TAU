@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=8 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Timeline/time_line.tscn" id="2_dftp8"]
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
+[ext_resource type="PackedScene" uid="uid://s56qikcw63vm" path="res://Scenes/NotePlacement/note_placement.tscn" id="5_1xg6d"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvxkh"]
@@ -80,6 +81,12 @@ layout_mode = 2
 position = Vector2(480, 360)
 timeline = NodePath("../../../TimelineMarginContainer/TimeLinePanel/Timeline")
 
+[node name="NotePlacementControl" type="Control" parent="PlayFieldMarginContainer"]
+layout_mode = 2
+
+[node name="NotePlacement" parent="PlayFieldMarginContainer/NotePlacementControl" instance=ExtResource("5_1xg6d")]
+position = Vector2(480, 360)
+
 [node name="LeftPanelMarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 0
@@ -95,6 +102,14 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SelectMode" type="Button" parent="LeftPanelMarginContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
 
 [node name="RightPanelMarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(480, 0)

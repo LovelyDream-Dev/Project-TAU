@@ -3,12 +3,6 @@ class_name Timeline
 
 signal SNAP_DIVISOR_CHANGED
 
-# Nodes
-@onready var scrollContainer:ScrollContainer = $ScrollContainer
-@onready var baseControl:ColorRect = $ScrollContainer/BaseControl
-@onready var noteContainer:Node2D = $ScrollContainer/BaseControl/NoteContainer
-@onready var camera = get_viewport().get_camera_2d()
-
 @export_category("Colors")
 ## The color of the timeline background
 @export var backgroundColor:Color
@@ -22,7 +16,6 @@ signal SNAP_DIVISOR_CHANGED
 @export var eighthBeatTickColor:Color
 ## The color of sixteenth beat ticks
 @export var sixteenthBeatTickColor:Color
-
 @export_category("Values")
 ## The height of the beat ticks
 @export var tickHeight:float = 80.0
@@ -39,7 +32,6 @@ signal SNAP_DIVISOR_CHANGED
 		_on_snap_divisor_changed()
 ## How many pixels represent one second on the timeline, directly affects timeline length and spacing between ticks
 @export var pixelsPerSecond:float = 500.0
-
 @export_category("Booleans")
 ## If the tick ends are rounded
 @export var roundedTicks:bool = true
@@ -110,6 +102,12 @@ var dragNoteStartPosX:float
 
 ## If [member initial_note_cull] has been initially called.
 var initialCull:bool
+var initialNotesSpawned:bool
+
+@onready var scrollContainer:ScrollContainer = $ScrollContainer
+@onready var baseControl:ColorRect = $ScrollContainer/BaseControl
+@onready var noteContainer:Node2D = $ScrollContainer/BaseControl/NoteContainer
+@onready var camera = get_viewport().get_camera_2d()
 
 func _on_snap_divisor_changed():
 	SNAP_DIVISOR_CHANGED.emit()
@@ -132,7 +130,7 @@ func _input(event: InputEvent) -> void:
 		if get_tree().get_node_count_in_group("selectedNotes") == 0:
 			if !dragSelectStarted:
 				dragSelectStarted = true
-				dragSelectStartPosition = get_global_mouse_position()
+				dragSelectStartPosition = get_local_mouse_position()
 		else:
 			if dragSelectStarted:
 				deselect_notes(null)
@@ -190,6 +188,8 @@ func _process(_delta: float) -> void:
 	get_sixteenth_beat_times()
 
 	set_base_control_length()
+	if initialNotesSpawned:
+		manage_notes()
 
 
 
@@ -243,7 +243,7 @@ func deselect_notes(note:TimelineNote):
 ## Returns [member true] if a mouse click is detected outside of any node within group [member selectedNotes].
 func get_if_clicked_outside_of_selected_note() -> bool:
 	for timelineNote:TimelineNote in get_tree().get_nodes_in_group("selectedNotes"):
-		if !timelineNote.hitNoteSprite.get_rect().has_point(timelineNote.hitNoteSprite.get_local_mouse_position()):
+		if !timelineNote.hitObjectSprite.get_rect().has_point(timelineNote.hitObjectSprite.get_local_mouse_position()):
 			return true
 		else: 
 			return false
@@ -268,7 +268,7 @@ func end_note_drag():
 func get_timeline_note_from_list_at_point(point:Vector2, list:Array) -> Array:
 	var pointArray:Array 
 	for timelineNote:TimelineNote in list:
-		if timelineNote.hitNoteSprite.get_rect().has_point(timelineNote.to_local(point)):
+		if timelineNote.hitObjectSprite.get_rect().has_point(timelineNote.to_local(point)):
 			pointArray.append(timelineNote)
 	return pointArray
 
@@ -283,6 +283,15 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 				highest = timelineNote
 	return highest
 
+func manage_notes():
+	for dict:Dictionary in timelineNotes:
+		if dict not in CurrentMap.hitObjects:
+			CurrentMap.hitObjects.append(dict)
+			CurrentMap.sort_hit_objects()
+	for dict:Dictionary in CurrentMap.hitObjects:
+		if dict not in timelineNotes:
+			CurrentMap.hitObjects.erase(dict)
+			CurrentMap.sort_hit_objects()
 
 ## Places notes on the timeline at the correct position using [member beat].
 func place_timeline_notes():
@@ -296,6 +305,7 @@ func place_timeline_notes():
 			var startPos = get_timeline_position_from_beat(hitBeat)
 			var endPos = get_timeline_position_from_beat(releaseBeat)
 			var timelineNote:TimelineNote = TimelineNote.new()
+			timelineNote.hitObject = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
 			timelineNote.hitBeat = hitBeat
 			timelineNote.releaseBeat = releaseBeat
 			timelineNote.startPos = startPos
@@ -305,7 +315,8 @@ func place_timeline_notes():
 			timelineNote.side = side
 			timelineNote.hitObjectTexture = load("res://Images/Timeline/timeline-note.png")
 			noteContainer.add_child(timelineNote)
-			timelineNotes.append(timelineNote)
+			timelineNotes.append({"hitTime": hitTime, "releaseTime": releaseTime, "side": side})
+	initialNotesSpawned = true
 
 
 # ----- TIMELINE POSITION FUNCTIONS -----
