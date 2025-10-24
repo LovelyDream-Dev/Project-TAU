@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Project TAU"
-run/main_scene="uid://dhi8nlbytnk8v"
+run/main_scene="uid://he8m4vmf82lk"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://Images/icon.svg"
 
@@ -19,6 +19,7 @@ config/icon="res://Images/icon.svg"
 
 GameData="*res://Auotoloads/game_data.gd"
 GlobalFunctions="*res://Auotoloads/global_functions.gd"
+PlayerData="*res://Auotoloads/player_data.gd"
 MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
 InputManager="*res://Auotoloads/input_manager.gd"
 CurrentMap="*res://Auotoloads/current_map.gd"

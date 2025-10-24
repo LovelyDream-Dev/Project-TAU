@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var timeline:Timeline
-@export var scrollContainer:ScrollContainer
+@export var timelineScroller:TimelineScroller
 
 var initialTicksDrawn:bool
 
@@ -19,7 +19,7 @@ func _process(_delta: float) -> void:
 		initialTicksDrawn = true
 
 	# Determine if the scroll container has scrolled
-	var currentScrollX = scrollContainer.scroll_horizontal
+	var currentScrollX = timelineScroller.scroll_horizontal
 	if lastScrollX != currentScrollX:
 		lastScrollX = currentScrollX
 		on_scroll_changed()
@@ -31,15 +31,15 @@ func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColo
 	#  \/ --- BEAT TICK CULLING WITH MARGIN --- \/
 
 	# Get the visible rect of the scrollcontainer
-	var scrollContainerRect:Rect2 = scrollContainer.get_rect()
-	var cullingRect = Rect2(scrollContainerRect.position - Vector2(cullingMargin, cullingMargin), scrollContainerRect.size + Vector2(cullingMargin * 2.0, cullingMargin * 2.0))
-	cullingRect.position.x += scrollContainer.scroll_horizontal
+	var timelineScrollerRect:Rect2 = timelineScroller.get_rect()
+	var cullingRect = Rect2(timelineScrollerRect.position - Vector2(cullingMargin, cullingMargin), timelineScrollerRect.size + Vector2(cullingMargin * 2.0, cullingMargin * 2.0))
+	cullingRect.position.x += timelineScroller.scroll_horizontal
 	var tickPos = Vector2(xPosition, yCenter)
 	if !cullingRect.has_point(tickPos):
 		return
 	if showCullingRect:
-		var visualDefaultRect:Rect2 = scrollContainerRect
-		visualDefaultRect.position.x += scrollContainer.scroll_horizontal
+		var visualDefaultRect:Rect2 = timelineScrollerRect
+		visualDefaultRect.position.x += timelineScroller.scroll_horizontal
 		draw_rect(cullingRect, Color.YELLOW, false)
 		draw_rect(visualDefaultRect, Color.RED, false)
 	

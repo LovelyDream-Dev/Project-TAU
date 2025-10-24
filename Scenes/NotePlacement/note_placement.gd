@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 	if !self.visible: self.show()
 	localMousePos = get_local_mouse_position()
 	notePlacementSide = notePlacementSide
-	editorSnapDivisor = GameData.playerData.editorSnapDivisor
+	editorSnapDivisor = PlayerData.editorSnapDivisor
 	rotationDirection = CurrentMap.rotationDirection
 	radiusInPixels = CurrentMap.radiusInPixels
 	get_closest_circle_position_to_mouse()

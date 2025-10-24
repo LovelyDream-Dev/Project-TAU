@@ -50,7 +50,7 @@ var beatsPerRotation:float = 4
 var spawnSide:int = -1
 var rotationDirection:int = 1
 var radiusInPixels = 450.0
-var scrollSpeed = GameData.playerData.scrollSpeed
+var scrollSpeed = PlayerData.scrollSpeed
 var initialObjectsSpawned:bool
 
 func _ready() -> void:

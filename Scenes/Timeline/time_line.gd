@@ -74,7 +74,7 @@ var snapInterval:float
 # The local position of the mouse in pixels on the timeline
 var mouseTimelinePosition:float
 
-## Whether the [member ScrollContainer] of the timeline is being manually scrolled by the player
+## Whether the [member timelineScroller] of the timeline is being manually scrolled by the player
 var manuallyScrolling:bool
 
 ## The notes that are currently on the timeline
@@ -89,9 +89,9 @@ var initialObjectOCull:bool
 var initialNotesSpawned:bool
 
 @onready var playheadOffset:float = $PlayHead.position.x
-@onready var scrollContainer:ScrollContainer = $ScrollContainer
-@onready var baseControl:ColorRect = $ScrollContainer/BaseControl
-@onready var noteContainer:Node2D = $ScrollContainer/BaseControl/NoteContainer
+@onready var timelineScroller:TimelineScroller = $TimelineScroller
+@onready var baseControl:ColorRect = $TimelineScroller/BaseControl
+@onready var timelineObjectContainer:Node2D = $TimelineScroller/BaseControl/TimelineObjectContainer
 @onready var camera = get_viewport().get_camera_2d()
 
 func _input(event: InputEvent) -> void:
@@ -126,16 +126,16 @@ func _input(event: InputEvent) -> void:
 			deselect_notes(null)
 
 		# Get the timeline mouse position if the mouse is moving within the timeline
-	if scrollContainer.get_rect().has_point(scrollContainer.get_local_mouse_position()):
+	if timelineScroller.get_rect().has_point(timelineScroller.get_local_mouse_position()):
 		if event is InputEventMouseMotion:
-			mouseTimelinePosition = scrollContainer.make_input_local(event).position.x + scrollContainer.scroll_horizontal
+			mouseTimelinePosition = timelineScroller.make_input_local(event).position.x + timelineScroller.scroll_horizontal
 
 
 
 
 func _process(_delta: float) -> void:
 	queue_redraw()
-	manuallyScrolling = scrollContainer.manuallyScrolling
+	manuallyScrolling = timelineScroller.manuallyScrolling
 	if !CurrentMap.mapLoaded:
 		return
 
@@ -156,10 +156,10 @@ func _process(_delta: float) -> void:
 	set_control_heights()
 
 	# Hide the scroll bar on the scroll container
-	if hideScrollBar and scrollContainer.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_SHOW_NEVER:
-		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
-	elif !hideScrollBar and scrollContainer.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_SHOW_NEVER:
-		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+	if hideScrollBar and timelineScroller.horizontal_scroll_mode != timelineScroller.SCROLL_MODE_SHOW_NEVER:
+		timelineScroller.horizontal_scroll_mode = timelineScroller.SCROLL_MODE_SHOW_NEVER
+	elif !hideScrollBar and timelineScroller.horizontal_scroll_mode == timelineScroller.SCROLL_MODE_SHOW_NEVER:
+		timelineScroller.horizontal_scroll_mode = timelineScroller.SCROLL_MODE_SHOW_ALWAYS
 
 	# Spawn timeline objects at load time in the editor
 	for dict:Dictionary in CurrentMap.hitObjects:
@@ -199,7 +199,7 @@ func select_notes_by_click(event:InputEvent):
 	if get_tree().get_node_count_in_group("selectedNotes") > 0:
 		return
 
-	var nodesUnderEvent:Array = get_timeline_note_from_list_at_point(event.position, noteContainer.get_children())
+	var nodesUnderEvent:Array = get_timeline_note_from_list_at_point(event.position, timelineObjectContainer.get_children())
 	if !nodesUnderEvent.is_empty():
 		var topNote:TimelineObject = nodesUnderEvent.back()
 		topNote.isSelected = true
@@ -209,8 +209,8 @@ func select_notes_by_drag():
 		if get_tree().get_node_count_in_group("selectedNotes") > 0:
 			return
 	else:
-		for timelineObject:TimelineObject in noteContainer.get_children():
-			if dragSelectionRect.abs().has_point(noteContainer.to_local(timelineObject.global_position)):
+		for timelineObject:TimelineObject in timelineObjectContainer.get_children():
+			if dragSelectionRect.abs().has_point(timelineObjectContainer.to_local(timelineObject.global_position)):
 				timelineObject.isSelected = true
 
 ## De-selects [member note] if it is not [code]null[/code]. Otherwise it de-selects all notes in group [member selectedNotes].
@@ -278,7 +278,7 @@ func manage_notes():
 func place_timeline_objects(dict:Dictionary):
 	var timelineObjectTexture = load("res://Images/Timeline/timeline-note.png")
 	var timelineObject:TimelineObject = create_timeline_object(dict, timelineObjectTexture)
-	noteContainer.add_child(timelineObject)
+	timelineObjectContainer.add_child(timelineObject)
 
 ## Creates timeline objects from the appropriate dictionary format; 
 ## [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
@@ -286,12 +286,13 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	var timelineObject:TimelineObject = TimelineObject.new()
 	var hitTime = dict["hitTime"]
 	var releaseTime = dict["releaseTime"]
-	var side = GameData.direction_from_raw(dict["side"])
+	var side = GlobalFunctions.direction_from_raw(dict["side"])
 	var yPos = self.get_rect().size.y/2
 	var startPos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), yPos)
 	var endPos= Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(releaseTime, pixelsPerSecond, playheadOffset), yPos)
 	timelineObject.position = startPos
-	timelineObject.hitObjectTexture = texture
+	timelineObject.texture = texture
+	
 	timelineObject.startPos = startPos
 	timelineObject.endPos = endPos
 	timelineObject.side = side
@@ -301,11 +302,11 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 
 
 func cull_notes():
-	var scrollContainerRect:Rect2 = scrollContainer.get_rect()
-	var cullingRect = Rect2(scrollContainerRect.position - Vector2(cullingMargin, cullingMargin), scrollContainerRect.size + Vector2(cullingMargin * 2.0, cullingMargin * 2.0))
-	cullingRect.position.x += scrollContainer.scroll_horizontal
+	var timelineScrollerRect:Rect2 = timelineScroller.get_rect()
+	var cullingRect = Rect2(timelineScrollerRect.position - Vector2(cullingMargin, cullingMargin), timelineScrollerRect.size + Vector2(cullingMargin * 2.0, cullingMargin * 2.0))
+	cullingRect.position.x += timelineScroller.scroll_horizontal
 	# cull
-	for timelineObject:TimelineObject in noteContainer.get_children():
+	for timelineObject:TimelineObject in timelineObjectContainer.get_children():
 		if !cullingRect.has_point(timelineObject.position):
 			if !timelineObject.is_in_group("culledtimelineObjects"): 
 				timelineObject.add_to_group("culledtimelineObjects")
@@ -330,7 +331,7 @@ func get_snapped_position():
 ## Uses [method valueInSeconds] to find the related pixel position on the timeline. [br]Returns [code]0.0[/code] if [method valueInSeconds] is greater than [method songLengthInSeconds].
 func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
 	if valueinSeconds <= songLengthInSeconds:
-		return ((valueinSeconds + (CurrentMap.LeadInTimeMS/1000.0)) * pixelsPerSecond) + scrollContainer.playheadOffset
+		return ((valueinSeconds + (CurrentMap.LeadInTimeMS/1000.0)) * pixelsPerSecond) + timelineScroller.playheadOffset
 	else: 
 		return 0.0
 	
@@ -340,9 +341,9 @@ func initial_object_cull():
 
 
 func set_control_heights():
-	if scrollContainer.size.y != self.size.y: 
-		scrollContainer.custom_minimum_size.y = self.size.y
-		scrollContainer.size.y = self.size.y
+	if timelineScroller.size.y != self.size.y: 
+		timelineScroller.custom_minimum_size.y = self.size.y
+		timelineScroller.size.y = self.size.y
 	if baseControl.size.y != self.size.y:
 		baseControl.custom_minimum_size.y = self.size.y
 		baseControl.size.y = self.size.y

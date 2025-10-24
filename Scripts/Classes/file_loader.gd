@@ -1,6 +1,34 @@
 extends Node
 class_name FileLoader
 
+## Loads the user config file
+static func load_user_config():
+	var path = "user://tau.".path_join(get_os_user()).path_join(".cfg")
+	var config = ConfigFile.new()
+	var err = config.load(path)
+
+	if err == OK:
+		# General 
+		PlayerData.username = config.get_value("General", "username")
+
+		# Settings 
+		PlayerData.color1 = config.get_value("Settings", "color1")
+		PlayerData.color2 = config.get_value("Settings", "color2")
+		PlayerData.scrollSpeed = config.get_value("Settings", "scrollSpeed")
+		PlayerData.audioOffsetInMs = config.get_value("Settings", "audioOffsetInMs")
+
+		# Editor
+		PlayerData.editorSnapDivisor = config.get_value("Editor", "EditorSnapDivisor")
+
+## Gets the name of the OS user 
+static func get_os_user() -> String:
+	if OS.has_environment("USERNAME"): # Windows
+		return OS.get_environment("USERNAME")
+	elif OS.has_environment("USER"): # macOS / Linux
+		return OS.get_environment("USER")
+	else:
+		return "tauUser"
+
 ## Takes the folder of the specific map and loads the map
 static func load_map(folderPath:String):
 	CurrentMap.unload_map()

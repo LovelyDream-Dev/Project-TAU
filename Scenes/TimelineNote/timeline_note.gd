@@ -1,4 +1,4 @@
-extends Node2D
+extends Sprite2D
 class_name TimelineObject
 
 var hitObjectSprite := Sprite2D.new() 
@@ -19,17 +19,6 @@ var isSelected:bool:
 	set(value):
 		isSelected = value
 		on_if_selected_changed(value)
-
-func _enter_tree() -> void:
-	if hitObjectTexture != null:
-		hitObjectSprite.texture = hitObjectTexture
-		self.add_child(hitObjectSprite)
-		hitObjectTexture = null
-
-	if side == -1:
-		hitObjectSprite.modulate = leftColor
-	elif side == 1:
-		hitObjectSprite.modulate = rightColor
 
 # --- CUSTOM FUNCTIONS ---
 func on_if_selected_changed(value):
