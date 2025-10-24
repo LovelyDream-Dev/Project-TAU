@@ -9,7 +9,10 @@ enum direction {
 	RIGHT = 1
 }
 
-func side_from_raw(rawValue:int):
+## Returns a direction from an enum. [member direction.LEFT] if [member rawValue] is [code]-1[/code], or [member direction.RIGHT] if it is [code]1[/code]. 
+## Returns [member direction.LEFT] if [member rawValue] is not [code]-1[/code] or [code]1[/code].
+## Directions are used for various direction based mechanics.
+func direction_from_raw(rawValue:int):
 	if rawValue == -1:
 		return direction.LEFT
 	elif rawValue == 1:

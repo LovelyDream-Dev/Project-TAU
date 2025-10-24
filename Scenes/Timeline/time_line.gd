@@ -3,9 +3,10 @@ class_name Timeline
 
 signal SNAP_DIVISOR_CHANGED
 
-@export_category("Colors")
+@export_group("Colors")
 ## The color of the timeline background
 @export var backgroundColor:Color
+@export_subgroup("Beat Ticks")
 ## The color of whole beat ticks
 @export var wholeBeatTickColor:Color
 ## The color of half beat ticks
@@ -16,7 +17,7 @@ signal SNAP_DIVISOR_CHANGED
 @export var eighthBeatTickColor:Color
 ## The color of sixteenth beat ticks
 @export var sixteenthBeatTickColor:Color
-@export_category("Values")
+@export_group("Values")
 ## The height of the beat ticks
 @export var tickHeight:float = 80.0
 ## The width of the beat ticks
@@ -32,7 +33,7 @@ signal SNAP_DIVISOR_CHANGED
 		_on_snap_divisor_changed()
 ## How many pixels represent one second on the timeline, directly affects timeline length and spacing between ticks
 @export var pixelsPerSecond:float = 500.0
-@export_category("Booleans")
+@export_group("Booleans")
 ## If the tick ends are rounded
 @export var roundedTicks:bool = true
 ## If it is set to true, placement on the timeline via mouse clicks will be enabled
@@ -40,39 +41,25 @@ signal SNAP_DIVISOR_CHANGED
 ## If it is set to true, the scroll bar will be hidden
 @export var hideScrollBar:bool
 
-@export_category("Textures")
+@export_group("Textures")
 ## Texture of the note that will be placed on the timeline
 @export var noteTexture:Texture
 
-# --- ARRAYS ---
-## Array of the times in seconds of all whole beats within the song
 var wholeBeatTimes:Array = []
-## Array of the times in seconds of all half beats within the song
 var halfBeatTimes:Array = []
-## Array of the times in seconds of all quarter beats within the song
 var quarterBeatTimes:Array = []
-## Array of the times in seconds of all eighth beats within the song
 var eighthBeatTimes:Array = []
-## Array of the times in seconds of all sixteenth beats within the song
 var sixteenthBeatTimes:Array = []
 
-# --- VALUES ---
 var songLengthInSeconds:float
 var bpm:float 
-## Length of the timeline in pixels
 var timelineLengthInPixels:float
-## If applicable, the current position of the song.
 var songPosition:float
-## If applicable, the total amount of whole beats in the song.
 var totalWholeBeats:int
-## How many seconds a whole beat lasts
 var secondsPerBeat:float
-## How many whole beats are in a second
 var beatsPerSecond:float
-## How many pixels are in a whole beat on the timeline
 var pixelsPerBeat:float
 
-# --- SNAPPING VARIABLES ---
 # The position of the mouse in beats on the timeline
 var mouseBeatPosition:float
 ## The nearest beat snap, this number DOES NOT indicate overral beat numbers. It counts beats sequentially depending on the snap divisor. [br]For example, with half beats it will count the first whole beat as 0, and the half beat after as 1.
@@ -93,24 +80,19 @@ var manuallyScrolling:bool
 ## The notes that are currently on the timeline
 var timelineObjects:Array
 
-# --- DRAGGING VARIABLES ---
-
 var dragSelectStartPosition:Vector2
 var dragSelectStarted:bool = false
 var dragSelectionRect:Rect2
 var dragNoteStartPosX:float
 
-## If [member initial_note_cull] has been initially called.
-var initialCull:bool
+var initialObjectOCull:bool
 var initialNotesSpawned:bool
 
+@onready var playheadOffset:float = $PlayHead.position.x
 @onready var scrollContainer:ScrollContainer = $ScrollContainer
 @onready var baseControl:ColorRect = $ScrollContainer/BaseControl
 @onready var noteContainer:Node2D = $ScrollContainer/BaseControl/NoteContainer
 @onready var camera = get_viewport().get_camera_2d()
-
-func _on_snap_divisor_changed():
-	SNAP_DIVISOR_CHANGED.emit()
 
 func _input(event: InputEvent) -> void:
 	if !CurrentMap.mapLoaded:
@@ -201,21 +183,16 @@ func _draw() -> void:
 	if dragSelectStarted:
 		draw_selection_rectangle(dragSelectStartPosition)
 
+func _on_snap_divisor_changed():
+	SNAP_DIVISOR_CHANGED.emit()
 
-# --- CUSTOM FUNCTIONS ---
-# ----- DRAWING FUNCTIONS -----
-
-
-## Draws the rectangle for multi note selection
+## Draws the rect for multi note selection.
 func draw_selection_rectangle(pos:Vector2):
 	var mousePos = get_local_mouse_position()
 	var movingCorner = Vector2(mousePos.x - pos.x, mousePos.y - pos.y)
 	dragSelectionRect = Rect2(pos, movingCorner)
 	draw_rect(dragSelectionRect, Color(1, 1, 1, 0.5), true)
 	draw_rect(dragSelectionRect, Color(1, 1, 1, 1), false)
-
-
-# ----- TIMELINE _NOTE FUNCTIONS -----
 
 ## Selects timeline objects on mouse click. Can only select individual notes if none are already selected.
 func select_notes_by_click(event:InputEvent):
@@ -303,14 +280,16 @@ func place_timeline_objects(dict:Dictionary):
 	var timelineObject:TimelineObject = create_timeline_object(dict, timelineObjectTexture)
 	noteContainer.add_child(timelineObject)
 
-## Creates timeline objects from the appropriate dictionary format; [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
+## Creates timeline objects from the appropriate dictionary format; 
+## [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
 func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	var timelineObject:TimelineObject = TimelineObject.new()
 	var hitTime = dict["hitTime"]
 	var releaseTime = dict["releaseTime"]
-	var side = dict["side"]
-	var startPos = get_timeline_position_from_seconds(hitTime)
-	var endPos = get_timeline_position_from_seconds(releaseTime)
+	var side = GameData.direction_from_raw(dict["side"])
+	var yPos = self.get_rect().size.y/2
+	var startPos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), yPos)
+	var endPos= Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(releaseTime, pixelsPerSecond, playheadOffset), yPos)
 	timelineObject.position = startPos
 	timelineObject.hitObjectTexture = texture
 	timelineObject.startPos = startPos
@@ -339,10 +318,7 @@ func cull_notes():
 			timelineObject.show()
 			timelineObject.process_mode = Node.PROCESS_MODE_INHERIT
 
-func get_timeline_position_from_seconds(valueInSeconds:float) -> Vector2:
-	var posx = (valueInSeconds * pixelsPerSecond) + scrollContainer.playheadOffset
-	var posy = self.get_rect().size.y/2
-	return Vector2(posx, posy)
+
 
 ## Assigns the closest snap position to [member snappedPosition] based on the mouse position on the timeline.
 func get_snapped_position():
@@ -358,8 +334,8 @@ func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
 	else: 
 		return 0.0
 	
-func initial_note_cull():
-	initialCull = true
+func initial_object_cull():
+	initialObjectOCull = true
 	cull_notes()
 
 

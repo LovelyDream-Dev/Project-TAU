@@ -18,6 +18,7 @@ config/icon="res://Images/icon.svg"
 [autoload]
 
 GameData="*res://Auotoloads/game_data.gd"
+GlobalFunctions="*res://Auotoloads/global_functions.gd"
 MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
 InputManager="*res://Auotoloads/input_manager.gd"
 CurrentMap="*res://Auotoloads/current_map.gd"

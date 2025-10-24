@@ -24,7 +24,7 @@ snapDivisor = 4
 hideScrollBar = true
 noteTexture = ExtResource("2_gk61m")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="." node_paths=PackedStringArray("rootNode")]
+[node name="ScrollContainer" type="ScrollContainer" parent="." node_paths=PackedStringArray("timeline")]
 z_as_relative = false
 clip_contents = false
 custom_minimum_size = Vector2(1920, 150)
@@ -33,7 +33,7 @@ offset_right = 1356.0
 offset_bottom = 100.0
 horizontal_scroll_mode = 2
 script = ExtResource("3_rnvyw")
-rootNode = NodePath("..")
+timeline = NodePath("..")
 
 [node name="BaseControl" type="ColorRect" parent="ScrollContainer"]
 z_as_relative = false
@@ -46,10 +46,10 @@ color = Color(0.0313726, 0.141176, 0.215686, 1)
 z_index = 2
 z_as_relative = false
 
-[node name="BeatTicks" type="Node2D" parent="ScrollContainer/BaseControl" node_paths=PackedStringArray("rootNode", "scrollContainer")]
+[node name="BeatTicks" type="Node2D" parent="ScrollContainer/BaseControl" node_paths=PackedStringArray("timeline", "scrollContainer")]
 z_index = 1
 script = ExtResource("2_1xed5")
-rootNode = NodePath("../../..")
+timeline = NodePath("../../..")
 scrollContainer = NodePath("../..")
 
 [node name="PlayHead" type="ColorRect" parent="."]

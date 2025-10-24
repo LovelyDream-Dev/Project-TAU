@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var rootNode:Timeline
+@export var timeline:Timeline
 @export var scrollContainer:ScrollContainer
 
 var initialTicksDrawn:bool
@@ -12,9 +12,9 @@ var cullingMargin:float
 var showCullingRect:bool
 
 func _process(_delta: float) -> void:
-	cullingMargin = rootNode.cullingMargin
-	showCullingRect = rootNode.showCullingRect
-	if !initialTicksDrawn and rootNode.get_if_ticks_are_drawable():
+	cullingMargin = timeline.cullingMargin
+	showCullingRect = timeline.showCullingRect
+	if !initialTicksDrawn and timeline.get_if_ticks_are_drawable():
 		queue_redraw()
 		initialTicksDrawn = true
 
@@ -25,8 +25,8 @@ func _process(_delta: float) -> void:
 		on_scroll_changed()
 
 func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColor:Color, rounded:bool):
-	var xPosition = rootNode.get_timeline_position_x_from_song_position(BeatTime)
-	var yCenter = rootNode.position.y + (rootNode.get_rect().size.y/2)
+	var xPosition = GlobalFunctions.get_timeline_position_x_from_seconds(BeatTime, timeline.pixelsPerSecond, timeline.playheadOffset)
+	var yCenter = timeline.position.y + (timeline.get_rect().size.y/2)
 	
 	#  \/ --- BEAT TICK CULLING WITH MARGIN --- \/
 
@@ -53,59 +53,59 @@ func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColo
 ## Checks if the given tick time is overlapped with another tick time of a different type (1: Whole tick 2: half tick 4: quarter tick, etc...), allowing said time to be excluded if it is a member of a smaller snap divisor. [br]Whole ticks are never excluded, tick type of 1 will have no effect.
 func get_if_tick_time_overlaps(tickTime:float, tickType:int):
 	if tickType == 2: # half ticks
-		if tickTime in rootNode.wholeBeatTimes:
+		if tickTime in timeline.wholeBeatTimes:
 			return true
 	elif tickType == 4: # quarter ticks
-		if tickTime in rootNode.halfBeatTimes:
+		if tickTime in timeline.halfBeatTimes:
 			return true
 	elif tickType == 8: # eighth ticks
-		if tickTime in rootNode.quarterBeatTimes:
+		if tickTime in timeline.quarterBeatTimes:
 			return true
 	elif tickType == 16: # sixteenth ticks
-		if tickTime in rootNode.eighthBeatTimes:
+		if tickTime in timeline.eighthBeatTimes:
 			return true
 
 func _draw() -> void:
 	# Draw whole ticks (always drawn)
-	for i in range(len(rootNode.wholeBeatTimes)):
-		var wholeBeatTime = rootNode.wholeBeatTimes[i]
+	for i in range(len(timeline.wholeBeatTimes)):
+		var wholeBeatTime = timeline.wholeBeatTimes[i]
 		var isFourth = (i % 4 == 0)
-		var tickwidth = rootNode.tickWidth if isFourth else rootNode.tickWidth * 0.7
-		var fourthTickHeight:float = rootNode.get_rect().size.y-10
-		var tickHeight = fourthTickHeight if isFourth else rootNode.tickHeight * 0.95
-		draw_beat_ticks(wholeBeatTime, tickHeight, tickwidth, rootNode.wholeBeatTickColor, rootNode.roundedTicks)
+		var tickwidth = timeline.tickWidth if isFourth else timeline.tickWidth * 0.7
+		var fourthTickHeight:float = timeline.get_rect().size.y-10
+		var tickHeight = fourthTickHeight if isFourth else timeline.tickHeight * 0.95
+		draw_beat_ticks(wholeBeatTime, tickHeight, tickwidth, timeline.wholeBeatTickColor, timeline.roundedTicks)
 
 	# Draw half ticks
-	if rootNode.snapDivisor >= 2: 
-		for halfBeatTime in rootNode.halfBeatTimes:
+	if timeline.snapDivisor >= 2: 
+		for halfBeatTime in timeline.halfBeatTimes:
 			if !get_if_tick_time_overlaps(halfBeatTime, 2):
-				var tickHeight = rootNode.tickHeight * 0.85
-				var tickwidth = rootNode.tickWidth * 0.65
-				draw_beat_ticks(halfBeatTime, tickHeight, tickwidth, rootNode.halfBeatTickColor, rootNode.roundedTicks)
+				var tickHeight = timeline.tickHeight * 0.85
+				var tickwidth = timeline.tickWidth * 0.65
+				draw_beat_ticks(halfBeatTime, tickHeight, tickwidth, timeline.halfBeatTickColor, timeline.roundedTicks)
 
 	# Draw quarter ticks
-	if rootNode.snapDivisor >= 4: 
-		for quarterBeatTime in rootNode.quarterBeatTimes: 
+	if timeline.snapDivisor >= 4: 
+		for quarterBeatTime in timeline.quarterBeatTimes: 
 			if !get_if_tick_time_overlaps(quarterBeatTime, 4):
-				var tickHeight = rootNode.tickHeight * 0.75
-				var tickwidth = rootNode.tickWidth * 0.6
-				draw_beat_ticks(quarterBeatTime, tickHeight, tickwidth, rootNode.quarterBeatTickColor, rootNode.roundedTicks)
+				var tickHeight = timeline.tickHeight * 0.75
+				var tickwidth = timeline.tickWidth * 0.6
+				draw_beat_ticks(quarterBeatTime, tickHeight, tickwidth, timeline.quarterBeatTickColor, timeline.roundedTicks)
 
 	# Draw eighth ticks
-	if rootNode.snapDivisor >= 8: 
-		for eighthBeatTime in rootNode.eighthBeatTimes: 
+	if timeline.snapDivisor >= 8: 
+		for eighthBeatTime in timeline.eighthBeatTimes: 
 			if !get_if_tick_time_overlaps(eighthBeatTime, 8):
-				var tickHeight = rootNode.tickHeight * 0.65
-				var tickwidth = rootNode.tickWidth * 0.55
-				draw_beat_ticks(eighthBeatTime, tickHeight, tickwidth, rootNode.eighthBeatTickColor, rootNode.roundedTicks)
+				var tickHeight = timeline.tickHeight * 0.65
+				var tickwidth = timeline.tickWidth * 0.55
+				draw_beat_ticks(eighthBeatTime, tickHeight, tickwidth, timeline.eighthBeatTickColor, timeline.roundedTicks)
 
 	# Draw sixteenth ticks
-	if rootNode.snapDivisor >= 16: 
-		for sixteenthBeatTime in rootNode.sixteenthBeatTimes: 
+	if timeline.snapDivisor >= 16: 
+		for sixteenthBeatTime in timeline.sixteenthBeatTimes: 
 			if !get_if_tick_time_overlaps(sixteenthBeatTime, 16):
-				var tickHeight = rootNode.tickHeight * 0.55
-				var tickwidth = rootNode.tickWidth * 0.5
-				draw_beat_ticks(sixteenthBeatTime, tickHeight, tickwidth, rootNode.sixteenthBeatTickColor, rootNode.roundedTicks)
+				var tickHeight = timeline.tickHeight * 0.55
+				var tickwidth = timeline.tickWidth * 0.5
+				draw_beat_ticks(sixteenthBeatTime, tickHeight, tickwidth, timeline.sixteenthBeatTickColor, timeline.roundedTicks)
 
 ## Refreshes beat ticks
 func refresh_ticks():

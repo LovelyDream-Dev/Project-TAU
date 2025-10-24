@@ -8,5 +8,5 @@ func _enter_tree() -> void:
 	CurrentMap.inEditor = true
 
 func _process(_delta: float) -> void:
-	if !timeline.initialCull:
-		timeline.initial_note_cull()
+	if !timeline.initialObjectOCull:
+		timeline.initial_object_cull()

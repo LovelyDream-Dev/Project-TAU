@@ -99,16 +99,16 @@ func _process(delta: float) -> void:
 # --- CUSTOM FUNCTIONS ---
 
 func spawn_hit_object(dict:Dictionary):
-	var hitTime:float = parse_hit_times(dict).hitTime
-	var releaseTime:float = parse_hit_times(dict).releaseTime
-	var side:int = parse_hit_times(dict).side
+	var hitTime:float = GlobalFunctions.parse_hit_times(dict).hitTime
+	var releaseTime:float = GlobalFunctions.parse_hit_times(dict).releaseTime
+	var side:int = GlobalFunctions.parse_hit_times(dict).side
 	var spawnTime:float = hitTime - spawnWindowInSeconds
 
 	var hitBeat = hitTime * beatsPerSecond
 	var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 	var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
-	var spawnPosition = get_position_along_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
-	var hitPosition = get_position_along_circumference(center, spawnSide * radiusInPixels, rotationDirection * angle)
+	var spawnPosition = GlobalFunctions.get_position_on_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
+	var hitPosition = GlobalFunctions.get_position_on_circumference(center, spawnSide * radiusInPixels, rotationDirection * angle)
 
 	var hitObject:HitObject = HitObject.new()
 	var hitNoteTexture:Texture  = load("res://Skins/Default Skin/hit-note.png")
@@ -122,21 +122,8 @@ func spawn_hit_object(dict:Dictionary):
 	hitObject.spawnTime = spawnTime
 	hitObject.hitTime = hitTime
 	hitObject.releaseTime = releaseTime
-	hitObject.side = side
+	hitObject.side = side 
 	SPAWN_HIT_OBJECT.emit(hitObject)
-
-func get_beat_from_song_position(songPosition:float) -> float:
-	return songPosition * beatsPerSecond
-
-func parse_hit_times(dict:Dictionary):
-	var ParsedHitObject = HitObjectParser.new()
-	ParsedHitObject.hitTime = dict["hitTime"]
-	ParsedHitObject.releaseTime = dict["releaseTime"]
-	ParsedHitObject.side = dict["side"] 
-	return ParsedHitObject
-
-func get_position_along_circumference(circleCenter:Vector2, circleRadius:float, angle:float):
-	return circleCenter + Vector2(cos(angle), sin(angle)) * circleRadius
 
 func start_and_stop_map(_mapTime = null):
 	if mapStarted:

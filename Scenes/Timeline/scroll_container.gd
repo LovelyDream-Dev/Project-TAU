@@ -1,13 +1,13 @@
 extends ScrollContainer
+class_name TimelineScroller
 
 signal SCROLL_CHANGED
 
 var maestro:Maestro = MaestroSingleton
 var elapsedLeadInTimeSeconds:float
 
-@export var rootNode:Timeline
+@export var timeline:Timeline
 var lastScrollX:float = 0
-var playheadOffset:float = 500.0
 var manuallyScrolling:bool:
 	set(value):
 		manuallyScrolling = value
@@ -23,7 +23,7 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	queue_redraw()
-	self.custom_minimum_size = rootNode.get_rect().size
+	self.custom_minimum_size = timeline.get_rect().size
 
 	# Handle getting if manual scroll stopped
 	if manuallyScrolling:
@@ -38,7 +38,7 @@ func _process(delta: float) -> void:
 	if !manuallyScrolling:
 		handle_scroll()
 	else:
-		CurrentMap.globalMapTimeInSeconds = self.scroll_horizontal / rootNode.pixelsPerSecond
+		CurrentMap.globalMapTimeInSeconds = self.scroll_horizontal / timeline.pixelsPerSecond
 		maestro.pause_songs()
 
 
@@ -54,13 +54,13 @@ func handle_scroll():
 		# Use elapsedLeadInTimeSeconds to manage lead in time with scrolling
 		GameData.mtween.mtween_property(self, "elapsedLeadInTimeSeconds", 0.0, (CurrentMap.LeadInTimeMS/1000.0), 0.0, abs(CurrentMap.LeadInTimeMS/1000.0))
 		if abs(elapsedLeadInTimeSeconds) < abs(CurrentMap.LeadInTimeMS/1000.0):
-			self.scroll_horizontal = int(abs(elapsedLeadInTimeSeconds) * rootNode.pixelsPerSecond)
+			self.scroll_horizontal = int(abs(elapsedLeadInTimeSeconds) * timeline.pixelsPerSecond)
 		else:
-			self.scroll_horizontal = int(abs(CurrentMap.globalMapTimeInSeconds) * rootNode.pixelsPerSecond)
+			self.scroll_horizontal = int(abs(CurrentMap.globalMapTimeInSeconds) * timeline.pixelsPerSecond)
 
 func on_manual_scroll(value):
 	if value == false:
 		if CurrentMap.mapStarted:
 			maestro.play_songs()
 		else:
-			CurrentMap.globalMapTimeInSeconds = self.scroll_horizontal / rootNode.pixelsPerSecond
+			CurrentMap.globalMapTimeInSeconds = self.scroll_horizontal / timeline.pixelsPerSecond
