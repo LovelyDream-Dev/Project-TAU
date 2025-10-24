@@ -3,7 +3,7 @@ class_name FileLoader
 
 ## Loads the user config file
 static func load_user_config():
-	var path = "user://tau.".path_join(get_os_user()).path_join(".cfg")
+	var path = "user://tau." + get_os_user() + ".cfg"
 	var config = ConfigFile.new()
 	var err = config.load(path)
 
@@ -18,7 +18,10 @@ static func load_user_config():
 		PlayerData.audioOffsetInMs = config.get_value("Settings", "audioOffsetInMs")
 
 		# Editor
-		PlayerData.editorSnapDivisor = config.get_value("Editor", "EditorSnapDivisor")
+		PlayerData.editorSnapDivisor = config.get_value("Editor", "editorSnapDivisor")
+	else:
+		FileSaver.save_user_config(path)
+
 
 ## Gets the name of the OS user 
 static func get_os_user() -> String:

@@ -1,6 +1,25 @@
 extends Node
 class_name FileSaver
 
+## Saves data to the user config file. If the file does not exist, it will be created.
+static func save_user_config(path:StringName):
+	var config = ConfigFile.new()
+	print(path)
+	# General
+	config.set_value("General", "username", PlayerData.username)
+
+	# Settings
+	config.set_value("Settings", "color1", PlayerData.color1)
+	config.set_value("Settings", "color2", PlayerData.color2)
+	config.set_value("Settings", "scrollSpeed", PlayerData.scrollSpeed)
+	config.set_value("Settings", "audioOffsetInMs", PlayerData.audioOffsetInMs)
+
+	# Editor
+	config.set_value("Editor", "editorSnapDivisor", PlayerData.editorSnapDivisor)
+
+	# Save the file
+	config.save(path)
+
 static func save_tau_data(filePath:String):
 	var file = FileAccess.open(filePath, FileAccess.WRITE)
 	if file == null:
