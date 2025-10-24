@@ -1,5 +1,5 @@
 extends Node2D
-class_name TimelineNote
+class_name TimelineObject
 
 var hitObjectSprite := Sprite2D.new() 
 
@@ -9,13 +9,10 @@ var leftColor:Color = Color("924CF4")
 var rightColor = Color("F44C4F")
 var highlightColor = Color("F6FF00")
 
-var currentPositionX:float
-
 var startPos:Vector2
 var endPos:Vector2
 var side:int
 
-var hitObject:Dictionary
 var hitObjectArray:Array = CurrentMap.hitObjects
 
 var isSelected:bool:

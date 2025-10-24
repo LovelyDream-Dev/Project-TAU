@@ -19,7 +19,7 @@ config/icon="res://Images/icon.svg"
 
 GameData="*res://Auotoloads/game_data.gd"
 MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
-InputManager="*res://Auotoloads/InputManager.gd"
+InputManager="*res://Auotoloads/input_manager.gd"
 CurrentMap="*res://Auotoloads/current_map.gd"
 
 [display]

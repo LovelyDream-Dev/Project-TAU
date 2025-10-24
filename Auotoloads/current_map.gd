@@ -3,8 +3,6 @@ extends Node
 signal READY_TO_SPAWN_HIT_OBJECTS
 signal SPAWN_HIT_OBJECT
 
-var fileLoader = FileLoader.new()
-
 # --- MAP VARIABLES ---
 
 var globalMapTimeInSeconds:float
@@ -74,7 +72,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if !is_map_loaded():
 		var path = "user://maps/xaev for tau"
-		fileLoader.load_map(path)
+		FileLoader.load_map(path)
 		timing_points()
 		secondsPerBeat = 60/bpm
 		beatsPerSecond = bpm/60
@@ -192,9 +190,9 @@ func sort_timing_points():
 
 func sort_hit_objects():
 	hitObjects.sort_custom(func(a,b): 
-		if a["startTime"] < b["startTime"]:
+		if a["hitTime"] < b["hitTime"]:
 			return -1
-		elif a["startTime"] > b["startTime"]:
+		elif a["hitTime"] > b["hitTime"]:
 			return 1
 		else:
 			return 0)

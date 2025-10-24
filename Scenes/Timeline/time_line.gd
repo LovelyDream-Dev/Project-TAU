@@ -91,7 +91,7 @@ var mouseTimelinePosition:float
 var manuallyScrolling:bool
 
 ## The notes that are currently on the timeline
-var timelineNotes:Array
+var timelineObjects:Array
 
 # --- DRAGGING VARIABLES ---
 
@@ -179,7 +179,11 @@ func _process(_delta: float) -> void:
 	elif !hideScrollBar and scrollContainer.horizontal_scroll_mode == ScrollContainer.SCROLL_MODE_SHOW_NEVER:
 		scrollContainer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
 
-	place_timeline_notes()
+	# Spawn timeline objects at load time in the editor
+	for dict:Dictionary in CurrentMap.hitObjects:
+		if !initialNotesSpawned:
+			place_timeline_objects(dict)
+		initialNotesSpawned = true
 	
 	get_whole_beat_times()
 	get_half_beat_times()
@@ -213,14 +217,14 @@ func draw_selection_rectangle(pos:Vector2):
 
 # ----- TIMELINE _NOTE FUNCTIONS -----
 
-## Selects timeline notes on mouse click. Can only select individual notes if none are already selected.
+## Selects timeline objects on mouse click. Can only select individual notes if none are already selected.
 func select_notes_by_click(event:InputEvent):
 	if get_tree().get_node_count_in_group("selectedNotes") > 0:
 		return
 
 	var nodesUnderEvent:Array = get_timeline_note_from_list_at_point(event.position, noteContainer.get_children())
 	if !nodesUnderEvent.is_empty():
-		var topNote:TimelineNote = nodesUnderEvent.back()
+		var topNote:TimelineObject = nodesUnderEvent.back()
 		topNote.isSelected = true
 
 func select_notes_by_drag():
@@ -228,22 +232,22 @@ func select_notes_by_drag():
 		if get_tree().get_node_count_in_group("selectedNotes") > 0:
 			return
 	else:
-		for timelineNote:TimelineNote in noteContainer.get_children():
-			if dragSelectionRect.abs().has_point(noteContainer.to_local(timelineNote.global_position)):
-				timelineNote.isSelected = true
+		for timelineObject:TimelineObject in noteContainer.get_children():
+			if dragSelectionRect.abs().has_point(noteContainer.to_local(timelineObject.global_position)):
+				timelineObject.isSelected = true
 
 ## De-selects [member note] if it is not [code]null[/code]. Otherwise it de-selects all notes in group [member selectedNotes].
-func deselect_notes(note:TimelineNote):
+func deselect_notes(note:TimelineObject):
 	if note == null:
-		for timelineNote:TimelineNote in get_tree().get_nodes_in_group("selectedNotes"):
-			timelineNote.isSelected = false
+		for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
+			timelineObject.isSelected = false
 	else:
 		note.isSelected = false
 
 ## Returns [member true] if a mouse click is detected outside of any node within group [member selectedNotes].
 func get_if_clicked_outside_of_selected_note() -> bool:
-	for timelineNote:TimelineNote in get_tree().get_nodes_in_group("selectedNotes"):
-		if !timelineNote.hitObjectSprite.get_rect().has_point(timelineNote.hitObjectSprite.get_local_mouse_position()):
+	for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
+		if !timelineObject.hitObjectSprite.get_rect().has_point(timelineObject.hitObjectSprite.get_local_mouse_position()):
 			return true
 		else: 
 			return false
@@ -254,22 +258,22 @@ func start_note_drag():
 
 func drag_notes():
 	if !dragSelectStarted:
-		for timelineNote:TimelineNote in get_tree().get_nodes_in_group("selectedNotes"):
+		for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
 			var dragDistance = (snappedPixel - dragNoteStartPosX)
-			timelineNote.position.x = timelineNote.currentPositionX + dragDistance
+			timelineObject.position.x = timelineObject.currentPositionX + dragDistance
 			
 
 func end_note_drag():
-	for timelineNote:TimelineNote in get_tree().get_nodes_in_group("selectedNotes"):
-		timelineNote.currentPositionX = timelineNote.position.x
+	for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
+		timelineObject.currentPositionX = timelineObject.position.x
 	dragNoteStartPosX = 0.0
 
 ## Returns an [member Array] of all [member Node2D]'s within [member list] that are located at [member point].
 func get_timeline_note_from_list_at_point(point:Vector2, list:Array) -> Array:
 	var pointArray:Array 
-	for timelineNote:TimelineNote in list:
-		if timelineNote.hitObjectSprite.get_rect().has_point(timelineNote.to_local(point)):
-			pointArray.append(timelineNote)
+	for timelineObject:TimelineObject in list:
+		if timelineObject.hitObjectSprite.get_rect().has_point(timelineObject.to_local(point)):
+			pointArray.append(timelineObject)
 	return pointArray
 
 ## Returns the [member Node2D] with the highest [member z-index] from [member list].
@@ -277,47 +281,42 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 	if list.is_empty():
 		return null
 
-	var highest:TimelineNote = list[0]
-	for timelineNote:TimelineNote in list:
-		if timelineNote.z_index > highest.z_index:
-				highest = timelineNote
+	var highest:TimelineObject = list[0]
+	for timelineObject:TimelineObject in list:
+		if timelineObject.z_index > highest.z_index:
+				highest = timelineObject
 	return highest
 
 func manage_notes():
-	for dict:Dictionary in timelineNotes:
+	for dict:Dictionary in timelineObjects:
 		if dict not in CurrentMap.hitObjects:
 			CurrentMap.hitObjects.append(dict)
 			CurrentMap.sort_hit_objects()
 	for dict:Dictionary in CurrentMap.hitObjects:
-		if dict not in timelineNotes:
+		if dict not in timelineObjects:
 			CurrentMap.hitObjects.erase(dict)
 			CurrentMap.sort_hit_objects()
 
 ## Places notes on the timeline at the correct position using [member beat].
-func place_timeline_notes():
-	for dict in CurrentMap.hitObjects:
-		if timelineNotes.size() < CurrentMap.hitObjects.size():
-			var hitTime = dict["hitTime"]
-			var releaseTime = dict["releaseTime"]
-			var side = dict["side"]
-			var hitBeat:float = hitTime * beatsPerSecond
-			var releaseBeat:float = releaseTime * beatsPerSecond
-			var startPos = get_timeline_position_from_beat(hitBeat)
-			var endPos = get_timeline_position_from_beat(releaseBeat)
-			var timelineNote:TimelineNote = TimelineNote.new()
-			timelineNote.hitObject = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
-			timelineNote.hitBeat = hitBeat
-			timelineNote.releaseBeat = releaseBeat
-			timelineNote.startPos = startPos
-			timelineNote.endPos = endPos
-			timelineNote.currentPositionX = startPos.x
-			timelineNote.position = startPos
-			timelineNote.side = side
-			timelineNote.hitObjectTexture = load("res://Images/Timeline/timeline-note.png")
-			noteContainer.add_child(timelineNote)
-			timelineNotes.append({"hitTime": hitTime, "releaseTime": releaseTime, "side": side})
-	initialNotesSpawned = true
+func place_timeline_objects(dict:Dictionary):
+	var timelineObjectTexture = load("res://Images/Timeline/timeline-note.png")
+	var timelineObject:TimelineObject = create_timeline_object(dict, timelineObjectTexture)
+	noteContainer.add_child(timelineObject)
 
+## Creates timeline objects from the appropriate dictionary format; [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
+func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
+	var timelineObject:TimelineObject = TimelineObject.new()
+	var hitTime = dict["hitTime"]
+	var releaseTime = dict["releaseTime"]
+	var side = dict["side"]
+	var startPos = get_timeline_position_from_seconds(hitTime)
+	var endPos = get_timeline_position_from_seconds(releaseTime)
+	timelineObject.position = startPos
+	timelineObject.hitObjectTexture = texture
+	timelineObject.startPos = startPos
+	timelineObject.endPos = endPos
+	timelineObject.side = side
+	return timelineObject
 
 # ----- TIMELINE POSITION FUNCTIONS -----
 
@@ -327,21 +326,21 @@ func cull_notes():
 	var cullingRect = Rect2(scrollContainerRect.position - Vector2(cullingMargin, cullingMargin), scrollContainerRect.size + Vector2(cullingMargin * 2.0, cullingMargin * 2.0))
 	cullingRect.position.x += scrollContainer.scroll_horizontal
 	# cull
-	for timelineNote:TimelineNote in noteContainer.get_children():
-		if !cullingRect.has_point(timelineNote.position):
-			if !timelineNote.is_in_group("culledTimelineNotes"): 
-				timelineNote.add_to_group("culledTimelineNotes")
-			timelineNote.hide()
-			timelineNote.process_mode = Node.PROCESS_MODE_DISABLED
+	for timelineObject:TimelineObject in noteContainer.get_children():
+		if !cullingRect.has_point(timelineObject.position):
+			if !timelineObject.is_in_group("culledtimelineObjects"): 
+				timelineObject.add_to_group("culledtimelineObjects")
+			timelineObject.hide()
+			timelineObject.process_mode = Node.PROCESS_MODE_DISABLED
 	# revive
-	for timelineNote:TimelineNote in get_tree().get_nodes_in_group("culledTimelineNotes"):
-		if cullingRect.has_point(timelineNote.position):
-			timelineNote.remove_from_group("culledTimelineNotes")
-			timelineNote.show()
-			timelineNote.process_mode = Node.PROCESS_MODE_INHERIT
+	for timelineObject:TimelineObject in get_tree().get_nodes_in_group("culledtimelineObjects"):
+		if cullingRect.has_point(timelineObject.position):
+			timelineObject.remove_from_group("culledtimelineObjects")
+			timelineObject.show()
+			timelineObject.process_mode = Node.PROCESS_MODE_INHERIT
 
-func get_timeline_position_from_beat(beat:float) -> Vector2:
-	var posx = beat * pixelsPerBeat + scrollContainer.playheadOffset
+func get_timeline_position_from_seconds(valueInSeconds:float) -> Vector2:
+	var posx = (valueInSeconds * pixelsPerSecond) + scrollContainer.playheadOffset
 	var posy = self.get_rect().size.y/2
 	return Vector2(posx, posy)
 

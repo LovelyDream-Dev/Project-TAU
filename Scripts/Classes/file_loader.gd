@@ -1,16 +1,8 @@
 extends Node
 class_name FileLoader
 
-var maestro:Maestro = MaestroSingleton
-
-var fileSaver:FileSaver = FileSaver.new()
-
-var originalAudioFileName:String
-var mapFolderPath:String
-var AudioFileExtension:String
-
 ## Takes the folder of the specific map and loads the map
-func load_map(folderPath:String):
+static func load_map(folderPath:String):
 	CurrentMap.unload_map()
 	var dir = DirAccess.open(folderPath)
 	if dir == null:
@@ -28,7 +20,7 @@ func load_map(folderPath:String):
 	dir.list_dir_end()
 	
 
-func load_tau_file(filePath:String, folderPath:String):
+static func load_tau_file(filePath:String, folderPath:String):
 	var file = FileAccess.open(filePath, FileAccess.READ)
 	if file == null:
 		push_error("Could not open .tau file: "+filePath)
@@ -59,7 +51,7 @@ func load_tau_file(filePath:String, folderPath:String):
 				load_song(audioFilePath)
 			elif line.begins_with("LeadInTimeMS:"):
 				var parts = line.split(":", false, 1) # split into [ "LeadInTimeMS", value]
-				CurrentMap.LeadInTimeMS = float(parts[1])
+				CurrentMap.LeadInTimeMS = int(parts[1])
 
 		if inMetadata:
 			if line.begins_with("Title:"):
@@ -108,8 +100,8 @@ func load_tau_file(filePath:String, folderPath:String):
 				CurrentMap.hitObjects.append(hitObject)
 
 func init_new_map(songFilePath:String):
-	originalAudioFileName = songFilePath.get_file().get_basename()
-	AudioFileExtension = songFilePath.get_file().get_extension()
+	var originalAudioFileName = songFilePath.get_file().get_basename()
+	var AudioFileExtension = songFilePath.get_file().get_extension()
 
 	CurrentMap.audioFileExtension = AudioFileExtension.to_lower()
 
@@ -117,7 +109,7 @@ func init_new_map(songFilePath:String):
 	
 	var mapsPath:String = "user://maps"
 	# The name of the map folder is the name of the song
-	mapFolderPath = mapsPath.path_join(originalAudioFileName+AudioFileExtension.to_lower())
+	var mapFolderPath = mapsPath.path_join(originalAudioFileName+AudioFileExtension.to_lower())
 
 	var errFolder := DirAccess.make_dir_absolute(mapFolderPath)
 	if errFolder != OK:
@@ -138,10 +130,11 @@ func init_new_map(songFilePath:String):
 
 	var tauFilePath = mapFolderPath.path_join("data.tau")
 	CurrentMap.tauFilePath = tauFilePath
-	fileSaver.save_tau_data(tauFilePath)
+	FileSaver.save_tau_data(tauFilePath)
 	CurrentMap.editorMapInit = true
 
-func load_song(filePath:String):
+static func load_song(filePath:String):
+	var maestro:Maestro = MaestroSingleton
 	var stream:AudioStream
 	if filePath.ends_with(".mp3"):
 		stream = AudioStreamMP3.load_from_file(filePath)

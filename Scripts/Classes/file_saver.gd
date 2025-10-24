@@ -1,7 +1,7 @@
 extends Node
 class_name FileSaver
 
-func save_tau_data(filePath:String):
+static func save_tau_data(filePath:String):
 	var file = FileAccess.open(filePath, FileAccess.WRITE)
 	if file == null:
 		push_error("Could not open .tau file for writing: " + filePath)
