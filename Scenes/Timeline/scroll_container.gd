@@ -52,7 +52,7 @@ func get_if_scroll_changed() -> bool:
 func handle_scroll():
 	if CurrentMap.mapStarted:
 		# Use elapsedLeadInTimeSeconds to manage lead in time with scrolling
-		GameData.mtween.mtween_property(self, "elapsedLeadInTimeSeconds", 0.0, (CurrentMap.LeadInTimeMS/1000.0), 0.0, abs(CurrentMap.LeadInTimeMS/1000.0))
+		MTween.mtween_property(self, "elapsedLeadInTimeSeconds", 0.0, (CurrentMap.LeadInTimeMS/1000.0), 0.0, abs(CurrentMap.LeadInTimeMS/1000.0))
 		if abs(elapsedLeadInTimeSeconds) < abs(CurrentMap.LeadInTimeMS/1000.0):
 			self.scroll_horizontal = int(abs(elapsedLeadInTimeSeconds) * timeline.pixelsPerSecond)
 		else:

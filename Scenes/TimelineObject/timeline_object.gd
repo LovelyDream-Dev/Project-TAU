@@ -26,8 +26,6 @@ func manage_object():
 			CurrentMap.hitObjects[index] = objectDict
 			CurrentMap.spawn_hit_objects(index)
 			lastObjectDict = objectDict
-			EditorManager.OBJECT_MOVED.emit(objectDict)
-			
 
 
 func set_object_dict():

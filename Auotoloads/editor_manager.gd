@@ -1,7 +1,6 @@
 extends Node
 
 signal SNAP_DIVISOR_CHANGED
-signal OBJECT_MOVED
 
 enum modes {
 	SELECT = 0,
@@ -10,10 +9,7 @@ enum modes {
 	RAPID = 3
 }
 var currentMode:int = 0
-var snapDivisor:int = 2:
-	set(value):
-		snapDivisor = value
-		SNAP_DIVISOR_CHANGED.emit()
+var editorSnapDivisor:int = 2
 
 ## The y positon of notes on the timeline.
 var yPos:float
@@ -21,3 +17,6 @@ var snappedBeat:float
 var snappedPixel:float
 var snappedSongPosition:float
 var playheadOffset:float
+
+func _ready() -> void:
+	editorSnapDivisor = PlayerData.editorSnapDivisor

@@ -11,18 +11,21 @@ var lastScrollX:float = 0
 var cullingMargin:float
 var showCullingRect:bool
 
+func _ready() -> void:
+	EditorManager.SNAP_DIVISOR_CHANGED.connect(refresh_ticks)
+
 func _process(_delta: float) -> void:
 	cullingMargin = timeline.cullingMargin
 	showCullingRect = timeline.showCullingRect
 	if !initialTicksDrawn and timeline.get_if_ticks_are_drawable():
-		queue_redraw()
+		refresh_ticks()
 		initialTicksDrawn = true
 
 	# Determine if the scroll container has scrolled
 	var currentScrollX = timelineScroller.scroll_horizontal
 	if lastScrollX != currentScrollX:
 		lastScrollX = currentScrollX
-		on_scroll_changed()
+		refresh_ticks()
 
 func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColor:Color, rounded:bool):
 	var xPosition = GlobalFunctions.get_timeline_position_x_from_seconds(BeatTime, timeline.pixelsPerSecond, timeline.playheadOffset)
@@ -76,7 +79,7 @@ func _draw() -> void:
 		draw_beat_ticks(wholeBeatTime, tickHeight, tickwidth, timeline.wholeBeatTickColor, timeline.roundedTicks)
 
 	# Draw half ticks
-	if EditorManager.snapDivisor >= 2: 
+	if EditorManager.editorSnapDivisor >= 2: 
 		for halfBeatTime in timeline.halfBeatTimes:
 			if !get_if_tick_time_overlaps(halfBeatTime, 2):
 				var tickHeight = timeline.tickHeight * 0.85
@@ -84,7 +87,7 @@ func _draw() -> void:
 				draw_beat_ticks(halfBeatTime, tickHeight, tickwidth, timeline.halfBeatTickColor, timeline.roundedTicks)
 
 	# Draw quarter ticks
-	if EditorManager.snapDivisor >= 4: 
+	if EditorManager.editorSnapDivisor >= 4: 
 		for quarterBeatTime in timeline.quarterBeatTimes: 
 			if !get_if_tick_time_overlaps(quarterBeatTime, 4):
 				var tickHeight = timeline.tickHeight * 0.75
@@ -92,7 +95,7 @@ func _draw() -> void:
 				draw_beat_ticks(quarterBeatTime, tickHeight, tickwidth, timeline.quarterBeatTickColor, timeline.roundedTicks)
 
 	# Draw eighth ticks
-	if EditorManager.snapDivisor >= 8: 
+	if EditorManager.editorSnapDivisor >= 8: 
 		for eighthBeatTime in timeline.eighthBeatTimes: 
 			if !get_if_tick_time_overlaps(eighthBeatTime, 8):
 				var tickHeight = timeline.tickHeight * 0.65
@@ -100,19 +103,13 @@ func _draw() -> void:
 				draw_beat_ticks(eighthBeatTime, tickHeight, tickwidth, timeline.eighthBeatTickColor, timeline.roundedTicks)
 
 	# Draw sixteenth ticks
-	if EditorManager.snapDivisor >= 16: 
+	if EditorManager.editorSnapDivisor >= 16: 
 		for sixteenthBeatTime in timeline.sixteenthBeatTimes: 
 			if !get_if_tick_time_overlaps(sixteenthBeatTime, 16):
 				var tickHeight = timeline.tickHeight * 0.55
 				var tickwidth = timeline.tickWidth * 0.5
 				draw_beat_ticks(sixteenthBeatTime, tickHeight, tickwidth, timeline.sixteenthBeatTickColor, timeline.roundedTicks)
 
-## Refreshes beat ticks
+## Refreshes (redraws) beat ticks
 func refresh_ticks():
 	queue_redraw()
-
-func on_scroll_changed():
-	refresh_ticks()
-
-func on_timeline_2d_snap_divisor_changed() -> void:
-	refresh_ticks()
