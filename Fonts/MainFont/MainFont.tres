@@ -1,0 +1,7 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://dyxaql4v2lcso"]
+
+[ext_resource type="FontFile" uid="uid://ob45whajbybj" path="res://Fonts/MainFont/538LyonsRoundedRegular-OmAP.ttf" id="1_a714p"]
+
+[resource]
+base_font = ExtResource("1_a714p")
+spacing_glyph = 1

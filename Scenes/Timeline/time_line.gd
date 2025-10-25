@@ -3,7 +3,7 @@ class_name Timeline
 
 @export_group("Colors")
 ## The color of the timeline background
-@export var backgroundColor:Color
+@export var backgroundColor:Color = Color("082437b3")
 @export_subgroup("Beat Ticks")
 ## The color of whole beat ticks
 @export var wholeBeatTickColor:Color
@@ -220,7 +220,7 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 
 ## Places notes on the timeline at the correct position using [member dict].
 func place_timeline_objects(dict:Dictionary):
-	var timelineObjectTexture = load("res://Images/Timeline/timeline-note.png")
+	var timelineObjectTexture = load("res://Images/Editor/Timeline/timeline-note.png")
 	timelineObjectContainer.add_child(create_timeline_object(dict, timelineObjectTexture))
 
 ## Creates timeline objects from the appropriate dictionary format; 

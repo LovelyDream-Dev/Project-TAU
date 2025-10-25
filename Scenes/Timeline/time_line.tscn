@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Timeline/time_line.gd" id="1_vkty0"]
 [ext_resource type="Script" uid="uid://7w8grgon3jya" path="res://Scenes/Timeline/beat_ticks.gd" id="2_1xed5"]
-[ext_resource type="Texture2D" uid="uid://dmvaqtjquryqk" path="res://Images/icon.svg" id="2_gk61m"]
+[ext_resource type="Texture2D" uid="uid://dmvaqtjquryqk" path="res://icon.svg" id="2_gk61m"]
 [ext_resource type="Script" uid="uid://cw4ldwcrwobik" path="res://Scenes/Timeline/scroll_container.gd" id="3_rnvyw"]
 [ext_resource type="Script" uid="uid://bt1suinuntwpg" path="res://Scenes/Timeline/timeline_content.gd" id="4_a3fgb"]
 
@@ -15,7 +15,6 @@ anchors_preset = 0
 offset_right = 50.0
 offset_bottom = 100.0
 script = ExtResource("1_vkty0")
-backgroundColor = Color(0.0313726, 0.141176, 0.215686, 1)
 wholeBeatTickColor = Color(1, 1, 1, 1)
 halfBeatTickColor = Color(0.713726, 0, 0, 1)
 quarterBeatTickColor = Color(0.2509804, 0.4509804, 0.7764706, 1)
@@ -59,6 +58,7 @@ layout_mode = 0
 offset_left = 500.0
 offset_right = 502.0
 offset_bottom = 150.0
+mouse_filter = 2
 color = Color(0, 0.7490196, 0.5254902, 1)
 
 [connection signal="SCROLL_CHANGED" from="TimelineScroller" to="." method="_on_scroll_container_scroll_changed"]

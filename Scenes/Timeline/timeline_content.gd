@@ -4,6 +4,7 @@ class_name TimelineContent
 @export var timeline:Timeline
 
 func _process(_delta: float) -> void:
+	self.color = timeline.backgroundColor
 	queue_redraw()
 	get_snapped_values()
 

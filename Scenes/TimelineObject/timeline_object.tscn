@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://he8m4vmf82lk"]
 
-[ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Timeline/timeline-note.png" id="1_eayod"]
+[ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Editor/Timeline/timeline-note.png" id="1_eayod"]
 [ext_resource type="Script" uid="uid://dfmp6kgwbwoaf" path="res://Scenes/TimelineObject/timeline_object.gd" id="2_i00dh"]
 [ext_resource type="Script" uid="uid://dudc3p60rhipf" path="res://Scenes/TimelineObject/interaction_control.gd" id="3_skji5"]
 

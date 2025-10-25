@@ -13,7 +13,7 @@ config_version=5
 config/name="Project TAU"
 run/main_scene="uid://dhi8nlbytnk8v"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://Images/icon.svg"
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -29,9 +29,11 @@ EditorManager="*res://Auotoloads/editor_manager.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/window_width_override=1280
-window/size/window_height_override=720
 window/stretch/mode="viewport"
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
 
 [input]
 
