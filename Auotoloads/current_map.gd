@@ -14,18 +14,20 @@ var mapLoaded:bool
 var mapStarted:bool
 var mapFinished:bool
 
-var activeNotes:Array = []
+var activeObjects:Array = []
 var hitObjects:Array = []
 var timingPoints:Array = []
 var rotationPoints:Array = []
 var speedPoints:Array = []
 
+var spawnedObjectCounter:int = 0
 var songLengthInSeconds:float
 var bpm:float = 0.0
 var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
+var pixelsPerSecond:float = 0.0
 var LeadInTimeMS:int = 0
 
 var mainSongIsPlaying:bool
@@ -42,18 +44,18 @@ var creator:String
 var version:String
 var audioFileExtension:String
 
-# --- HIT OBJECT VARIABLES ---
+
 var spinnerLoaded:bool
 var center:Vector2
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:float = 4
-var spawnSide:int = -1
+var spawnSide:int = GlobalFunctions.side.LEFT
 var rotationDirection:int = 1
-var radiusInPixels = 450.0
+var radiusInPixels
 var scrollSpeed = PlayerData.scrollSpeed
-var initialObjectsSpawned:bool
 
 func _ready() -> void:
+	radiusInPixels = GameData.radiusInPixels
 	if inEditor:
 		InputManager.KEY_SPACE_PRESSED.connect(start_and_stop_map)
 		radiusInPixels/=2
@@ -83,33 +85,37 @@ func _process(delta: float) -> void:
 	if !spinnerLoaded:
 		READY_TO_SPAWN_HIT_OBJECTS.emit()
 	else:
-		if !initialObjectsSpawned:
-			for dict in hitObjects:
-				spawn_hit_object(dict)
-			initialObjectsSpawned = true
-
-	# Stop global song time if the song reached its end
+		spawn_hit_objects()
 
 	if mapStarted:
 		globalMapTimeInSeconds += delta
-	
-	
-	
 
-# --- CUSTOM FUNCTIONS ---
 
-func spawn_hit_object(dict:Dictionary):
+func spawn_hit_objects(index:int = -1):
+	if index == -1:
+		if spawnedObjectCounter < hitObjects.size():
+			SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjects[spawnedObjectCounter]))
+			sort_hit_objects()
+			spawnedObjectCounter += 1
+		elif spawnedObjectCounter > hitObjects.size():
+			spawnedObjectCounter = hitObjects.size()
+	else:
+		SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjects[index]))
+		sort_hit_objects()
+		spawnedObjectCounter += 1
+
+
+func create_hit_object(dict:Dictionary) -> HitObject:
 	var hitTime:float = GlobalFunctions.parse_hit_times(dict).hitTime
 	var releaseTime:float = GlobalFunctions.parse_hit_times(dict).releaseTime
 	var side:int = GlobalFunctions.parse_hit_times(dict).side
 	var spawnTime:float = hitTime - spawnWindowInSeconds
-
 	var hitBeat = hitTime * beatsPerSecond
 	var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 	var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
+	var hitRadiusFromCenter = spawnSide * radiusInPixels
 	var spawnPosition = GlobalFunctions.get_position_on_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
-	var hitPosition = GlobalFunctions.get_position_on_circumference(center, spawnSide * radiusInPixels, rotationDirection * angle)
-
+	var hitPosition = GlobalFunctions.get_position_on_circumference(center, hitRadiusFromCenter, rotationDirection * angle)
 	var hitObject:HitObject = HitObject.new()
 	var hitNoteTexture:Texture  = load("res://Skins/Default Skin/hit-note.png")
 	var hitNoteOutlineTexture:Texture = load("res://Skins/Default Skin/hit-note-outline.png")
@@ -118,12 +124,12 @@ func spawn_hit_object(dict:Dictionary):
 	hitObject.position = spawnPosition
 	hitObject.spawnPosition = spawnPosition
 	hitObject.hitPosition = hitPosition
-	hitObject.center = Vector2(480.0, 270.0)
 	hitObject.spawnTime = spawnTime
 	hitObject.hitTime = hitTime
 	hitObject.releaseTime = releaseTime
-	hitObject.side = side 
-	SPAWN_HIT_OBJECT.emit(hitObject)
+	hitObject.side = GlobalFunctions.side_from_raw(side) 
+	hitObject.objectDict = dict
+	return hitObject
 
 func start_and_stop_map(_mapTime = null):
 	if mapStarted:
@@ -193,9 +199,11 @@ func is_map_loaded():
 
 
 func unload_map():
+	pixelsPerSecond = 0.0
+	spawnedObjectCounter = 0
 	mapLoaded = false
 	mapStarted = false
-	activeNotes.clear()
+	activeObjects.clear()
 	hitObjects.clear()
 	timingPoints.clear()
 	rotationPoints.clear()

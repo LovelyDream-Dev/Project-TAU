@@ -1,7 +1,7 @@
 extends Node
 class_name MTween
 
-func mtween_property(target:Object, property:StringName, startValue, endValue, startTime:float, duration:float):
+static func mtween_property(target:Object, property:StringName, startValue, endValue, startTime:float, duration:float):
 	var globalTime:float = CurrentMap.globalMapTimeInSeconds
 	var progress:float = clampf((globalTime - startTime) / duration, 0.0, 1.0)
 

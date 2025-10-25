@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bybn6e8ggh00o"]
+[gd_scene load_steps=6 format=3 uid="uid://bybn6e8ggh00o"]
 
 [ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Timeline/time_line.gd" id="1_vkty0"]
 [ext_resource type="Script" uid="uid://7w8grgon3jya" path="res://Scenes/Timeline/beat_ticks.gd" id="2_1xed5"]
 [ext_resource type="Texture2D" uid="uid://dmvaqtjquryqk" path="res://Images/icon.svg" id="2_gk61m"]
 [ext_resource type="Script" uid="uid://cw4ldwcrwobik" path="res://Scenes/Timeline/scroll_container.gd" id="3_rnvyw"]
+[ext_resource type="Script" uid="uid://bt1suinuntwpg" path="res://Scenes/Timeline/timeline_content.gd" id="4_a3fgb"]
 
 [node name="Timeline" type="Control"]
 z_index = 3
@@ -20,7 +21,6 @@ halfBeatTickColor = Color(0.713726, 0, 0, 1)
 quarterBeatTickColor = Color(0.2509804, 0.4509804, 0.7764706, 1)
 eighthBeatTickColor = Color(0.7764706, 0.67058825, 0.2509804, 1)
 sixteenthBeatTickColor = Color(0.4862745, 0.1764706, 0.7607843, 1)
-snapDivisor = 4
 hideScrollBar = true
 noteTexture = ExtResource("2_gk61m")
 
@@ -35,18 +35,20 @@ horizontal_scroll_mode = 2
 script = ExtResource("3_rnvyw")
 timeline = NodePath("..")
 
-[node name="BaseControl" type="ColorRect" parent="TimelineScroller"]
+[node name="TimelineContent" type="ColorRect" parent="TimelineScroller" node_paths=PackedStringArray("timeline")]
 z_as_relative = false
 custom_minimum_size = Vector2(1920, 150)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.0313726, 0.141176, 0.215686, 1)
+script = ExtResource("4_a3fgb")
+timeline = NodePath("../..")
 
-[node name="TimelineObjectContainer" type="Node2D" parent="TimelineScroller/BaseControl"]
+[node name="TimelineObjectContainer" type="Node2D" parent="TimelineScroller/TimelineContent"]
 z_index = 2
 z_as_relative = false
 
-[node name="BeatTicks" type="Node2D" parent="TimelineScroller/BaseControl" node_paths=PackedStringArray("timeline", "timelineScroller")]
+[node name="BeatTicks" type="Node2D" parent="TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline", "timelineScroller")]
 z_index = 1
 script = ExtResource("2_1xed5")
 timeline = NodePath("../../..")

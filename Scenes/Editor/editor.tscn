@@ -74,7 +74,6 @@ position = Vector2(480, 360)
 scale = Vector2(0.5, 0.5)
 
 [node name="HitObjectContainerControl" type="Control" parent="PlayFieldMarginContainer"]
-clip_contents = true
 layout_mode = 2
 
 [node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]

@@ -6,27 +6,13 @@ var noteContainerParent:Node2D
 var hitNoteTexture:Texture = null
 var hitNoteOutlineTexture:Texture = null
 
+var objectDict:Dictionary
 var spawnPosition:Vector2
 var hitPosition:Vector2
-
-## The ID of the hold note. If [member endBeat] is greater than [member startBeat], the note becomes a hold note.
-var holdNoteID:int
-
 var spawnTime:float
-
-## The time that the note is meant to be hit on. If it is less than [member endBeat], the note will be a hold note.
 var hitTime:float
-
-## The time that the note is meant to be released on. If it is greater than [member startBeat], the note will be a hold note.
 var releaseTime:float
-
-## The side that the note is meant to be hit by. [br][code]-1[/code]: The note is hit by the left side. [br][code]1[/code]: The note is hit by the right side.
 var side:int
-
-## The center that the note will move towards and look at.
-var center:Vector2
-
-var isPressed:bool
 var isDying:bool
 var missed:bool
 
@@ -37,38 +23,42 @@ func _enter_tree() -> void:
 	hitNote.texture = hitNoteTexture
 	hitNoteOutline.texture = hitNoteOutlineTexture
 	
-	if side == -1: hitNote.modulate = Color("924CF4")
-	elif side == 1: hitNote.modulate = Color("F44C4F")
+	if side == GlobalFunctions.side.LEFT: hitNote.modulate = PlayerData.color1
+	elif side == GlobalFunctions.side.RIGHT: hitNote.modulate = PlayerData.color2
 	
-	self.add_child(hitNoteOutline)
 	self.add_child(hitNote)
-	self.look_at(center)
+	self.add_child(hitNoteOutline)
 
 func _process(_delta: float) -> void:
 	if spawnTime == null or hitTime == null:
 		return
-	
+
+	manage_self_in_editor()
+
 	animate_self()
 	is_active()
 
-# --- ANIMATIONS ---
+func manage_self_in_editor():
+	if CurrentMap.inEditor:
+		if objectDict not in CurrentMap.hitObjects:
+			queue_free()
+
 func animate_self():
 	spawn_animation()
 	hitAnimation()
 
 func spawn_animation():
-	GameData.mtween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, (hitTime-spawnTime))
-	GameData.mtween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, (hitTime-spawnTime))
+	MTween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, CurrentMap.spawnWindowInSeconds)
+	MTween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, CurrentMap.spawnWindowInSeconds)
 
 func hitAnimation():
-	GameData.mtween.mtween_property(self, "modulate", Color(1,1,1,1), Color(Color.GREEN, 0), hitTime, 0.5)
+	MTween.mtween_property(self, "modulate", Color(1,1,1,1), Color(Color.GREEN, 0), hitTime, 0.5)
 
-## Checks to see if the hitObject should be active and removes or adds it to CurrentMap.activeNotes accordingly.
 func is_active():
 	if CurrentMap.globalMapTimeInSeconds <= spawnTime or CurrentMap.globalMapTimeInSeconds >= hitTime:
-		CurrentMap.activeNotes.erase(self)
+		CurrentMap.activeObjects.erase(self)
 	else:
-		CurrentMap.activeNotes.append(self)
+		CurrentMap.activeObjects.append(self)
 
 func kill_note():
 	isDying = true
@@ -84,5 +74,3 @@ func kill_note():
 		CurrentMap.activeNotes.erase(self)
 		await tw.finished
 		self.queue_free()
-
-	

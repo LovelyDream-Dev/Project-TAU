@@ -1,21 +1,26 @@
 extends Node
 
-enum direction {
+enum side {
 	LEFT = -1,
 	RIGHT = 1
 }
 
-## Returns a direction from an enum. [member direction.LEFT] if [member rawValue] is [code]-1[/code], or [member direction.RIGHT] if it is [code]1[/code]. 
-## Returns [member direction.LEFT] if [member rawValue] is not [code]-1[/code] or [code]1[/code].
-## Directions are used for various direction based mechanics.
-func direction_from_raw(rawValue:int):
+enum direction {
+	CW = -1,
+	CCW = 1
+}
+
+## Returns a side vaue from an enum. [member side.LEFT] if [member rawValue] is [code]-1[/code], or [member side.RIGHT] if it is [code]1[/code]. 
+## Returns [member side.LEFT] if [member rawValue] is not [code]-1[/code] or [code]1[/code].
+## Sides are used for various mechanics, notably hit objects.
+func side_from_raw(rawValue:int):
 	if rawValue == -1:
-		return direction.LEFT
+		return side.LEFT
 	elif rawValue == 1:
-		return direction.RIGHT
+		return side.RIGHT
 	else:
 		push_error("Invalid side %s; defaulting to LEFT" % str(rawValue))
-		return direction.LEFT
+		return side.LEFT
 
 ## Returns a [HitObjectParser] class; used for calling hit object values such as; 
 ## [br][member HitObjectParser.hitTime], 
@@ -25,7 +30,7 @@ func parse_hit_times(dict:Dictionary) -> HitObjectParser:
 	var ParsedHitObject = HitObjectParser.new()
 	ParsedHitObject.hitTime = dict["hitTime"]
 	ParsedHitObject.releaseTime = dict["releaseTime"]
-	ParsedHitObject.side = direction_from_raw(dict["side"] )
+	ParsedHitObject.side = side_from_raw(dict["side"] )
 	return ParsedHitObject
 
 ## Returns the beat number at [member songPosition] within a song.

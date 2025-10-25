@@ -1,8 +1,6 @@
 extends Control
 class_name Timeline
 
-signal SNAP_DIVISOR_CHANGED
-
 @export_group("Colors")
 ## The color of the timeline background
 @export var backgroundColor:Color
@@ -26,11 +24,6 @@ signal SNAP_DIVISOR_CHANGED
 @export var showCullingRect:bool
 ## Determines margin around the culling rectangle that ticks and timeline notes will actually cull at.
 @export var cullingMargin:float = 100.0
-## Determines the amount of ticks between each whole beat.
-@export_range(1,16) var snapDivisor:int:
-	set(value):
-		snapDivisor = value
-		_on_snap_divisor_changed()
 ## How many pixels represent one second on the timeline, directly affects timeline length and spacing between ticks
 @export var pixelsPerSecond:float = 500.0
 @export_group("Booleans")
@@ -60,20 +53,6 @@ var secondsPerBeat:float
 var beatsPerSecond:float
 var pixelsPerBeat:float
 
-# The position of the mouse in beats on the timeline
-var mouseBeatPosition:float
-## The nearest beat snap, this number DOES NOT indicate overral beat numbers. It counts beats sequentially depending on the snap divisor. [br]For example, with half beats it will count the first whole beat as 0, and the half beat after as 1.
-var snappedBeat:float
-# The nearest snap point in pixels
-var snappedPixel:float
-## The song position that is used as a snap point that the mouse is closest to
-var snappedSongPosition:float
-## The snap interval to determine beat ticks and snapping
-var snapInterval:float
-
-# The local position of the mouse in pixels on the timeline
-var mouseTimelinePosition:float
-
 ## Whether the [member timelineScroller] of the timeline is being manually scrolled by the player
 var manuallyScrolling:bool
 
@@ -90,19 +69,17 @@ var initialNotesSpawned:bool
 
 @onready var playheadOffset:float = $PlayHead.position.x
 @onready var timelineScroller:TimelineScroller = $TimelineScroller
-@onready var baseControl:ColorRect = $TimelineScroller/BaseControl
-@onready var timelineObjectContainer:Node2D = $TimelineScroller/BaseControl/TimelineObjectContainer
+@onready var timelineContent:TimelineContent = $TimelineScroller/TimelineContent
+@onready var timelineObjectContainer:Node2D = $TimelineScroller/TimelineContent/TimelineObjectContainer
 @onready var camera = get_viewport().get_camera_2d()
+
+func _ready() -> void:
+	EditorManager.playheadOffset = playheadOffset
+	EditorManager.yPos = self.get_rect().size.y/2
 
 func _input(event: InputEvent) -> void:
 	if !CurrentMap.mapLoaded:
 		return
-
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			select_notes_by_click(event)
-			if get_if_clicked_outside_of_selected_note() == true:
-				deselect_notes(null)
 
 	if Input.is_action_just_pressed("LMB"):
 		start_note_drag()
@@ -125,15 +102,9 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_ESCAPE:
 			deselect_notes(null)
 
-		# Get the timeline mouse position if the mouse is moving within the timeline
-	if timelineScroller.get_rect().has_point(timelineScroller.get_local_mouse_position()):
-		if event is InputEventMouseMotion:
-			mouseTimelinePosition = timelineScroller.make_input_local(event).position.x + timelineScroller.scroll_horizontal
-
-
-
 
 func _process(_delta: float) -> void:
+	CurrentMap.pixelsPerSecond = pixelsPerSecond
 	queue_redraw()
 	manuallyScrolling = timelineScroller.manuallyScrolling
 	if !CurrentMap.mapLoaded:
@@ -148,11 +119,8 @@ func _process(_delta: float) -> void:
 	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + (CurrentMap.LeadInTimeMS/1000.0)))
 
 	# manage drag selection
-	select_notes_by_drag()
+	#select_notes_by_drag()
 
-	# manage snapping
-	mouseBeatPosition = (mouseTimelinePosition / pixelsPerBeat) 
-	get_snapped_position()
 	set_control_heights()
 
 	# Hide the scroll bar on the scroll container
@@ -165,7 +133,7 @@ func _process(_delta: float) -> void:
 	for dict:Dictionary in CurrentMap.hitObjects:
 		if !initialNotesSpawned:
 			place_timeline_objects(dict)
-		initialNotesSpawned = true
+	initialNotesSpawned = true
 	
 	get_whole_beat_times()
 	get_half_beat_times()
@@ -174,17 +142,13 @@ func _process(_delta: float) -> void:
 	get_sixteenth_beat_times()
 
 	set_base_control_length()
-	if initialNotesSpawned:
-		manage_notes()
 
 
 
 func _draw() -> void:
-	if dragSelectStarted:
-		draw_selection_rectangle(dragSelectStartPosition)
-
-func _on_snap_divisor_changed():
-	SNAP_DIVISOR_CHANGED.emit()
+	#if dragSelectStarted:
+		#draw_selection_rectangle(dragSelectStartPosition)
+	pass
 
 ## Draws the rect for multi note selection.
 func draw_selection_rectangle(pos:Vector2):
@@ -193,16 +157,6 @@ func draw_selection_rectangle(pos:Vector2):
 	dragSelectionRect = Rect2(pos, movingCorner)
 	draw_rect(dragSelectionRect, Color(1, 1, 1, 0.5), true)
 	draw_rect(dragSelectionRect, Color(1, 1, 1, 1), false)
-
-## Selects timeline objects on mouse click. Can only select individual notes if none are already selected.
-func select_notes_by_click(event:InputEvent):
-	if get_tree().get_node_count_in_group("selectedNotes") > 0:
-		return
-
-	var nodesUnderEvent:Array = get_timeline_note_from_list_at_point(event.position, timelineObjectContainer.get_children())
-	if !nodesUnderEvent.is_empty():
-		var topNote:TimelineObject = nodesUnderEvent.back()
-		topNote.isSelected = true
 
 func select_notes_by_drag():
 	if !dragSelectStarted:
@@ -231,12 +185,12 @@ func get_if_clicked_outside_of_selected_note() -> bool:
 	return true
 
 func start_note_drag():
-	dragNoteStartPosX = snappedPixel
+	dragNoteStartPosX = EditorManager.snappedPixel
 
 func drag_notes():
 	if !dragSelectStarted:
 		for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
-			var dragDistance = (snappedPixel - dragNoteStartPosX)
+			var dragDistance = (EditorManager.snappedPixel - dragNoteStartPosX)
 			timelineObject.position.x = timelineObject.currentPositionX + dragDistance
 			
 
@@ -264,38 +218,29 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 				highest = timelineObject
 	return highest
 
-func manage_notes():
-	for dict:Dictionary in timelineObjects:
-		if dict not in CurrentMap.hitObjects:
-			CurrentMap.hitObjects.append(dict)
-			CurrentMap.sort_hit_objects()
-	for dict:Dictionary in CurrentMap.hitObjects:
-		if dict not in timelineObjects:
-			CurrentMap.hitObjects.erase(dict)
-			CurrentMap.sort_hit_objects()
-
-## Places notes on the timeline at the correct position using [member beat].
+## Places notes on the timeline at the correct position using [member dict].
 func place_timeline_objects(dict:Dictionary):
 	var timelineObjectTexture = load("res://Images/Timeline/timeline-note.png")
-	var timelineObject:TimelineObject = create_timeline_object(dict, timelineObjectTexture)
-	timelineObjectContainer.add_child(timelineObject)
+	timelineObjectContainer.add_child(create_timeline_object(dict, timelineObjectTexture))
 
 ## Creates timeline objects from the appropriate dictionary format; 
 ## [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
 func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
-	var timelineObject:TimelineObject = TimelineObject.new()
+	var timelineObject:TimelineObject = preload("res://Scenes/TimelineObject/timeline_object.tscn").instantiate()
 	var hitTime = dict["hitTime"]
 	var releaseTime = dict["releaseTime"]
-	var side = GlobalFunctions.direction_from_raw(dict["side"])
-	var yPos = self.get_rect().size.y/2
-	var startPos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), yPos)
-	var endPos= Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(releaseTime, pixelsPerSecond, playheadOffset), yPos)
-	timelineObject.position = startPos
+	var side = GlobalFunctions.side_from_raw(dict["side"])
+	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.yPos)
+	timelineObject.position = pos
 	timelineObject.texture = texture
-	
-	timelineObject.startPos = startPos
-	timelineObject.endPos = endPos
+	timelineObject.lastObjectDict = dict
+	timelineObject.hitTime = hitTime
+	timelineObject.releaseTime = releaseTime
 	timelineObject.side = side
+	if side == GlobalFunctions.side.LEFT:
+		timelineObject.modulate = PlayerData.color1
+	elif side == GlobalFunctions.side.RIGHT:
+		timelineObject.modulate = PlayerData.color2
 	return timelineObject
 
 # ----- TIMELINE POSITION FUNCTIONS -----
@@ -321,13 +266,6 @@ func cull_notes():
 
 
 
-## Assigns the closest snap position to [member snappedPosition] based on the mouse position on the timeline.
-func get_snapped_position():
-	snapInterval = 1.0/float(snapDivisor)
-	snappedBeat = round(mouseBeatPosition / snapInterval) * snapInterval
-	snappedPixel = snappedBeat * pixelsPerBeat
-	snappedSongPosition = snappedBeat * secondsPerBeat
-
 ## Uses [method valueInSeconds] to find the related pixel position on the timeline. [br]Returns [code]0.0[/code] if [method valueInSeconds] is greater than [method songLengthInSeconds].
 func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
 	if valueinSeconds <= songLengthInSeconds:
@@ -344,16 +282,16 @@ func set_control_heights():
 	if timelineScroller.size.y != self.size.y: 
 		timelineScroller.custom_minimum_size.y = self.size.y
 		timelineScroller.size.y = self.size.y
-	if baseControl.size.y != self.size.y:
-		baseControl.custom_minimum_size.y = self.size.y
-		baseControl.size.y = self.size.y
+	if timelineContent.size.y != self.size.y:
+		timelineContent.custom_minimum_size.y = self.size.y
+		timelineContent.size.y = self.size.y
 
 func set_base_control_length():
 	var leadInMS = CurrentMap.LeadInTimeMS
 	var lastTickTime:float = sixteenthBeatTimes.back()
 	var lastTickPositionX:float = ((lastTickTime + (leadInMS)) * pixelsPerSecond)
-	baseControl.custom_minimum_size.x = lastTickPositionX + 1920.0
-	baseControl.size.x = lastTickPositionX + 1920.0
+	timelineContent.custom_minimum_size.x = lastTickPositionX + 1920.0
+	timelineContent.size.x = lastTickPositionX + 1920.0
 
 # ----- BEAT TIME FUNCTIONS -----
 
