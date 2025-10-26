@@ -1,17 +1,33 @@
-[gd_scene load_steps=4 format=3 uid="uid://he8m4vmf82lk"]
+[gd_scene load_steps=5 format=3 uid="uid://he8m4vmf82lk"]
 
 [ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Editor/Timeline/timeline-note.png" id="1_eayod"]
 [ext_resource type="Script" uid="uid://dfmp6kgwbwoaf" path="res://Scenes/TimelineObject/timeline_object.gd" id="2_i00dh"]
 [ext_resource type="Script" uid="uid://dudc3p60rhipf" path="res://Scenes/TimelineObject/interaction_control.gd" id="3_skji5"]
+[ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="4_i00dh"]
 
 [node name="TimelineObject" type="Sprite2D"]
 texture = ExtResource("1_eayod")
 script = ExtResource("2_i00dh")
 
-[node name="InteractionControl" type="Control" parent="." node_paths=PackedStringArray("parent")]
+[node name="InteractionControl" type="Control" parent="." node_paths=PackedStringArray("parent", "menu")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 60.0
 offset_bottom = 60.0
 script = ExtResource("3_skji5")
 parent = NodePath("..")
+menu = NodePath("MenuButton")
+
+[node name="MenuButton" type="MenuButton" parent="InteractionControl"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 1
+theme_override_fonts/font = ExtResource("4_i00dh")
+button_mask = 2
+switch_on_hover = true
+item_count = 1
+popup/item_0/text = "Delete"
+popup/item_0/id = 0
+
+[connection signal="about_to_popup" from="InteractionControl/MenuButton" to="InteractionControl" method="_on_menu_button_about_to_popup"]

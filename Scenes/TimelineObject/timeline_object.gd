@@ -27,9 +27,11 @@ func manage_object():
 			CurrentMap.spawn_hit_objects(index)
 			lastObjectDict = objectDict
 
-
 func set_object_dict():
 	if !isHoldNote:
 		hitTime = (self.position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
 		releaseTime = hitTime
 		objectDict = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
+
+func _exit_tree() -> void:
+	CurrentMap.hitObjects.erase(objectDict)
