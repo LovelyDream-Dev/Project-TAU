@@ -1,11 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=24 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://WallpaperDog-10731419.png" id="2_6172c"]
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Timeline/time_line.tscn" id="2_dftp8"]
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
-[ext_resource type="ButtonGroup" uid="uid://dbxhe2gmph5f4" path="res://Resources/EditorModeButtons.tres" id="6_1xg6d"]
 [ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="8_l58k3"]
 [ext_resource type="Texture2D" uid="uid://baogfjcp2y5e3" path="res://Images/Editor/Icons/note-icon.png" id="9_bx3ly"]
 [ext_resource type="Texture2D" uid="uid://ceo0qv5gjjvht" path="res://Images/Editor/Icons/hold-note-icon.png" id="10_ytwan"]
@@ -20,12 +19,30 @@ shadow_color = Color(0, 0, 0, 0.29803923)
 shadow_size = 16
 shadow_offset = Vector2(0, 8)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1xg6d"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o25bw"]
 bg_color = Color(0.02745098, 0.1254902, 0.19215687, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l58k3"]
+bg_color = Color(0.033599995, 0.15743998, 0.24, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ytwan"]
+bg_color = Color(0.033599995, 0.15743998, 0.24, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o25bw"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_l58k3"]
 
 [sub_resource type="Image" id="Image_l58k3"]
 data = {
@@ -39,7 +56,36 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_bx3ly"]
 image = SubResource("Image_l58k3")
 
-[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner", "snapDivisorSlider")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bx3ly"]
+bg_color = Color(0.02745098, 0.1254902, 0.19215687, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l58k3"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ytwan"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aigvi"]
+bg_color = Color(0.02745098, 0.1254902, 0.19215687, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bx3ly"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_hckbq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1xg6d"]
+bg_color = Color(0.02745098, 0.1254902, 0.19215687, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner", "selectButton", "noteButon", "holdNoteButton", "snapDivisorSlider")]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
@@ -47,9 +93,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_ub1o7")
 timeline = NodePath("TimelineMarginContainer/TimeLinePanel/Timeline")
 spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Spinner")
+selectButton = NodePath("LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Select")
+noteButon = NodePath("LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Note")
+holdNoteButton = NodePath("LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNote")
 snapDivisorSlider = NodePath("RightPanelMarginContainer/RightPanel/SnapDivisorPanel/SnapDivisorVbox/SnapDivisorSlider")
 
 [node name="BackgroundImage" type="TextureRect" parent="."]
@@ -71,6 +121,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 color = Color(0.13333334, 0.17254902, 0.2, 0.7607843)
 
 [node name="PlayFieldMarginContainer" type="MarginContainer" parent="."]
@@ -118,6 +169,7 @@ custom_minimum_size = Vector2(384, 720)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
 
 [node name="ButtonsMargin" type="MarginContainer" parent="LeftPanelMarginContainer/LeftPanel"]
@@ -135,38 +187,37 @@ theme_override_constants/margin_top = 24
 layout_mode = 2
 columns = 2
 
-[node name="SelectPanel" type="Panel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
+[node name="Select" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
-
-[node name="Select" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/SelectPanel"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 8.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_o25bw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l58k3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ytwan")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_o25bw")
 toggle_mode = true
-button_group = ExtResource("6_1xg6d")
-flat = true
+action_mode = 0
+button_group = SubResource("ButtonGroup_l58k3")
 
-[node name="SelectIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/SelectPanel"]
+[node name="SelectIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Select"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 0
-offset_right = 100.0
-offset_bottom = 100.0
+offset_right = 125.0
+offset_bottom = 125.0
+mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="SelectIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/SelectPanel/SelectIconVbox"]
+[node name="SelectIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Select/SelectIconVbox"]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 texture = SubResource("ImageTexture_bx3ly")
 
-[node name="SelectText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/SelectPanel/SelectIconVbox"]
+[node name="SelectText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Select/SelectIconVbox"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_fonts/normal_font = ExtResource("8_l58k3")
 theme_override_font_sizes/normal_font_size = 24
 text = "Select"
@@ -179,39 +230,35 @@ vertical_alignment = 1
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="NotePanel" type="Panel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
+[node name="Note" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
-
-[node name="Note" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/NotePanel"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 8.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_bx3ly")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bx3ly")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bx3ly")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_l58k3")
 toggle_mode = true
-button_group = ExtResource("6_1xg6d")
-flat = true
+button_group = SubResource("ButtonGroup_ytwan")
 
-[node name="NoteIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/NotePanel"]
+[node name="NoteIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Note"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 0
-offset_right = 100.0
-offset_bottom = 100.0
+offset_right = 125.0
+offset_bottom = 125.0
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="NoteIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/NotePanel/NoteIconVbox"]
+[node name="NoteIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Note/NoteIconVbox"]
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("9_bx3ly")
 stretch_mode = 2
 
-[node name="NoteText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/NotePanel/NoteIconVbox"]
+[node name="NoteText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Note/NoteIconVbox"]
 layout_mode = 2
+mouse_filter = 1
 theme_override_fonts/normal_font = ExtResource("8_l58k3")
 theme_override_font_sizes/normal_font_size = 24
 text = "Note
@@ -225,39 +272,35 @@ vertical_alignment = 1
 deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 
-[node name="HoldNotePanel" type="Panel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
+[node name="HoldNote" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
-
-[node name="HoldNote" type="Button" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNotePanel"]
-clip_contents = true
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 8.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_aigvi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_aigvi")
+theme_override_styles/hover = SubResource("StyleBoxFlat_aigvi")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bx3ly")
 toggle_mode = true
-button_group = ExtResource("6_1xg6d")
-flat = true
+button_group = SubResource("ButtonGroup_hckbq")
 
-[node name="HoldNoteIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNotePanel"]
+[node name="HoldNoteIconVbox" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNote"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 0
-offset_right = 100.0
-offset_bottom = 100.0
+offset_right = 125.0
+offset_bottom = 125.0
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="HoldNoteIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNotePanel/HoldNoteIconVbox"]
+[node name="HoldNoteIcon" type="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNote/HoldNoteIconVbox"]
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("10_ytwan")
 stretch_mode = 2
 
-[node name="HoldNoteText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNotePanel/HoldNoteIconVbox"]
+[node name="HoldNoteText" type="RichTextLabel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/HoldNote/HoldNoteIconVbox"]
 layout_mode = 2
+mouse_filter = 1
 theme_override_fonts/normal_font = ExtResource("8_l58k3")
 theme_override_font_sizes/normal_font_size = 24
 text = "Hold Note
@@ -289,12 +332,14 @@ custom_minimum_size = Vector2(384, 720)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
 
 [node name="SnapDivisorPanel" type="Panel" parent="RightPanelMarginContainer/RightPanel"]
 clip_contents = true
 custom_minimum_size = Vector2(125, 50)
 layout_mode = 0
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
 
 [node name="SnapDivisorVbox" type="VBoxContainer" parent="RightPanelMarginContainer/RightPanel/SnapDivisorPanel"]
@@ -308,6 +353,7 @@ alignment = 1
 
 [node name="SnapDivisorText" type="RichTextLabel" parent="RightPanelMarginContainer/RightPanel/SnapDivisorPanel/SnapDivisorVbox"]
 layout_mode = 2
+mouse_filter = 1
 theme_override_fonts/normal_font = ExtResource("8_l58k3")
 theme_override_font_sizes/normal_font_size = 24
 text = "Snap Divisor"
@@ -349,6 +395,7 @@ custom_minimum_size = Vector2(1920, 150)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 
 [node name="Timeline" parent="TimelineMarginContainer/TimeLinePanel" instance=ExtResource("2_dftp8")]
 clip_contents = true
