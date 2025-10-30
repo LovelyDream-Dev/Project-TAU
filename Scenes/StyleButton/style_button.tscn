@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://cgr7sk7ooyr1t"]
+
+[ext_resource type="Script" uid="uid://crvackudtdb6r" path="res://Scenes/StyleButton/style_button.gd" id="1_4ylee"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2l3d5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4hxns"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aus3f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ti81b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ylee"]
+
+[node name="StyleButton" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_2l3d5")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_4hxns")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_aus3f")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ti81b")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4ylee")
+script = ExtResource("1_4ylee")
+highlightColor = null
+highlightInTime = null
+highlightOutTime = null
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
