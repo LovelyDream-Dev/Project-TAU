@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbrru1tp4t2uk"]
+
+[ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
+[ext_resource type="Texture2D" uid="uid://dong7e5dyypeq" path="res://Images/Main Menu/menu-gradient.png" id="1_uqdog"]
+[ext_resource type="Texture2D" uid="uid://cjvsfjooueuvo" path="res://Images/Main Menu/title-logo.png" id="2_v763k"]
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qgdf6")
+parallax = NodePath("Parallax2D")
+
+[node name="Parallax2D" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.5, 0.5)
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="BackgroundImage" type="TextureRect" parent="Parallax2D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_uqdog")
+
+[node name="Foreground" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Logo" type="TextureRect" parent="Foreground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_v763k")
+stretch_mode = 2
