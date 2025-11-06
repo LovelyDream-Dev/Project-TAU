@@ -12,22 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qgdf6")
-parallax = NodePath("Parallax2D")
-
-[node name="Parallax2D" type="Parallax2D" parent="."]
-scroll_scale = Vector2(0.5, 0.5)
-follow_viewport = false
-ignore_camera_scroll = true
-
-[node name="BackgroundImage" type="TextureRect" parent="Parallax2D"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 1920.0
-offset_bottom = 1080.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("1_uqdog")
+parallax = NodePath("")
 
 [node name="Foreground" type="Control" parent="."]
 layout_mode = 1
@@ -52,3 +37,12 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_v763k")
 stretch_mode = 2
+
+[node name="BackgroundImage" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_uqdog")
