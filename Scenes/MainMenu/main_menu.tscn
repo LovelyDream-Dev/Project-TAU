@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene load_steps=7 format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
-[ext_resource type="Texture2D" uid="uid://dong7e5dyypeq" path="res://Images/Main Menu/menu-gradient.png" id="1_uqdog"]
+[ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
+[ext_resource type="Shader" uid="uid://c50q265nvencr" path="res://Scripts/Shaders/simple_blur.gdshader" id="2_adu2g"]
 [ext_resource type="Texture2D" uid="uid://cjvsfjooueuvo" path="res://Images/Main Menu/title-logo.png" id="2_v763k"]
+[ext_resource type="Texture2D" uid="uid://3on3osnvioa7" path="res://Images/Main Menu/spy_family_background.png" id="4_adu2g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_adu2g"]
+shader = ExtResource("2_adu2g")
+shader_parameter/blur_radius = 4.00000019
 
 [node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax")]
 layout_mode = 3
@@ -11,8 +17,32 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_qgdf6")
-parallax = NodePath("")
+parallax = NodePath("ParallaxGUI")
+
+[node name="ParallaxGUI" type="Control" parent="." node_paths=PackedStringArray("controls")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_0qgbs")
+controls = [NodePath("BackgroundTexture")]
+metadata/_custom_type_script = "uid://bll14v81mmy73"
+
+[node name="BackgroundTexture" type="TextureRect" parent="ParallaxGUI"]
+material = SubResource("ShaderMaterial_adu2g")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("4_adu2g")
+stretch_mode = 3
 
 [node name="Foreground" type="Control" parent="."]
 layout_mode = 1
@@ -21,6 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="Logo" type="TextureRect" parent="Foreground"]
 layout_mode = 1
@@ -37,12 +68,3 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_v763k")
 stretch_mode = 2
-
-[node name="BackgroundImage" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("1_uqdog")
