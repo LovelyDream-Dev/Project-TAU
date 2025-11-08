@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene load_steps=19 format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
@@ -11,6 +11,8 @@
 [ext_resource type="Shader" uid="uid://de6ywx617mb1q" path="res://Scripts/Shaders/square_rounded_corners.gdshader" id="6_n5jej"]
 [ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="8_2r307"]
 [ext_resource type="Texture2D" uid="uid://d506bt6glrj8" path="res://Images/Main Menu/detail-rects.png" id="9_omq0y"]
+[ext_resource type="Texture2D" uid="uid://cwbtsffdykn5r" path="res://Images/Main Menu/settings-parameters-background.png" id="12_rlg4b"]
+[ext_resource type="Texture2D" uid="uid://f4j0s5f8timj" path="res://Images/Main Menu/settings-icon-fill-large.png" id="13_w5buf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adu2g"]
 bg_color = Color(0.07450981, 0, 0.14509805, 1)
@@ -19,7 +21,23 @@ bg_color = Color(0.07450981, 0, 0.14509805, 1)
 shader = ExtResource("6_n5jej")
 shader_parameter/corner_scale = 0.32
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax", "settingsButton")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rlg4b"]
+bg_color = Color(0.13333334, 0.078431375, 0.22352941, 1)
+shadow_color = Color(0, 0, 0, 0.3529412)
+shadow_size = 10
+shadow_offset = Vector2(10, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w5buf"]
+bg_color = Color(0.18714997, 0.117, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5buf"]
+texture = ExtResource("12_rlg4b")
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax", "settingsButton", "settingsIconLarge")]
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
@@ -31,7 +49,8 @@ script = ExtResource("1_qgdf6")
 parallax = NodePath("ParallaxGUI")
 blurStrength = 7.0
 blurShaderMaterial = ExtResource("3_adu2g")
-settingsButton = NodePath("NavBar/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton")
+settingsButton = NodePath("NavBarMargin/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton")
+settingsIconLarge = NodePath("SettingsIconLarge")
 
 [node name="ParallaxGUI" type="Control" parent="." node_paths=PackedStringArray("controls")]
 clip_contents = true
@@ -58,7 +77,7 @@ mouse_filter = 2
 texture = ExtResource("4_adu2g")
 stretch_mode = 3
 
-[node name="NavBar" type="MarginContainer" parent="."]
+[node name="NavBarMargin" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(1920, 60)
 layout_mode = 1
 anchors_preset = 5
@@ -69,31 +88,31 @@ offset_right = 960.0
 offset_bottom = 60.0
 grow_horizontal = 2
 
-[node name="Panel" type="Panel" parent="NavBar"]
+[node name="Panel" type="Panel" parent="NavBarMargin"]
 clip_contents = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_adu2g")
 
-[node name="Section1" type="MarginContainer" parent="NavBar/Panel"]
+[node name="Section1" type="MarginContainer" parent="NavBarMargin/Panel"]
 custom_minimum_size = Vector2(1560, 60)
 layout_mode = 1
 offset_right = 1560.0
 offset_bottom = 60.0
 
-[node name="SettingsHbox" type="HBoxContainer" parent="NavBar/Panel/Section1"]
+[node name="SettingsHbox" type="HBoxContainer" parent="NavBarMargin/Panel/Section1"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="NavBar/Panel/Section1/SettingsHbox"]
+[node name="MarginContainer" type="MarginContainer" parent="NavBarMargin/Panel/Section1/SettingsHbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="SettingsButton" parent="NavBar/Panel/Section1/SettingsHbox/MarginContainer" instance=ExtResource("5_mdp32")]
+[node name="SettingsButton" parent="NavBarMargin/Panel/Section1/SettingsHbox/MarginContainer" instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
-[node name="Control" type="Control" parent="NavBar/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton"]
+[node name="Control" type="Control" parent="NavBarMargin/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton"]
 custom_minimum_size = Vector2(32, 32)
 anchors_preset = 0
 offset_left = 24.0
@@ -104,32 +123,32 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="SettingsIcon" type="TextureRect" parent="NavBar/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton/Control"]
+[node name="SettingsIcon" type="TextureRect" parent="NavBarMargin/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton/Control"]
 layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
 texture = ExtResource("5_agesy")
 stretch_mode = 2
 
-[node name="UserHbox" type="HBoxContainer" parent="NavBar/Panel/Section1"]
+[node name="UserHbox" type="HBoxContainer" parent="NavBarMargin/Panel/Section1"]
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_constants/separation = 64
 alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="NavBar/Panel/Section1/UserHbox"]
+[node name="MarginContainer" type="MarginContainer" parent="NavBarMargin/Panel/Section1/UserHbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 4
 
-[node name="StyleButton" parent="NavBar/Panel/Section1/UserHbox/MarginContainer" instance=ExtResource("5_mdp32")]
+[node name="StyleButton" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer" instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
-[node name="HboxContainer" type="HBoxContainer" parent="NavBar/Panel/Section1/UserHbox/MarginContainer/StyleButton"]
+[node name="HboxContainer" type="HBoxContainer" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -145,20 +164,20 @@ grow_vertical = 2
 theme_override_constants/separation = 12
 alignment = 2
 
-[node name="UsernameText" type="Label" parent="NavBar/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
+[node name="UsernameText" type="Label" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
 layout_mode = 2
 mouse_filter = 1
 theme_override_fonts/font = ExtResource("8_2r307")
 theme_override_font_sizes/font_size = 16
 text = "NOVA"
 
-[node name="Control" type="Control" parent="NavBar/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
+[node name="Control" type="Control" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="PFPTexture" type="TextureRect" parent="NavBar/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer/Control"]
+[node name="PFPTexture" type="TextureRect" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer/Control"]
 material = SubResource("ShaderMaterial_2r307")
 layout_mode = 0
 offset_right = 500.0
@@ -182,10 +201,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -250.0
-offset_right = 250.0
-offset_bottom = 250.0
+offset_left = -325.0
+offset_top = -175.0
+offset_right = 325.0
+offset_bottom = 175.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_v763k")
@@ -201,3 +220,95 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("9_omq0y")
+
+[node name="SettingsIconLarge" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -125.0
+offset_right = 125.0
+offset_bottom = 125.0
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset = Vector2(125, 125)
+texture = ExtResource("13_w5buf")
+
+[node name="SettingsMargin" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(1920, 390)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 960.0
+offset_top = -195.0
+offset_right = 2880.0
+offset_bottom = 195.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = -30
+
+[node name="Control" type="Control" parent="SettingsMargin/HBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(270, 390)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="ControlPanel" type="Panel" parent="SettingsMargin/HBoxContainer/Control"]
+z_index = 1
+custom_minimum_size = Vector2(250, 390)
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 390.0
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rlg4b")
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 402.0
+theme_override_constants/margin_top = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer"]
+custom_minimum_size = Vector2(200, 390)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer"]
+custom_minimum_size = Vector2(150, 390)
+layout_mode = 2
+
+[node name="AudioTabButton" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("5_mdp32")]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_w5buf")
+
+[node name="Label" type="Label" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer/AudioTabButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_2r307")
+theme_override_font_sizes/font_size = 24
+text = "Audio"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ParameterPanel" type="Panel" parent="SettingsMargin/HBoxContainer"]
+texture_filter = 2
+custom_minimum_size = Vector2(1670, 390)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxTexture_w5buf")

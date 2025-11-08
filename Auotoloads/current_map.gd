@@ -22,7 +22,7 @@ var speedPoints:Array = []
 
 var spawnedObjectCounter:int = 0
 var songLengthInSeconds:float
-var bpm:float = 0.0
+var bpm:float = 120.0 # Default value
 var secondsPerBeat:float = 0.0
 var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
@@ -208,7 +208,7 @@ func unload_map():
 	timingPoints.clear()
 	rotationPoints.clear()
 	speedPoints.clear()
-	bpm = 0.0
+	bpm = 120.0 # Default value
 	secondsPerBeat = 0.0
 	beatsPerSecond = 0.0
 	mainSongPosition = 0.0

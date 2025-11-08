@@ -23,16 +23,21 @@ var _enableParallax:bool = true
 @export_category("Buttons")
 @export_group("Settings")
 @export var settingsButton:Button
+@export var settingsIconLarge:TextureRect
 @export_group("User")
 @export var userButton:Button
 @export_group("Editor")
 @export var editorButton:Button
+
+func _ready() -> void:
+	pass
 
 func _process(_delta: float) -> void:
 	if parallax and enableParallax:
 		parallax.maximumMovement = maximumMovement
 		parallax.movementDecrease = movementDecrease
 	toggle_blur()
+	animate_settings()
 
 func toggle_parallax(value):
 	if parallax:
@@ -48,3 +53,7 @@ func toggle_blur():
 				control.material = blurShaderMaterial
 		if blurShaderMaterial:
 			blurShaderMaterial.set_shader_parameter("blur_strength", blurStrength)
+
+func animate_settings():
+	if settingsIconLarge:
+		settingsIconLarge.rotation = (TAU*0.25)/(60/CurrentMap.bpm) * CurrentMap.globalMapTimeInSeconds
