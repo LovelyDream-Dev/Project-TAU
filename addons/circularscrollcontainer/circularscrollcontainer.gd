@@ -13,8 +13,8 @@ func _disable_plugin() -> void:
 
 
 func _enter_tree() -> void:
-	add_custom_type("ParallaxGUI", "Control", preload("res://addons/parallaxgui/parallaxgui.gd"), preload("res://addons/parallaxgui/ParallaxGUI.svg"))
+	add_custom_type("CircularScrollContainer", "Control", preload("res://Scenes/CircularScrollContainer/circular_scroll_container.gd"), preload("res://icon.svg"))
 
 
 func _exit_tree() -> void:
-	remove_custom_type("ParallaxGUI")
+	remove_custom_type("CircularScrollContainer")
