@@ -4,8 +4,8 @@ extends Control
 @export var menu:MenuButton
 
 func _ready() -> void:
-	self.position = parent.get_rect().position
-	self.size = parent.get_rect().size
+	position = parent.get_rect().position
+	size = parent.get_rect().size
 	if menu:
 		menu.size = parent.get_rect().size
 		menu.get_popup().add_theme_stylebox_override("panel", create_popup_button_style())
@@ -31,7 +31,7 @@ func create_popup_button_style() -> StyleBoxFlat:
 	return newStyle
 
 func _on_menu_button_about_to_popup() -> void:
-	menu.get_popup().position = self.get_rect().get_center()
+	menu.get_popup().position = get_rect().get_center()
 
 func on_popup_button_pressed(id:int):
 	if id == 0:

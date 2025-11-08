@@ -14,4 +14,4 @@ func _process(_delta: float) -> void:
 
 # --- CUSTOM FUNCTIONS ---
 func spawn_hit_objects(hitObject:HitObject):
-	self.add_child(hitObject)
+	add_child(hitObject)

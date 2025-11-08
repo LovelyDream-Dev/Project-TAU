@@ -10,4 +10,4 @@ class_name StyleButton
 @export var highlightInTime:float = 0.1
 @export var highlightOutTime:float = 0.5
 func _on_resized() -> void:
-	panel.size = self.size
+	panel.size = size

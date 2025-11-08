@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://u6m4rnofvb1t"]
+
+[ext_resource type="Shader" uid="uid://c50q265nvencr" path="res://Scripts/Shaders/simple_blur.gdshader" id="1_hh30t"]
+
+[resource]
+shader = ExtResource("1_hh30t")
+shader_parameter/blur_radius = 4.0

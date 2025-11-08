@@ -29,7 +29,7 @@ func manage_object():
 
 func set_object_dict():
 	if !isHoldNote:
-		hitTime = (self.position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
+		hitTime = (position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
 		releaseTime = hitTime
 		objectDict = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
 

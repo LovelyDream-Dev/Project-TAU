@@ -1,9 +1,9 @@
 shader_type canvas_item;
 
-uniform float blur_radius : hint_range(0.0, 20.0) = 4.0;
+uniform float blur_strength : hint_range(0.0, 20.0) = 4.0;
 
 void fragment() {
-    vec2 texel_size = SCREEN_PIXEL_SIZE * blur_radius;
+    vec2 texel_size = SCREEN_PIXEL_SIZE * blur_strength;
 
     // A few symmetric sample offsets
     vec2 offsets[9] = vec2[](

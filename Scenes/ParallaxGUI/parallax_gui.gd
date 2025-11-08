@@ -2,8 +2,8 @@ extends Control
 class_name ParallaxGUI
 
 @export var controls: Array[Control]
-@export var maximumMovement: Vector2 = Vector2(8.0, 8.0)
-@export var movementDecrease: float = 0.5
+@export var maximumMovement: Vector2
+@export var movementDecrease: float
 
 var previousScreenPercent: Vector2 = Vector2(0,0)
 
@@ -12,7 +12,7 @@ func _ready() -> void:
 	
 
 func _process(_delta: float) -> void:
-	scale_controls()
+	initialize_controls()
 	set_parallax(calculate_screen_percent(get_global_mouse_position()))
 
 func calculate_screen_percent(globalPos: Vector2) -> Vector2 :
@@ -24,10 +24,8 @@ func calculate_screen_percent(globalPos: Vector2) -> Vector2 :
 	return p
 
 func set_parallax(screenPercent: Vector2) -> void:
+	assert(controls.size() > 0, "Exported variable 'controls' has no members. ParallaxGUI")
 	var move = maximumMovement
-	if controls.size() == 0:
-		assert(controls.size() > 0, "Exported variable 'controls' has no members. ParallaxGUI")
-		return
 	for i in range(controls.size()):
 		var c := controls[i]
 		c.position = move * screenPercent
@@ -39,6 +37,11 @@ func _on_focus_changed(node: Control) -> void:
 	var t = create_tween()
 	t.tween_method(set_parallax, previousScreenPercent,  p, 0.25 )
 
-func scale_controls():
+func initialize_controls():
 	for control:Control in controls:
 		control.pivot_offset = Vector2(control.size/2)
+		var mat:Material = control.material
+		var blurShader:Shader = preload("res://Scripts/Shaders/simple_blur.gdshader")
+		if mat != ShaderMaterial or mat.shader != blurShader:
+			mat = ShaderMaterial.new()
+			mat.shader = blurShader

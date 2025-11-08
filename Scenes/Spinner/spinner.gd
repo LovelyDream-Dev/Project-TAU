@@ -41,7 +41,7 @@ func _process(_delta: float) -> void:
 
 ## When [member CurrentMap] is ready to spawn hit notes on load time, this is called via signals to let [member CurrentMap] know the spinner is loaded. 
 func on_spinner_ready():
-	CurrentMap.center = self.global_position
+	CurrentMap.center = global_position
 	CurrentMap.spinnerLoaded = true
 
 func rotate_spinner():

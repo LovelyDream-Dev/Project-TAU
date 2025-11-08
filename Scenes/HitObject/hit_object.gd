@@ -26,8 +26,8 @@ func _enter_tree() -> void:
 	if side == GlobalFunctions.side.LEFT: hitNote.modulate = PlayerData.color1
 	elif side == GlobalFunctions.side.RIGHT: hitNote.modulate = PlayerData.color2
 	
-	self.add_child(hitNote)
-	self.add_child(hitNoteOutline)
+	add_child(hitNote)
+	add_child(hitNoteOutline)
 
 func _process(_delta: float) -> void:
 	if spawnTime == null or hitTime == null:
@@ -67,10 +67,10 @@ func kill_note():
 		tw.tween_property(self, "modulate", Color(Color.GREEN, 0), 0.5)
 		CurrentMap.activeNotes.erase(self)
 		await tw.finished
-		self.queue_free()
+		queue_free()
 	else: 
 		var tw = create_tween().set_ease(Tween.EASE_OUT_IN).set_trans(Tween.TRANS_LINEAR).parallel()
 		tw.tween_property(self, "modulate", Color(Color.RED, 0), 0.5)
 		CurrentMap.activeNotes.erase(self)
 		await tw.finished
-		self.queue_free()
+		queue_free()

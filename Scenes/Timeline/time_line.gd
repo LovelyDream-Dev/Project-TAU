@@ -75,7 +75,7 @@ var initialNotesSpawned:bool
 
 func _ready() -> void:
 	EditorManager.playheadOffset = playheadOffset
-	EditorManager.yPos = self.get_rect().size.y/2
+	EditorManager.yPos = get_rect().size.y/2
 
 func _input(event: InputEvent) -> void:
 	if !CurrentMap.mapLoaded:
@@ -279,12 +279,12 @@ func initial_object_cull():
 
 
 func set_control_heights():
-	if timelineScroller.size.y != self.size.y: 
-		timelineScroller.custom_minimum_size.y = self.size.y
-		timelineScroller.size.y = self.size.y
-	if timelineContent.size.y != self.size.y:
-		timelineContent.custom_minimum_size.y = self.size.y
-		timelineContent.size.y = self.size.y
+	if timelineScroller.size.y != size.y: 
+		timelineScroller.custom_minimum_size.y = size.y
+		timelineScroller.size.y = size.y
+	if timelineContent.size.y != size.y:
+		timelineContent.custom_minimum_size.y = size.y
+		timelineContent.size.y = size.y
 
 func set_base_control_length():
 	var leadInMS = CurrentMap.LeadInTimeMS
