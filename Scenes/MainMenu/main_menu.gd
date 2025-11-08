@@ -20,6 +20,14 @@ var _enableParallax:bool = true
 @export_range(0.1, 20.0, 0.1) var blurStrength:float = 4.0
 @export var blurShaderMaterial:ShaderMaterial
 
+@export_category("Buttons")
+@export_group("Settings")
+@export var settingsButton:Button
+@export_group("User")
+@export var userButton:Button
+@export_group("Editor")
+@export var editorButton:Button
+
 func _process(_delta: float) -> void:
 	if parallax and enableParallax:
 		parallax.maximumMovement = maximumMovement

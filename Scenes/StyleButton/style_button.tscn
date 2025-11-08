@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cgr7sk7ooyr1t"]
+[gd_scene load_steps=8 format=3 uid="uid://cgr7sk7ooyr1t"]
 
 [ext_resource type="Script" uid="uid://crvackudtdb6r" path="res://Scenes/StyleButton/style_button.gd" id="1_4ylee"]
 
@@ -12,7 +12,14 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ylee"]
 
-[node name="StyleButton" type="Button" node_paths=PackedStringArray("panel")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ylee"]
+bg_color = Color(0.6052743, 0.6052744, 0.6052742, 0.6117647)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="StyleButton" type="Button"]
 offset_right = 8.0
 offset_bottom = 8.0
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2l3d5")
@@ -21,11 +28,11 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_aus3f")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_ti81b")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4ylee")
 script = ExtResource("1_4ylee")
-panel = NodePath("Panel")
 
 [node name="Panel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[connection signal="resized" from="." to="." method="_on_resized"]
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4ylee")

@@ -1,5 +1,6 @@
 extends Node
 
+@warning_ignore("unused_signal")
 signal SNAP_DIVISOR_CHANGED
 
 enum modes {

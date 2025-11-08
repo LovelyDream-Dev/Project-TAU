@@ -13,4 +13,5 @@ func _ready() -> void:
 	DirAccess.make_dir_absolute(userAbsolutePath.path_join("maps"))
 
 func _process(_delta: float) -> void:
-	get_window().mode = Window.MODE_FULLSCREEN
+	if get_window().mode != Window.MODE_FULLSCREEN:
+		get_window().mode = Window.MODE_FULLSCREEN
