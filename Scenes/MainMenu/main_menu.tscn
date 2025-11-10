@@ -315,45 +315,9 @@ grow_vertical = 2
 pivot_offset = Vector2(325, 325)
 script = ExtResource("15_43m2q")
 
-[node name="ColorRect" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
+[node name="StyleButton" parent="Foreground/Logo/LogoButtonContainer" instance=ExtResource("5_mdp32")]
 layout_mode = 0
-
-[node name="ColorRect2" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect3" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect4" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect5" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect6" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect7" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect8" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect9" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-
-[node name="ColorRect10" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
+texture = ExtResource("5_agesy")
 
 [node name="SettingsIconLarge" type="TextureRect" parent="."]
 layout_mode = 1

@@ -2,19 +2,21 @@ extends Node
 class_name ShapeArranger
 
 
-static func circular_control_arrangement(controls:Array, center:Vector2, spacingInDegrees:float, startAngleInDegrees:float = 0, clockwise:bool = true) -> void:
-	if controls.size() == 0:
+static func circular_arrangement(nodes:Array, center:Vector2, radiusInPixels:float, spacingInDegrees:float, startAngleInDegrees:float = 0, clockwise:bool = true) -> void:
+	if nodes.size() == 0:
 		return
 
 	var radStartAngle:float = deg_to_rad(startAngleInDegrees)
 	var radSpacing:float = deg_to_rad(spacingInDegrees)
-	for child:Control in controls:
-		var firstChild:Control = controls[0]
-		var index:int = child.get_index()
-		child.pivot_offset = center
-		firstChild.rotation = radStartAngle
-		if child != firstChild:
-			if clockwise:
-				child.rotation = firstChild.rotation + (radSpacing * index)
-			else:
-				child.rotation = firstChild.rotation - (radSpacing * index)
+	for child in nodes:
+		var x = cos(radStartAngle) * radiusInPixels
+		var y = sin(radStartAngle) * radiusInPixels
+		var pos = center + Vector2(x, y)
+		if child is Control:
+			child.position = pos - child.size/2
+		else:
+			child.position = pos
+		if clockwise:
+			radStartAngle += radSpacing
+		else:
+			radStartAngle -= radSpacing

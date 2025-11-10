@@ -1,6 +1,9 @@
 extends Button
 class_name StyleButton
 
+@export_category("Texture")
+@export var texture:Texture
+
 @export_category("Hover")
 @export var hoverRadius:float = 0.0
 
@@ -24,9 +27,8 @@ var initialScale:Vector2
 
 func _ready() -> void:
 	initialScale = scale
-	if panel:
-		if panel.has_theme_stylebox("panel"):
-			panel.get_theme_stylebox("panel").duplicate(true)
+	set_panel()
+	set_texture()
 
 func _process(_delta: float) -> void:
 	if panel and panel.size != size:
@@ -79,3 +81,12 @@ func hover_on_circle():
 			highlight_tween(0.0, highlightOutTime)
 		if enableExpand:
 			expand_tween(initialScale, expandOutTime)
+
+func set_panel():
+	if panel:
+		if panel.has_theme_stylebox("panel"):
+			panel.get_theme_stylebox("panel").duplicate(true)
+
+func set_texture():
+	if texture:
+		$TextureRect.texture = texture
