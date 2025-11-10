@@ -22,12 +22,12 @@ var _enableParallax:bool = true
 
 @export_category("Buttons")
 @export_group("Settings")
-@export var settingsButton:Button
+@export var settingsButton:StyleButton
 @export var settingsIconLarge:TextureRect
 @export_group("User")
-@export var userButton:Button
+@export var userButton:StyleButton
 @export_group("Editor")
-@export var editorButton:Button
+@export var editorButton:StyleButton
 
 func _ready() -> void:
 	pass

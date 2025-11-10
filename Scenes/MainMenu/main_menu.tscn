@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cwbtsffdykn5r" path="res://Images/Main Menu/settings-parameters-background.png" id="12_rlg4b"]
 [ext_resource type="Texture2D" uid="uid://f4j0s5f8timj" path="res://Images/Main Menu/settings-icon-fill-large.png" id="13_w5buf"]
 [ext_resource type="Texture2D" uid="uid://0xyo8sjmqjws" path="res://Images/Main Menu/menu-ring.png" id="14_nqd6t"]
-[ext_resource type="Script" uid="uid://gbvobvhxupor" path="res://Scenes/CircularScrollContainer/circular_scroll_container.gd" id="15_43m2q"]
+[ext_resource type="Script" uid="uid://ce1da8jhmx6bf" path="res://Scenes/MainMenu/logo_button_container.gd" id="15_43m2q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adu2g"]
 bg_color = Color(0.07450981, 0, 0.14509805, 1)
@@ -57,7 +57,7 @@ corner_radius_bottom_left = 8
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5buf"]
 texture = ExtResource("12_rlg4b")
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax", "settingsButton", "settingsIconLarge")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax", "settingsButton", "settingsIconLarge", "userButton", "editorButton")]
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
@@ -71,6 +71,8 @@ blurStrength = 7.0
 blurShaderMaterial = ExtResource("3_adu2g")
 settingsButton = NodePath("NavBarMargin/Panel/Section1/SettingsHbox/MarginContainer/SettingsButton")
 settingsIconLarge = NodePath("SettingsIconLarge")
+userButton = NodePath("NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton")
+editorButton = NodePath("NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton")
 
 [node name="ParallaxGUI" type="Control" parent="." node_paths=PackedStringArray("controls")]
 clip_contents = true
@@ -164,11 +166,11 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 4
 
-[node name="StyleButton" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer" instance=ExtResource("5_mdp32")]
+[node name="UserButton" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer" instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
-[node name="HboxContainer" type="HBoxContainer" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton"]
+[node name="HboxContainer" type="HBoxContainer" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -184,20 +186,20 @@ grow_vertical = 2
 theme_override_constants/separation = 12
 alignment = 2
 
-[node name="UsernameText" type="Label" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
+[node name="UsernameText" type="Label" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton/HboxContainer"]
 layout_mode = 2
 mouse_filter = 1
 theme_override_fonts/font = ExtResource("8_2r307")
 theme_override_font_sizes/font_size = 16
 text = "NOVA"
 
-[node name="Control" type="Control" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer"]
+[node name="Control" type="Control" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton/HboxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="PFPTexture" type="TextureRect" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/StyleButton/HboxContainer/Control"]
+[node name="PFPTexture" type="TextureRect" parent="NavBarMargin/Panel/Section1/UserHbox/MarginContainer/UserButton/HboxContainer/Control"]
 material = SubResource("ShaderMaterial_2r307")
 layout_mode = 0
 offset_right = 500.0
@@ -225,7 +227,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("9_omq0y")
 
-[node name="LogoButton" parent="Foreground" instance=ExtResource("5_mdp32")]
+[node name="Logo" parent="Foreground" instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(650, 650)
 layout_mode = 1
 anchors_preset = 8
@@ -245,7 +247,7 @@ hoverRadius = 325.0
 enableHighlight = false
 enableExpand = true
 
-[node name="Circle" type="TextureRect" parent="Foreground/LogoButton"]
+[node name="Circle" type="TextureRect" parent="Foreground/Logo"]
 texture_filter = 2
 layout_mode = 1
 anchors_preset = 8
@@ -261,7 +263,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_fo6ee")
 
-[node name="Text" type="TextureRect" parent="Foreground/LogoButton"]
+[node name="Text" type="TextureRect" parent="Foreground/Logo"]
 texture_filter = 2
 material = SubResource("ShaderMaterial_fo6ee")
 layout_mode = 1
@@ -278,7 +280,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("12_fo6ee")
 
-[node name="LogoRing" type="TextureRect" parent="Foreground/LogoButton"]
+[node name="OuterRing" type="TextureRect" parent="Foreground/Logo"]
 texture_filter = 2
 material = SubResource("ShaderMaterial_nqd6t")
 layout_mode = 1
@@ -296,52 +298,62 @@ grow_vertical = 2
 pivot_offset = Vector2(325, 325)
 texture = ExtResource("14_nqd6t")
 
-[node name="CircularScrollContainer" type="Control" parent="Foreground/LogoButton" node_paths=PackedStringArray("pivot")]
+[node name="LogoButtonContainer" type="Control" parent="Foreground/Logo"]
+custom_minimum_size = Vector2(650, 650)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -325.0
+offset_top = -325.0
+offset_right = 325.0
+offset_bottom = 325.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(325, 325)
 script = ExtResource("15_43m2q")
-pivot = NodePath("Pivot")
-rotationOffset = 30.0
-metadata/_custom_type_script = "uid://gbvobvhxupor"
 
-[node name="Pivot" type="Control" parent="Foreground/LogoButton/CircularScrollContainer"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="Foreground/LogoButton/CircularScrollContainer/Pivot"]
+[node name="ColorRect" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
-[node name="ColorRect2" type="ColorRect" parent="Foreground/LogoButton/CircularScrollContainer/Pivot"]
+[node name="ColorRect2" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
-[node name="ColorRect3" type="ColorRect" parent="Foreground/LogoButton/CircularScrollContainer/Pivot"]
+[node name="ColorRect3" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+
+[node name="ColorRect4" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect5" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect6" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect7" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect8" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect9" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+
+[node name="ColorRect10" type="ColorRect" parent="Foreground/Logo/LogoButtonContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
 
 [node name="SettingsIconLarge" type="TextureRect" parent="."]
 layout_mode = 1
