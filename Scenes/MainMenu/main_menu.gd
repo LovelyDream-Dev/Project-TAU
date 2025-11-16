@@ -64,6 +64,6 @@ func manage_song_queue():
 	if idx < MaestroSingleton.songQueue.size():
 		if loadedMapPath != MaestroSingleton.songQueue[idx]:
 			loadedMapPath = MaestroSingleton.songQueue[idx]
-			MaestroSingleton.play_songs()
+			CurrentMap.start_and_stop_map()
 			await MaestroSingleton.offsetSong.finished
 			idx += 1

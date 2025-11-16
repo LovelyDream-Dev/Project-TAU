@@ -34,14 +34,16 @@ var mapFilePath:StringName
 var songQueue:Array 
 
 func _ready() -> void:
+	
 	queue_songs()
 	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
 	mapFilePath = "res://TestMaps/xaev for tau/"
-	#OFFSET_WHOLE_BEAT.connect(play_metronome)
+	OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
 
 func _process(_delta: float) -> void:
+	offsetSong.bus = "OffsetSong"
 	if !CurrentMap.mapLoaded:
 		return
 

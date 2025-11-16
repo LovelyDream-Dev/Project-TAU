@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene load_steps=27 format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
@@ -10,6 +10,7 @@
 [ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="8_2r307"]
 [ext_resource type="Shader" uid="uid://bim8reh3fl2o7" path="res://Scripts/Shaders/fading_gradient.gdshader" id="10_6c6cs"]
 [ext_resource type="Texture2D" uid="uid://bmodpmy0xmjfx" path="res://Images/Main Menu/bottom-left-rect.png" id="10_os7au"]
+[ext_resource type="PackedScene" uid="uid://cf3vt826hltm4" path="res://Scenes/AudioSpectrum/audio_spectrum.tscn" id="10_xt57n"]
 [ext_resource type="Texture2D" uid="uid://bs2oygrdd5be1" path="res://Images/Main Menu/title-logo-circle.png" id="11_fo6ee"]
 [ext_resource type="Texture2D" uid="uid://bdlyeqy4nmjmn" path="res://Images/Main Menu/top-right-rect.png" id="11_n0kcp"]
 [ext_resource type="Texture2D" uid="uid://cm0ylu24h82th" path="res://Images/Main Menu/title-logo-text-normal.png" id="12_fo6ee"]
@@ -23,6 +24,12 @@ texture = ExtResource("5_os7au")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xt57n"]
 texture = ExtResource("15_43m2q")
+
+[sub_resource type="Curve2D" id="Curve2D_xt57n"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 200, 0)
+}
+point_count = 3
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fo6ee"]
 shader = ExtResource("10_6c6cs")
@@ -196,6 +203,9 @@ pivot_offset = Vector2(56.5, 23)
 theme_override_fonts/font = ExtResource("8_2r307")
 theme_override_font_sizes/font_size = 48
 text = "EDIT"
+
+[node name="AudioSpectrum" parent="BottomBarPanel" instance=ExtResource("10_xt57n")]
+spectrumCurve = SubResource("Curve2D_xt57n")
 
 [node name="Foreground" type="Control" parent="."]
 layout_mode = 1
