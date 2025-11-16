@@ -24,13 +24,12 @@ var _enableParallax:bool = true
 @export_group("Settings")
 @export var settingsButton:StyleButton
 @export var settingsIconLarge:TextureRect
-@export_group("User")
-@export var userButton:StyleButton
 @export_group("Editor")
 @export var editorButton:StyleButton
 
 func _ready() -> void:
-	pass
+	print(DisplayServer.get_screen_count())
+	GlobalFunctions.toggle_borderless()
 
 func _process(_delta: float) -> void:
 	if parallax and enableParallax:

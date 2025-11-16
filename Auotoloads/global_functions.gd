@@ -46,3 +46,13 @@ func get_position_on_circumference(circleCenter:Vector2, circleRadius:float, ang
 func get_timeline_position_x_from_seconds(seconds:float, pixelsPerSecond:float, offset:float) -> float:
 	var posx = (seconds * pixelsPerSecond) + offset
 	return posx
+
+## Waits for [member amount] frames to pass
+func await_frames(amount:int):
+	for frame in amount:
+		await get_tree().process_frame
+
+## Toggles borderless fullscreen
+func toggle_borderless():
+	if get_window().mode != Window.MODE_FULLSCREEN:
+		get_window().mode = Window.MODE_FULLSCREEN

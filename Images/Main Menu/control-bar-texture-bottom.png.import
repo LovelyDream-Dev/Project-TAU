@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sfscdi1uubbd"
-path="res://.godot/imported/Hit-Ring-Area-Body.png-0016c1631d333f3894e5bc64b4cc9301.ctex"
+uid="uid://dcdtsyw2o5apv"
+path="res://.godot/imported/control-bar-texture-bottom.png-f22b14b959a6299116dcb75797a9a830.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Images/Spinner/Hit-Ring-Area-Body.png"
-dest_files=["res://.godot/imported/Hit-Ring-Area-Body.png-0016c1631d333f3894e5bc64b4cc9301.ctex"]
+source_file="res://Images/Main Menu/control-bar-texture-bottom.png"
+dest_files=["res://.godot/imported/control-bar-texture-bottom.png-f22b14b959a6299116dcb75797a9a830.ctex"]
 
 [params]
 

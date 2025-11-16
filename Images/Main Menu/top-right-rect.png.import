@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkl50tp08xlaw"
-path="res://.godot/imported/Node-Divider.png-751dae84954343e0a144f35886289d3a.ctex"
+uid="uid://bdlyeqy4nmjmn"
+path="res://.godot/imported/top-right-rect.png-7b819e68a70df0efb9c115162f4784b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Images/Spinner/Node-Divider.png"
-dest_files=["res://.godot/imported/Node-Divider.png-751dae84954343e0a144f35886289d3a.ctex"]
+source_file="res://Images/Main Menu/top-right-rect.png"
+dest_files=["res://.godot/imported/top-right-rect.png-7b819e68a70df0efb9c115162f4784b2.ctex"]
 
 [params]
 

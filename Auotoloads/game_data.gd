@@ -11,7 +11,3 @@ func _ready() -> void:
 	FileLoader.load_user_config()
 	# Create the "user://maps" folder
 	DirAccess.make_dir_absolute(userAbsolutePath.path_join("maps"))
-
-func _process(_delta: float) -> void:
-	if get_window().mode != Window.MODE_FULLSCREEN:
-		get_window().mode = Window.MODE_FULLSCREEN
