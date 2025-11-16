@@ -4,4 +4,5 @@
 
 [resource]
 shader = ExtResource("1_hh30t")
-shader_parameter/blur_radius = 4.0
+shader_parameter/step = Vector2(1, 0)
+shader_parameter/radius = 15.0

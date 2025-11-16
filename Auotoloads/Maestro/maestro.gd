@@ -31,13 +31,15 @@ var leadInBeats:float
 
 var mapFilePath:StringName
 
+var songQueue:Array 
+
 func _ready() -> void:
+	queue_songs()
 	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
 	mapFilePath = "res://TestMaps/xaev for tau/"
 	#OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
-
 
 func _process(_delta: float) -> void:
 	if !CurrentMap.mapLoaded:
@@ -60,6 +62,13 @@ func _process(_delta: float) -> void:
 
 # --- CUSTOM FUNCTIONS ---
 
+func queue_songs():
+	var mapFolderPath:String
+	var dirs = DirAccess.get_directories_at(OS.get_user_data_dir().path_join("maps"))
+	for i in dirs:
+		mapFolderPath = OS.get_user_data_dir().path_join("maps").path_join(i)
+		songQueue.append(mapFolderPath)
+
 func play_songs():
 	var offsetSeconds:float = PlayerData.audioOffsetInMs / 1000.0
 	var globalMapTimeInSeconds = CurrentMap.globalMapTimeInSeconds
@@ -76,8 +85,6 @@ func play_songs():
 		await get_tree().create_timer(-offsetSeconds).timeout
 		if offsetSong.playing:
 			mainSong.play(max(globalMapTimeInSeconds + offsetSeconds, 0.0))
-
-
 
 func pause_songs():
 	if mainSong.playing or offsetSong.playing:

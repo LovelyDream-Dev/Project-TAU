@@ -49,7 +49,6 @@ static func load_map(folderPath:String):
 				load_tau_file(CurrentMap.tauFilePath, folderPath)
 		fileName = dir.get_next()
 	dir.list_dir_end()
-	
 
 static func load_tau_file(filePath:String, folderPath:String):
 	var file = FileAccess.open(filePath, FileAccess.READ)

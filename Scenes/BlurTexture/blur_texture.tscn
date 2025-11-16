@@ -1,0 +1,75 @@
+[gd_scene load_steps=10 format=3 uid="uid://d3lsrsgfoy1pf"]
+
+[ext_resource type="Script" uid="uid://b56dtuitwo00c" path="res://Scenes/BlurTexture/blur_texture.gd" id="1_0sldl"]
+[ext_resource type="Texture2D" uid="uid://3on3osnvioa7" path="res://Images/Main Menu/temp/spy_family_background.png" id="2_reskv"]
+[ext_resource type="Shader" uid="uid://de303r3ut45uq" path="res://Scripts/Shaders/blur_h.gdshader" id="3_reskv"]
+[ext_resource type="Shader" uid="uid://vfmjjgk1lqd7" path="res://Scripts/Shaders/blur_v.gdshader" id="4_ieojq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fhfm5"]
+shader = ExtResource("3_reskv")
+shader_parameter/u_sigma = 10.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_reskv"]
+viewport_path = NodePath("CaptureViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahxiv"]
+shader = ExtResource("4_ieojq")
+shader_parameter/u_sigma = 10.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ieojq"]
+viewport_path = NodePath("BlurViewportH")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_fhfm5"]
+viewport_path = NodePath("BlurViewportV")
+
+[node name="BlurTexture" type="Control" node_paths=PackedStringArray("displayTextureRect", "vpCapture", "vpCaptureSprite", "vpHorizontal", "vpHorizontalSprite", "vpVertical", "vpVerticalSprite")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0sldl")
+texture = ExtResource("2_reskv")
+displayTextureRect = NodePath("DisplayTexture")
+vpCapture = NodePath("CaptureViewport")
+vpCaptureSprite = NodePath("CaptureViewport/Sprite2D")
+vpHorizontal = NodePath("BlurViewportH")
+vpHorizontalSprite = NodePath("BlurViewportH/Sprite2D")
+vpVertical = NodePath("BlurViewportV")
+vpVerticalSprite = NodePath("BlurViewportV/Sprite2D")
+
+[node name="CaptureViewport" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Sprite2D" type="Sprite2D" parent="CaptureViewport"]
+texture_filter = 2
+texture = ExtResource("2_reskv")
+centered = false
+
+[node name="BlurViewportH" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Sprite2D" type="Sprite2D" parent="BlurViewportH"]
+material = SubResource("ShaderMaterial_fhfm5")
+texture = SubResource("ViewportTexture_reskv")
+centered = false
+
+[node name="BlurViewportV" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Sprite2D" type="Sprite2D" parent="BlurViewportV"]
+material = SubResource("ShaderMaterial_ahxiv")
+texture = SubResource("ViewportTexture_ieojq")
+centered = false
+
+[node name="DisplayTexture" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_fhfm5")
+stretch_mode = 3

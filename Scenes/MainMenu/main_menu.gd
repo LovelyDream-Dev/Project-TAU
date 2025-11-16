@@ -27,11 +27,13 @@ var _enableParallax:bool = true
 @export_group("Editor")
 @export var editorButton:StyleButton
 
+var loadedMapPath:String
+
 func _ready() -> void:
-	print(DisplayServer.get_screen_count())
 	GlobalFunctions.toggle_borderless()
 
 func _process(_delta: float) -> void:
+	manage_song_queue()
 	if parallax and enableParallax:
 		parallax.maximumMovement = maximumMovement
 		parallax.movementDecrease = movementDecrease
@@ -56,3 +58,12 @@ func toggle_blur():
 func animate_settings():
 	if settingsIconLarge:
 		settingsIconLarge.rotation = (TAU*0.25)/(60/CurrentMap.bpm) * CurrentMap.globalMapTimeInSeconds
+
+func manage_song_queue():
+	var idx:int = 0
+	if idx < MaestroSingleton.songQueue.size():
+		if loadedMapPath != MaestroSingleton.songQueue[idx]:
+			loadedMapPath = MaestroSingleton.songQueue[idx]
+			MaestroSingleton.play_songs()
+			await MaestroSingleton.offsetSong.finished
+			idx += 1

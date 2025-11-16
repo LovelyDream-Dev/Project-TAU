@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
 [ext_resource type="Material" uid="uid://u6m4rnofvb1t" path="res://Images/Resources/ShaderBlur.tres" id="3_adu2g"]
-[ext_resource type="Texture2D" uid="uid://3on3osnvioa7" path="res://Images/Main Menu/temp/spy_family_background.png" id="4_adu2g"]
+[ext_resource type="PackedScene" uid="uid://d3lsrsgfoy1pf" path="res://Scenes/BlurTexture/blur_texture.tscn" id="4_xt57n"]
 [ext_resource type="Texture2D" uid="uid://b8nlcdgwe6sms" path="res://Images/Main Menu/settings-icon.png" id="5_agesy"]
 [ext_resource type="PackedScene" uid="uid://cgr7sk7ooyr1t" path="res://Scenes/StyleButton/style_button.tscn" id="5_mdp32"]
 [ext_resource type="Texture2D" uid="uid://c4rx6saiybabn" path="res://Images/Main Menu/control-bar-texture-top.png" id="5_os7au"]
@@ -68,7 +68,7 @@ script = ExtResource("1_qgdf6")
 parallax = NodePath("ParallaxGUI")
 blurStrength = 7.0
 blurShaderMaterial = ExtResource("3_adu2g")
-settingsButton = NodePath("ParallaxGUI/NavBarPanel/HBoxContainer/Settings/SettingsButton")
+settingsButton = NodePath("NavBarPanel/HBoxContainer/Settings/SettingsButton")
 settingsIconLarge = NodePath("SettingsIconLarge")
 
 [node name="ParallaxGUI" type="Control" parent="." node_paths=PackedStringArray("controls")]
@@ -81,22 +81,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_0qgbs")
-controls = [NodePath("Background")]
+controls = [NodePath("BlurTexture")]
 metadata/_custom_type_script = "uid://bll14v81mmy73"
 
-[node name="Background" type="TextureRect" parent="ParallaxGUI"]
+[node name="BlurTexture" parent="ParallaxGUI" instance=ExtResource("4_xt57n")]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 scale = Vector2(1.15, 1.15)
-mouse_filter = 2
-texture = ExtResource("4_adu2g")
-stretch_mode = 3
 
-[node name="NavBarPanel" type="Panel" parent="ParallaxGUI"]
+[node name="NavBarPanel" type="Panel" parent="."]
 texture_filter = 2
 clip_contents = true
 custom_minimum_size = Vector2(1693, 127)
@@ -105,24 +98,24 @@ offset_right = 1693.0
 offset_bottom = 127.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_os7au")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ParallaxGUI/NavBarPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="NavBarPanel"]
 layout_mode = 0
 offset_right = 1566.0
 offset_bottom = 127.0
 theme_override_constants/separation = 32
 alignment = 2
 
-[node name="Settings" type="MarginContainer" parent="ParallaxGUI/NavBarPanel/HBoxContainer"]
+[node name="Settings" type="MarginContainer" parent="NavBarPanel/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="SettingsButton" parent="ParallaxGUI/NavBarPanel/HBoxContainer/Settings" instance=ExtResource("5_mdp32")]
+[node name="SettingsButton" parent="NavBarPanel/HBoxContainer/Settings" instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Control" type="Control" parent="ParallaxGUI/NavBarPanel/HBoxContainer/Settings/SettingsButton"]
+[node name="Control" type="Control" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchors_preset = 8
@@ -140,7 +133,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="SettingsIcon" type="TextureRect" parent="ParallaxGUI/NavBarPanel/HBoxContainer/Settings/SettingsButton/Control"]
+[node name="SettingsIcon" type="TextureRect" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton/Control"]
 layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
