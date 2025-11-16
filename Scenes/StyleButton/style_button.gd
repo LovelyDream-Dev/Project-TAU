@@ -26,6 +26,7 @@ var initialScale:Vector2
 @onready var panel:Panel = $Panel
 
 func _ready() -> void:
+	pivot_offset = size/2
 	initialScale = scale
 	set_panel()
 	set_texture()

@@ -162,6 +162,48 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_xt57n")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomBarPanel"]
+custom_minimum_size = Vector2(800, 127)
+layout_mode = 0
+offset_left = 127.0
+offset_right = 927.0
+offset_bottom = 127.0
+theme_override_constants/separation = 48
+
+[node name="PlayButton" parent="BottomBarPanel/HBoxContainer" instance=ExtResource("5_mdp32")]
+custom_minimum_size = Vector2(113, 46)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+enableHighlight = false
+enableExpand = true
+
+[node name="play" type="Label" parent="BottomBarPanel/HBoxContainer/PlayButton"]
+layout_mode = 1
+offset_right = 113.0
+offset_bottom = 46.0
+pivot_offset = Vector2(56.5, 23)
+theme_override_fonts/font = ExtResource("8_2r307")
+theme_override_font_sizes/font_size = 48
+text = "PLAY"
+
+[node name="EditButton" parent="BottomBarPanel/HBoxContainer" instance=ExtResource("5_mdp32")]
+custom_minimum_size = Vector2(99, 46)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+enableHighlight = false
+enableExpand = true
+
+[node name="edit" type="Label" parent="BottomBarPanel/HBoxContainer/EditButton"]
+layout_mode = 1
+offset_right = 99.0
+offset_bottom = 46.0
+pivot_offset = Vector2(56.5, 23)
+theme_override_fonts/font = ExtResource("8_2r307")
+theme_override_font_sizes/font_size = 48
+text = "EDIT"
+
 [node name="Foreground" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15

@@ -13,7 +13,7 @@ func _disable_plugin() -> void:
 
 
 func _enter_tree() -> void:
-	add_custom_type("ParallaxGUI", "Control", preload("res://addons/parallaxgui/parallaxgui.gd"), preload("res://addons/parallaxgui/ParallaxGUI.svg"))
+	add_custom_type("ParallaxGUI", "ParallaxGUI", preload("res://addons/parallaxgui/parallaxgui.gd"), preload("res://addons/parallaxgui/ParallaxGUI.svg"))
 
 
 func _exit_tree() -> void:
