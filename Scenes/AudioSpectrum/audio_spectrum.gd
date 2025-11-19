@@ -20,8 +20,7 @@ func _ready() -> void:
 		multimesh.set_instance_custom_data(i, barColor)
 
 func _process(_delta: float) -> void:
-	var fftAmps: Array = getFFTAmplitudes()
-	update_spectrum(fftAmps)
+	update_spectrum(getFFTAmplitudes())
 
 func getFFTAmplitudes(size: int = 128) -> Array:
 	var analyzer = AudioServer.get_bus_effect_instance(1, 0) as AudioEffectSpectrumAnalyzerInstance

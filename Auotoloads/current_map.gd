@@ -5,6 +5,8 @@ signal SPAWN_HIT_OBJECT
 
 # --- MAP VARIABLES ---
 
+var audioFilePath:StringName
+
 var globalMapTimeInSeconds:float
 
 var maestro:Maestro = MaestroSingleton
@@ -62,9 +64,6 @@ func _ready() -> void:
 	else:
 		if InputManager.KEY_SPACE_PRESSED.is_connected(start_and_stop_map):
 			InputManager.KEY_SPACE_PRESSED.disconnect(start_and_stop_map)
-
-	maestro.mainSong.finished.connect(on_sonngs_finished)
-	maestro.offsetSong.finished.connect(on_sonngs_finished)
 	
 	if hitObjects.size() > 0:
 		sort_hit_objects()
@@ -80,7 +79,6 @@ func _process(delta: float) -> void:
 		beatsPerSecond = bpm/60
 		return
 
-	if !mapLoaded: mapLoaded = true 
 	timing_points()
 	if !spinnerLoaded:
 		READY_TO_SPAWN_HIT_OBJECTS.emit()
@@ -192,7 +190,7 @@ func sort_hit_objects():
 
 func is_map_loaded():
 	sort_timing_points()
-	if songLengthInSeconds > 0.0 and timingPoints[0]["bpm"] > 0.0:
+	if tauFilePath.is_empty():
 		return true
 	else: 
 		return false

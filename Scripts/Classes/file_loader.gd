@@ -78,7 +78,8 @@ static func load_tau_file(filePath:String, folderPath:String):
 			if line.begins_with("AudioFileName:"):
 				var parts = line.split(":", false, 1) # split into [ "AudioFileName", " song.mp3" ]
 				var audioFilePath = folderPath.path_join(parts[1].strip_edges())
-				load_song(audioFilePath)
+				print("ASD")
+				MaestroSingleton.audioFilePath = audioFilePath
 			elif line.begins_with("LeadInTimeMS:"):
 				var parts = line.split(":", false, 1) # split into [ "LeadInTimeMS", value]
 				CurrentMap.LeadInTimeMS = int(parts[1])
@@ -135,8 +136,6 @@ func init_new_map(songFilePath:String):
 
 	CurrentMap.audioFileExtension = AudioFileExtension.to_lower()
 
-	load_song(songFilePath)
-	
 	var mapsPath:String = "user://maps"
 	# The name of the map folder is the name of the song
 	var mapFolderPath = mapsPath.path_join(originalAudioFileName+AudioFileExtension.to_lower())
@@ -163,8 +162,7 @@ func init_new_map(songFilePath:String):
 	FileSaver.save_tau_data(tauFilePath)
 	CurrentMap.editorMapInit = true
 
-static func load_song(filePath:String):
-	var maestro:Maestro = MaestroSingleton
+static func load_song(filePath:String) -> AudioStream:
 	var stream:AudioStream
 	if filePath.ends_with(".mp3"):
 		stream = AudioStreamMP3.load_from_file(filePath)
@@ -172,7 +170,7 @@ static func load_song(filePath:String):
 		stream = AudioStreamOggVorbis.load_from_file(filePath)
 	if stream is AudioStreamMP3 or stream is AudioStreamOggVorbis:
 		CurrentMap.songLengthInSeconds = stream.get_length()
-		maestro.offsetSong.stream = stream.duplicate()
-		maestro.mainSong.stream = stream.duplicate()
+		return stream
 	else:
 		push_error("Failed to load audio: " + filePath + ". File must be .mp3 or .ogg.")
+		return null

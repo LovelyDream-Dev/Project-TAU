@@ -48,8 +48,8 @@ func get_timeline_position_x_from_seconds(seconds:float, pixelsPerSecond:float, 
 	return posx
 
 ## Waits for [member amount] frames to pass
-func await_frames(amount:int):
-	for frame in amount:
+func await_frames(amount:int) -> void:
+	for frame in range(amount):
 		await get_tree().process_frame
 
 ## Toggles borderless fullscreen

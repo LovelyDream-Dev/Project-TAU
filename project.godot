@@ -17,16 +17,16 @@ config/icon="res://icon.svg"
 
 [audio]
 
-buses/default_bus_layout="uid://wi7hmtmc1v3o"
+buses/default_bus_layout="uid://b61ccy5fporsj"
 
 [autoload]
 
 GlobalFunctions="*res://Auotoloads/global_functions.gd"
 GameData="*res://Auotoloads/game_data.gd"
 PlayerData="*res://Auotoloads/player_data.gd"
-MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
 InputManager="*res://Auotoloads/input_manager.gd"
 CurrentMap="*res://Auotoloads/current_map.gd"
+MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
 EditorManager="*res://Auotoloads/editor_manager.gd"
 
 [display]

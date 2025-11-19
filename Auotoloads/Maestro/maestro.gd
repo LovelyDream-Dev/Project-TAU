@@ -12,6 +12,8 @@ signal OFFSET_WHOLE_BEAT
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
 
+var audioFilePath:StringName
+
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
 
@@ -33,8 +35,9 @@ var mapFilePath:StringName
 
 var songQueue:Array 
 
+var streamsSet:bool = false
+
 func _ready() -> void:
-	
 	queue_songs()
 	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
@@ -43,9 +46,11 @@ func _ready() -> void:
 	init_metronome()
 
 func _process(_delta: float) -> void:
-	offsetSong.bus = "OffsetSong"
 	if !CurrentMap.mapLoaded:
 		return
+
+	if !streamsSet:
+		set_streams()
 
 	LeadInTimeMS = CurrentMap.LeadInTimeMS
 	secondsPerBeat = CurrentMap.secondsPerBeat
@@ -63,6 +68,15 @@ func _process(_delta: float) -> void:
 	CurrentMap.offsetSongIsPlaying = offsetSong.playing
 
 # --- CUSTOM FUNCTIONS ---
+
+func connect_signals():
+	mainSong.finished.connect(CurrentMap.on_sonngs_finished)
+	offsetSong.finished.connect(CurrentMap.on_sonngs_finished)
+
+func set_streams():
+	mainSong.stream = FileLoader.load_song(audioFilePath).duplicate()
+	offsetSong.stream = FileLoader.load_song(audioFilePath).duplicate()
+	streamsSet = true
 
 func queue_songs():
 	var mapFolderPath:String
