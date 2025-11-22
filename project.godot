@@ -25,8 +25,8 @@ GlobalFunctions="*res://Auotoloads/global_functions.gd"
 GameData="*res://Auotoloads/game_data.gd"
 PlayerData="*res://Auotoloads/player_data.gd"
 InputManager="*res://Auotoloads/input_manager.gd"
-CurrentMap="*res://Auotoloads/current_map.gd"
 MaestroSingleton="*res://Auotoloads/Maestro/maestro.tscn"
+CurrentMap="*res://Auotoloads/current_map.gd"
 EditorManager="*res://Auotoloads/editor_manager.gd"
 
 [display]

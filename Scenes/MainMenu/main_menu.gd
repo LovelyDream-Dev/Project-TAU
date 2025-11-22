@@ -30,15 +30,25 @@ var _enableParallax:bool = true
 var loadedMapPath:String
 
 func _ready() -> void:
+	if !CurrentMap.is_map_loaded():
+		var path = "user://maps/xaev for tau"
+		FileLoader.load_map(path)
+		CurrentMap.timing_points()
+
 	GlobalFunctions.toggle_borderless()
 
+func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("SPACE"):
+		CurrentMap.start_map()
+
 func _process(_delta: float) -> void:
-	manage_song_queue()
 	if parallax and enableParallax:
 		parallax.maximumMovement = maximumMovement
 		parallax.movementDecrease = movementDecrease
 	toggle_blur()
 	animate_settings()
+
+# --- CUSTOMM FUNCTIONS ---
 
 func toggle_parallax(value):
 	if parallax:
@@ -64,6 +74,6 @@ func manage_song_queue():
 	if idx < MaestroSingleton.songQueue.size():
 		if loadedMapPath != MaestroSingleton.songQueue[idx]:
 			loadedMapPath = MaestroSingleton.songQueue[idx]
-			CurrentMap.start_and_stop_map()
+			CurrentMap.start_map()
 			await MaestroSingleton.offsetSong.finished
 			idx += 1

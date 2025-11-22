@@ -46,7 +46,7 @@ func _ready() -> void:
 	init_metronome()
 
 func _process(_delta: float) -> void:
-	if !CurrentMap.mapLoaded:
+	if !CurrentMap.is_map_loaded():
 		return
 
 	if !streamsSet:

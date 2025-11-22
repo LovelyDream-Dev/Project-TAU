@@ -12,7 +12,6 @@ var globalMapTimeInSeconds:float
 var maestro:Maestro = MaestroSingleton
 
 var inEditor:bool
-var mapLoaded:bool
 var mapStarted:bool
 var mapFinished:bool
 
@@ -59,11 +58,14 @@ var scrollSpeed = PlayerData.scrollSpeed
 func _ready() -> void:
 	radiusInPixels = GameData.radiusInPixels
 	if inEditor:
-		InputManager.KEY_SPACE_PRESSED.connect(start_and_stop_map)
+		InputManager.KEY_SPACE_PRESSED.connect(start_map)
+		InputManager.KEY_SPACE_PRESSED.connect(stop_map)
 		radiusInPixels/=2
 	else:
-		if InputManager.KEY_SPACE_PRESSED.is_connected(start_and_stop_map):
-			InputManager.KEY_SPACE_PRESSED.disconnect(start_and_stop_map)
+		if InputManager.KEY_SPACE_PRESSED.is_connected(start_map):
+			InputManager.KEY_SPACE_PRESSED.disconnect(start_map)
+		if InputManager.KEY_SPACE_PRESSED.is_connected(stop_map):
+			InputManager.KEY_SPACE_PRESSED.disconnect(stop_map)
 	
 	if hitObjects.size() > 0:
 		sort_hit_objects()
@@ -72,11 +74,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if !is_map_loaded():
-		var path = "user://maps/xaev for tau"
-		FileLoader.load_map(path)
-		timing_points()
-		secondsPerBeat = 60/bpm
-		beatsPerSecond = bpm/60
 		return
 
 	timing_points()
@@ -129,16 +126,18 @@ func create_hit_object(dict:Dictionary) -> HitObject:
 	hitObject.objectDict = dict
 	return hitObject
 
-func start_and_stop_map(_mapTime = null):
-	if mapStarted:
-		maestro.pause_songs()
-		mapStarted = false
-	else:
+func start_map(_mapTime = null):
+	if !mapStarted:
 		if mapFinished:
 			mapFinished = false
 			globalMapTimeInSeconds = 0.0
 		maestro.play_songs()
 		mapStarted = true
+
+func stop_map(_mapTime = null):
+	if mapStarted:
+		maestro.pause_songs()
+		mapStarted = false
 
 func on_sonngs_finished():
 	mapStarted = false
@@ -190,7 +189,7 @@ func sort_hit_objects():
 
 func is_map_loaded():
 	sort_timing_points()
-	if tauFilePath.is_empty():
+	if !tauFilePath.is_empty():
 		return true
 	else: 
 		return false
@@ -199,7 +198,6 @@ func is_map_loaded():
 func unload_map():
 	pixelsPerSecond = 0.0
 	spawnedObjectCounter = 0
-	mapLoaded = false
 	mapStarted = false
 	activeObjects.clear()
 	hitObjects.clear()

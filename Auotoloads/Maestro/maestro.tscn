@@ -20,3 +20,4 @@ stream = ExtResource("2_vluqj")
 volume_db = -80.0
 
 [node name="OffsetSong" type="AudioStreamPlayer" parent="."]
+bus = &"OffsetSong"

@@ -78,7 +78,6 @@ static func load_tau_file(filePath:String, folderPath:String):
 			if line.begins_with("AudioFileName:"):
 				var parts = line.split(":", false, 1) # split into [ "AudioFileName", " song.mp3" ]
 				var audioFilePath = folderPath.path_join(parts[1].strip_edges())
-				print("ASD")
 				MaestroSingleton.audioFilePath = audioFilePath
 			elif line.begins_with("LeadInTimeMS:"):
 				var parts = line.split(":", false, 1) # split into [ "LeadInTimeMS", value]
