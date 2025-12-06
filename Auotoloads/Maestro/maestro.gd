@@ -13,29 +13,22 @@ signal OFFSET_WHOLE_BEAT
 @export var metronomeLeadInBeats:int
 
 var audioFilePath:StringName
-
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
-
 var currentMeasure:int
 var beatsPerMeasure:int = 4
-
 var lastWholeBeat:float = -1.0
 var currentWholeBeat:float
 var nextWholeBeat:float
 var nextOffsetWholeBeat:float
-
 var secondsPerBeat:float
 var beatsPerSecond:float
-
 var LeadInTimeMS:int
 var leadInBeats:float
-
 var mapFilePath:StringName
-
 var songQueue:Array 
-
 var streamsSet:bool = false
+var songsPlaying:bool
 
 func _ready() -> void:
 	queue_songs()
@@ -101,6 +94,7 @@ func play_songs():
 		await get_tree().create_timer(-offsetSeconds).timeout
 		if offsetSong.playing:
 			mainSong.play(max(globalMapTimeInSeconds + offsetSeconds, 0.0))
+	songsPlaying = true
 
 func pause_songs():
 	if mainSong.playing or offsetSong.playing:
@@ -108,6 +102,7 @@ func pause_songs():
 		CurrentMap.offsetSongPosition = offsetSong.get_playback_position()
 		mainSong.stop()
 		offsetSong.stop()
+	songsPlaying = false
 
 func emit_beat_signals():
 	currentWholeBeat = beatsPerSecond * CurrentMap.mainSongPosition
@@ -132,6 +127,9 @@ func init_metronome():
 		metronome.stream = AudioStreamPolyphonic.new()
 	metronome.play()
 	polyphonicMetronome = metronome.get_stream_playback()
+
+func play_hitsound():
+	hitSound.play()
 
 func play_metronome(beatIndex:int):
 	if metronomeIsOn:

@@ -78,7 +78,7 @@ func _ready() -> void:
 	EditorManager.yPos = get_rect().size.y/2
 
 func _input(event: InputEvent) -> void:
-	if !CurrentMap.mapLoaded:
+	if !CurrentMap.is_map_loaded():
 		return
 
 	if Input.is_action_just_pressed("LMB"):
@@ -107,7 +107,7 @@ func _process(_delta: float) -> void:
 	CurrentMap.pixelsPerSecond = pixelsPerSecond
 	queue_redraw()
 	manuallyScrolling = timelineScroller.manuallyScrolling
-	if !CurrentMap.mapLoaded:
+	if !CurrentMap.is_map_loaded():
 		return
 
 	# set some important values

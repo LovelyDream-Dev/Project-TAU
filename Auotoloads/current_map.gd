@@ -13,6 +13,7 @@ var maestro:Maestro = MaestroSingleton
 
 var inEditor:bool
 var mapStarted:bool
+var mapIsPlaying:bool
 var mapFinished:bool
 
 var activeObjects:Array = []
@@ -57,16 +58,8 @@ var scrollSpeed = PlayerData.scrollSpeed
 
 func _ready() -> void:
 	radiusInPixels = GameData.radiusInPixels
-	if inEditor:
-		InputManager.KEY_SPACE_PRESSED.connect(start_map)
-		InputManager.KEY_SPACE_PRESSED.connect(stop_map)
-		radiusInPixels/=2
-	else:
-		if InputManager.KEY_SPACE_PRESSED.is_connected(start_map):
-			InputManager.KEY_SPACE_PRESSED.disconnect(start_map)
-		if InputManager.KEY_SPACE_PRESSED.is_connected(stop_map):
-			InputManager.KEY_SPACE_PRESSED.disconnect(stop_map)
-	
+	InputManager.KEY_SPACE_PRESSED.connect(play_and_pause_map)
+
 	if hitObjects.size() > 0:
 		sort_hit_objects()
 	if timingPoints.size() > 0:
@@ -82,6 +75,8 @@ func _process(delta: float) -> void:
 	else:
 		spawn_hit_objects()
 
+	mapStarted = maestro.songsPlaying
+	mapFinished = globalMapTimeInSeconds >= MaestroSingleton.offsetSong.stream.get_length() + (PlayerData.audioOffsetInMs/1000.0)
 	if mapStarted:
 		globalMapTimeInSeconds += delta
 
@@ -126,25 +121,20 @@ func create_hit_object(dict:Dictionary) -> HitObject:
 	hitObject.objectDict = dict
 	return hitObject
 
-func start_map(_mapTime = null):
-	if !mapStarted:
-		if mapFinished:
-			mapFinished = false
-			globalMapTimeInSeconds = 0.0
-		maestro.play_songs()
-		mapStarted = true
+func play_and_pause_map(_mapTime = null):
+	if !mapFinished:
+		if !mapIsPlaying:
+			maestro.play_songs()
+			mapIsPlaying = true
+		else:
+			maestro.pause_songs()
+			mapIsPlaying = false 
 
-func stop_map(_mapTime = null):
-	if mapStarted:
+func on_songs_finished():
+	if mapFinished and mapIsPlaying:
+		mapIsPlaying = false
 		maestro.pause_songs()
-		mapStarted = false
-
-func on_sonngs_finished():
-	mapStarted = false
-	maestro.pause_songs()
-	mainSongPosition = 0.0
-	offsetSongPosition = 0.0
-	mapFinished = true
+		globalMapTimeInSeconds = 0.0
 
 
 # NEEDS FILEDIALOG "fileloaded" SIGNAL. CURRENTLY UNUSED
@@ -199,6 +189,8 @@ func unload_map():
 	pixelsPerSecond = 0.0
 	spawnedObjectCounter = 0
 	mapStarted = false
+	mapIsPlaying = false
+	mapFinished = false
 	activeObjects.clear()
 	hitObjects.clear()
 	timingPoints.clear()

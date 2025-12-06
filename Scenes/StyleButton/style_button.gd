@@ -6,10 +6,12 @@ class_name StyleButton
 @export var texture:Texture
 
 @export_category("Hover")
+## The radius of the button that the mouse will need to be within to trigger the hover animation.
 @export var hoverRadius:float = 0.0
 
 @export_category("Animations")
 @export_group("Highlight")
+@export var highlightColor:Color = Color("ffffff00")
 @export var enableHighlight:bool = true
 @export var highlightInTime:float = 0.1
 @export var highlightOutTime:float = 0.25
@@ -32,14 +34,17 @@ var initialScale:Vector2
 @onready var textureRect:TextureRect = $TextureRect
 
 func _ready() -> void:
+	if panel.has_theme_stylebox_override("panel"):
+		panel.get_theme_stylebox("panel").bg_color = highlightColor
 	pivot_offset = size/2
 	initialScale = scale
 	set_panel()
 
 func _process(_delta: float) -> void:
-	if Engine.is_editor_hint():
-		if texture and textureRect.texture != texture:
+	if texture and textureRect.texture != texture:
 			set_texture()
+			custom_minimum_size = textureRect.size
+	if Engine.is_editor_hint():
 		return
 	if panel and panel.size != size:
 		panel.size = size
