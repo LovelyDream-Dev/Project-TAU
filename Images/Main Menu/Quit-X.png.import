@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvsk2v5dkmfs0"
-path="res://.godot/imported/WallpaperDog-10731419.png-627a917016bb6bb3eee73097b1b1f35d.ctex"
+uid="uid://dvtdeqppq7low"
+path="res://.godot/imported/Quit-X.png-0b2868627436298396d87d3489024c2a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://WallpaperDog-10731419.png"
-dest_files=["res://.godot/imported/WallpaperDog-10731419.png-627a917016bb6bb3eee73097b1b1f35d.ctex"]
+source_file="res://Images/Main Menu/Quit-X.png"
+dest_files=["res://.godot/imported/Quit-X.png-0b2868627436298396d87d3489024c2a.ctex"]
 
 [params]
 

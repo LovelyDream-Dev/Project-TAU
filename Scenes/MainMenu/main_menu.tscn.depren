@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene load_steps=27 format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://b8nlcdgwe6sms" path="res://Images/Main Menu/settings-icon.png" id="5_agesy"]
 [ext_resource type="PackedScene" uid="uid://cgr7sk7ooyr1t" path="res://Scenes/StyleButton/style_button.tscn" id="5_mdp32"]
 [ext_resource type="Texture2D" uid="uid://c4rx6saiybabn" path="res://Images/Main Menu/control-bar-texture-top.png" id="5_os7au"]
-[ext_resource type="Texture2D" uid="uid://dvtdeqppq7low" path="res://Images/Main Menu/Quit-X.png" id="6_mdh17"]
 [ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="8_2r307"]
 [ext_resource type="PackedScene" uid="uid://cwlqwvsdycaxf" path="res://Scenes/MapWorld/map_world.tscn" id="9_os7au"]
 [ext_resource type="Shader" uid="uid://bim8reh3fl2o7" path="res://Scripts/Shaders/fading_gradient.gdshader" id="10_6c6cs"]
@@ -91,22 +90,6 @@ metadata/_custom_type_script = "uid://bll14v81mmy73"
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 scale = Vector2(1.15, 1.15)
-
-[node name="QuitButton" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -142.0
-offset_bottom = 142.0
-grow_horizontal = 0
-theme_override_constants/margin_left = 54
-theme_override_constants/margin_bottom = 54
-
-[node name="QuitButton" parent="QuitButton" instance=ExtResource("5_mdp32")]
-texture_filter = 2
-layout_mode = 2
-texture = ExtResource("6_mdh17")
 
 [node name="NavBarPanel" type="Panel" parent="."]
 texture_filter = 2

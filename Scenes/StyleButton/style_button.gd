@@ -1,3 +1,4 @@
+@tool
 extends Button
 class_name StyleButton
 
@@ -16,6 +17,10 @@ class_name StyleButton
 @export var enableExpand:bool = false
 @export var expandInTime:float = 0.1
 @export var expandOutTime:float = 0.1
+@export_category("Functionality")
+@export_group("Scene Change")
+@export var sceneSwitch:bool = false
+@export var scene:PackedScene = null
 
 var hovering:bool = false
 var hoverTween:Tween
@@ -24,14 +29,18 @@ var expandTween:Tween
 var initialScale:Vector2
 
 @onready var panel:Panel = $Panel
+@onready var textureRect:TextureRect = $TextureRect
 
 func _ready() -> void:
 	pivot_offset = size/2
 	initialScale = scale
 	set_panel()
-	set_texture()
 
 func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		if texture and textureRect.texture != texture:
+			set_texture()
+		return
 	if panel and panel.size != size:
 		panel.size = size
 
@@ -90,4 +99,8 @@ func set_panel():
 
 func set_texture():
 	if texture:
-		$TextureRect.texture = texture
+		textureRect.texture = texture
+
+func _on_pressed() -> void:
+	if sceneSwitch and scene:
+		get_tree().change_scene_to_file(scene.resource_path)

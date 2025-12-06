@@ -21,11 +21,13 @@ var _enableParallax:bool = true
 @export var blurShaderMaterial:ShaderMaterial
 
 @export_category("Buttons")
+@export var buttons:Array[Button]
+
+@export_category("Icons")
 @export_group("Settings")
-@export var settingsButton:StyleButton
 @export var settingsIconLarge:TextureRect
-@export_group("Editor")
-@export var editorButton:StyleButton
+
+
 
 var loadedMapPath:String
 
@@ -37,9 +39,9 @@ func _ready() -> void:
 
 	GlobalFunctions.toggle_borderless()
 
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("SPACE"):
-		CurrentMap.start_map()
+#func _input(_event: InputEvent) -> void:
+	#if Input.is_action_just_pressed("SPACE"):
+		#CurrentMap.start_map()
 
 func _process(_delta: float) -> void:
 	if parallax and enableParallax:
