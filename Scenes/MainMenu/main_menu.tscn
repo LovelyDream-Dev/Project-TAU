@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene load_steps=28 format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
@@ -20,9 +20,6 @@
 [ext_resource type="Texture2D" uid="uid://f4j0s5f8timj" path="res://Images/Main Menu/settings-icon-fill-large.png" id="13_w5buf"]
 [ext_resource type="Texture2D" uid="uid://0xyo8sjmqjws" path="res://Images/Main Menu/menu-ring.png" id="14_nqd6t"]
 [ext_resource type="Texture2D" uid="uid://dcdtsyw2o5apv" path="res://Images/Main Menu/control-bar-texture-bottom.png" id="15_43m2q"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n0kcp"]
-bg_color = Color(0.92629945, 2.7193873e-06, 3.85046e-07, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_os7au"]
 texture = ExtResource("5_os7au")
@@ -106,16 +103,17 @@ offset_bottom = 142.0
 grow_horizontal = 0
 mouse_filter = 1
 
-[node name="QuitButtonHoverPanel" type="Panel" parent="QuitButtonControl"]
-visible = false
-custom_minimum_size = Vector2(142, 142)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_n0kcp")
+[node name="ColorRect" type="ColorRect" parent="QuitButtonControl"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -142.0
+offset_bottom = 143.0
+grow_horizontal = 0
+color = Color(1, 0, 0, 0)
 
-[node name="QuitButton" parent="QuitButtonControl" instance=ExtResource("5_mdp32")]
+[node name="QuitButton" parent="QuitButtonControl" node_paths=PackedStringArray("backgroundColorRect") instance=ExtResource("5_mdp32")]
 texture_filter = 2
 layout_mode = 0
 offset_left = 54.0
@@ -123,8 +121,11 @@ offset_right = 142.0
 offset_bottom = 88.0
 pivot_offset = Vector2(44, 44)
 texture = ExtResource("6_mdh17")
-highlightColor = Color(0.9816658, 0.075860985, 2.3102762e-06, 1)
+toggleBackground = true
+backgroundColorRect = NodePath("../ColorRect")
+maxAlpha = 0.8
 enableExpand = true
+expandTransition = 0
 
 [node name="NavBarPanel" type="Panel" parent="."]
 texture_filter = 2
@@ -150,6 +151,12 @@ size_flags_vertical = 4
 
 [node name="SettingsButton" parent="NavBarPanel/HBoxContainer/Settings" instance=ExtResource("5_mdp32")]
 layout_mode = 2
+toggleBackground = null
+backgroundColor = null
+maxAlpha = null
+minAlpha = null
+fadetInTime = null
+fadeOutTime = null
 
 [node name="Control" type="Control" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton"]
 custom_minimum_size = Vector2(32, 32)
@@ -204,6 +211,12 @@ custom_minimum_size = Vector2(113, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+toggleBackground = null
+backgroundColor = null
+maxAlpha = null
+minAlpha = null
+fadetInTime = null
+fadeOutTime = null
 enableHighlight = false
 enableExpand = true
 sceneSwitch = true
@@ -223,6 +236,12 @@ custom_minimum_size = Vector2(98, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+toggleBackground = null
+backgroundColor = null
+maxAlpha = null
+minAlpha = null
+fadetInTime = null
+fadeOutTime = null
 enableHighlight = false
 enableExpand = true
 sceneSwitch = true
@@ -295,6 +314,12 @@ grow_vertical = 2
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(325, 325)
 hoverRadius = 325.0
+toggleBackground = null
+backgroundColor = null
+maxAlpha = null
+minAlpha = null
+fadetInTime = null
+fadeOutTime = null
 enableHighlight = false
 enableExpand = true
 
@@ -419,6 +444,12 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/normal = SubResource("StyleBoxFlat_w5buf")
+toggleBackground = null
+backgroundColor = null
+maxAlpha = null
+minAlpha = null
+fadetInTime = null
+fadeOutTime = null
 
 [node name="Label" type="Label" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer/AudioTabButton"]
 layout_mode = 1
@@ -439,3 +470,6 @@ custom_minimum_size = Vector2(1670, 390)
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_styles/panel = SubResource("StyleBoxTexture_w5buf")
+
+[connection signal="ENTER_HOVER" from="QuitButtonControl/QuitButton" to="QuitButtonControl" method="_on_quit_button_enter_hover"]
+[connection signal="LEAVE_HOVER" from="QuitButtonControl/QuitButton" to="QuitButtonControl" method="_on_quit_button_leave_hover"]

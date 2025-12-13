@@ -2,6 +2,9 @@
 extends Button
 class_name StyleButton
 
+signal ENTER_HOVER
+signal LEAVE_HOVER
+
 @export_category("Texture")
 @export var texture:Texture
 
@@ -10,6 +13,14 @@ class_name StyleButton
 @export var hoverRadius:float = 0.0
 
 @export_category("Animations")
+@export_group("Background")
+@export var toggleBackground:bool = false
+@export var backgroundColorRect:ColorRect
+@export var backgroundColor:Color = Color.RED
+@export_range(0.0, 1.0, 0.1) var maxAlpha:float = 1.0
+@export_range(0.0, 1.0, 0.1) var minAlpha:float = 0.0
+@export var fadetInTime:float = 0.1
+@export var fadeOutTime:float = 0.25
 @export_group("Highlight")
 @export var highlightColor:Color = Color("ffffff00")
 @export var enableHighlight:bool = true
@@ -19,6 +30,10 @@ class_name StyleButton
 @export var enableExpand:bool = false
 @export var expandInTime:float = 0.1
 @export var expandOutTime:float = 0.1
+@export_group("Easing")
+@export var expandEase:Tween.EaseType = Tween.EASE_IN_OUT
+@export_group("Transition")
+@export var expandTransition:Tween.TransitionType = Tween.TRANS_BACK
 @export_category("Functionality")
 @export_group("Scene Change")
 @export var sceneSwitch:bool = false
@@ -30,10 +45,15 @@ var expandTween:Tween
 
 var initialScale:Vector2
 
+var bgTween:Tween
+
 @onready var panel:Panel = $Panel
 @onready var textureRect:TextureRect = $TextureRect
 
 func _ready() -> void:
+	if backgroundColorRect:
+		backgroundColorRect.color = backgroundColor
+		backgroundColorRect.color.a = minAlpha
 	if panel.has_theme_stylebox_override("panel"):
 		panel.get_theme_stylebox("panel").bg_color = highlightColor
 	pivot_offset = size/2
@@ -44,24 +64,16 @@ func _process(_delta: float) -> void:
 	if texture and textureRect.texture != texture:
 			set_texture()
 			custom_minimum_size = textureRect.size
+
 	if Engine.is_editor_hint():
 		return
+
 	if panel and panel.size != size:
 		panel.size = size
 
+	# --- Hovering ---
 	if hoverRadius == 0.0:
-		if !hovering and get_global_rect().has_point(get_global_mouse_position()):
-			hovering = true
-			if enableHighlight:
-				highlight_tween(1.0, highlightInTime)
-			if enableExpand:
-				expand_tween(Vector2(1.1, 1.1), expandInTime)
-		elif hovering and !get_global_rect().has_point(get_global_mouse_position()):
-			hovering = false
-			if enableHighlight:
-				highlight_tween(0.0, highlightOutTime)
-			if enableExpand:
-				expand_tween(Vector2(1.0, 1.0), expandOutTime)
+		normal_hover()
 	else:
 		hover_on_circle()
 
@@ -79,23 +91,55 @@ func expand_tween(targetScale:Vector2, duration:float):
 	
 	var currentScale = self.scale
 	expandTween = create_tween()
-	expandTween.tween_property(self, "scale", targetScale, duration).from(currentScale).set_trans(Tween.TRANS_BACK)
+	expandTween.tween_property(self, "scale", targetScale, duration).from(currentScale).set_trans(expandTransition).set_ease(expandEase)
+
+func normal_hover():
+	if !hovering and get_global_rect().has_point(get_global_mouse_position()):
+		ENTER_HOVER.emit()
+		backgroundAnimation(true, bgTween)
+		hovering = true
+		if enableHighlight:
+			highlight_tween(1.0, highlightInTime)
+		if enableExpand:
+			expand_tween(Vector2(1.1, 1.1), expandInTime)
+	elif hovering and !get_global_rect().has_point(get_global_mouse_position()):
+		LEAVE_HOVER.emit()
+		backgroundAnimation(false, bgTween)
+		hovering = false
+		if enableHighlight:
+			highlight_tween(0.0, highlightOutTime)
+		if enableExpand:
+			expand_tween(Vector2(1.0, 1.0), expandOutTime)
 
 func hover_on_circle():
 	var targetScaleUp:Vector2 = initialScale*1.1
 	var distance = get_global_rect().get_center().distance_to(get_global_mouse_position())
 	if hovering and distance < hoverRadius/2:
 		hovering = false
+		backgroundAnimation(false, bgTween)
 		if enableHighlight:
 			highlight_tween(1.0, highlightInTime)
 		if enableExpand:
 			expand_tween(targetScaleUp, expandInTime)
 	elif !hovering and distance > hoverRadius/2:
 		hovering = true
+		backgroundAnimation(true, bgTween)
 		if enableHighlight:
 			highlight_tween(0.0, highlightOutTime)
 		if enableExpand:
 			expand_tween(initialScale, expandOutTime)
+
+func backgroundAnimation(fadeIn:bool, bgt:Tween) -> void:
+	if !backgroundColorRect:
+		return
+
+	var targetAlpha:float = maxAlpha if fadeIn else minAlpha
+	var fadeTime = fadetInTime if fadeIn else fadeOutTime
+	if bgt and bgt.is_running():
+		bgt.kill()
+
+	bgt = create_tween()
+	bgt.tween_property(backgroundColorRect, "color:a", targetAlpha, fadeTime).from(backgroundColorRect.color.a)
 
 func set_panel():
 	if panel:
