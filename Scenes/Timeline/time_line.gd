@@ -59,11 +59,6 @@ var manuallyScrolling:bool
 ## The notes that are currently on the timeline
 var timelineObjects:Array
 
-var dragSelectStartPosition:Vector2
-var dragSelectStarted:bool = false
-var dragSelectionRect:Rect2
-var dragNoteStartPosX:float
-
 var initialObjectOCull:bool
 var initialNotesSpawned:bool
 
@@ -75,33 +70,12 @@ var initialNotesSpawned:bool
 
 func _ready() -> void:
 	EditorManager.playheadOffset = playheadOffset
-	EditorManager.yPos = get_rect().size.y/2
+	EditorManager.localYPos = get_rect().size.y/2
+	EditorManager.globalYPos = position.y + (get_rect().size.y/2)
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if !CurrentMap.is_map_loaded():
 		return
-
-	if Input.is_action_just_pressed("LMB"):
-		start_note_drag()
-
-	if Input.is_action_pressed("LMB"):
-		drag_notes()
-		if get_tree().get_node_count_in_group("selectedNotes") == 0:
-			if !dragSelectStarted:
-				dragSelectStarted = true
-				dragSelectStartPosition = get_local_mouse_position()
-		else:
-			if dragSelectStarted:
-				deselect_notes(null)
-
-	if Input.is_action_just_released("LMB"):
-		end_note_drag()
-		dragSelectStarted = false
-
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_ESCAPE:
-			deselect_notes(null)
-
 
 func _process(_delta: float) -> void:
 	CurrentMap.pixelsPerSecond = pixelsPerSecond
@@ -117,9 +91,6 @@ func _process(_delta: float) -> void:
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	pixelsPerBeat = secondsPerBeat * pixelsPerSecond
 	totalWholeBeats = floori(beatsPerSecond * (songLengthInSeconds + (CurrentMap.LeadInTimeMS/1000.0)))
-
-	# manage drag selection
-	#select_notes_by_drag()
 
 	set_control_heights()
 
@@ -144,60 +115,6 @@ func _process(_delta: float) -> void:
 	set_base_control_length()
 
 
-
-func _draw() -> void:
-	#if dragSelectStarted:
-		#draw_selection_rectangle(dragSelectStartPosition)
-	pass
-
-## Draws the rect for multi note selection.
-func draw_selection_rectangle(pos:Vector2):
-	var mousePos = get_local_mouse_position()
-	var movingCorner = Vector2(mousePos.x - pos.x, mousePos.y - pos.y)
-	dragSelectionRect = Rect2(pos, movingCorner)
-	draw_rect(dragSelectionRect, Color(1, 1, 1, 0.5), true)
-	draw_rect(dragSelectionRect, Color(1, 1, 1, 1), false)
-
-func select_notes_by_drag():
-	if !dragSelectStarted:
-		if get_tree().get_node_count_in_group("selectedNotes") > 0:
-			return
-	else:
-		for timelineObject:TimelineObject in timelineObjectContainer.get_children():
-			if dragSelectionRect.abs().has_point(timelineObjectContainer.to_local(timelineObject.global_position)):
-				timelineObject.isSelected = true
-
-## De-selects [member note] if it is not [code]null[/code]. Otherwise it de-selects all notes in group [member selectedNotes].
-func deselect_notes(note:TimelineObject):
-	if note == null:
-		for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
-			timelineObject.isSelected = false
-	else:
-		note.isSelected = false
-
-## Returns [member true] if a mouse click is detected outside of any node within group [member selectedNotes].
-func get_if_clicked_outside_of_selected_note() -> bool:
-	for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
-		if !timelineObject.hitObjectSprite.get_rect().has_point(timelineObject.hitObjectSprite.get_local_mouse_position()):
-			return true
-		else: 
-			return false
-	return true
-
-func start_note_drag():
-	dragNoteStartPosX = EditorManager.snappedPixel
-
-func drag_notes():
-	if !dragSelectStarted:
-		for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
-			var dragDistance = (EditorManager.snappedPixel - dragNoteStartPosX)
-			timelineObject.position.x = timelineObject.currentPositionX + dragDistance
-			
-
-func end_note_drag():
-	for timelineObject:TimelineObject in get_tree().get_nodes_in_group("selectedNotes"):
-		timelineObject.currentPositionX = timelineObject.position.x
-	dragNoteStartPosX = 0.0
 
 ## Returns an [member Array] of all [member Node2D]'s within [member list] that are located at [member point].
 func get_timeline_note_from_list_at_point(point:Vector2, list:Array) -> Array:
@@ -230,8 +147,9 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	var hitTime = dict["hitTime"]
 	var releaseTime = dict["releaseTime"]
 	var side = GlobalFunctions.side_from_raw(dict["side"])
-	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.yPos)
+	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.localYPos)
 	timelineObject.position = pos
+	timelineObject.dragStartPosition = pos
 	timelineObject.texture = texture
 	timelineObject.lastObjectDict = dict
 	timelineObject.hitTime = hitTime

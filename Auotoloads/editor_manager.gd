@@ -12,8 +12,11 @@ enum modes {
 var currentMode:int = 0
 var editorSnapDivisor:int = 2
 
-## The y positon of notes on the timeline.
-var yPos:float
+## The global y positon of notes on the timeline.
+var globalYPos:float
+## The local y position of notes on the timeline
+var localYPos:float
+
 var snappedBeat:float
 var snappedPixel:float
 var snappedSongPosition:float

@@ -16,6 +16,8 @@ var nextObjectIndex:int = 0
 var nextObjectTime:float = CurrentMap.hitObjects[0]["hitTime"]
 var defaultButtonColor:Color
 
+var currentObjectIndex:int = 0
+
 func _enter_tree() -> void:
 	MaestroSingleton.pause_songs()
 	CurrentMap.globalMapTimeInSeconds = 0.0
@@ -30,11 +32,11 @@ func _ready() -> void:
 	connect_buttons()
 
 func _process(_delta: float) -> void:
-	play_hitsounds()
 	if snapDivisorSlider and !snapDivisorSlider.value_changed.is_connected(set_snap_divisor):
 		snapDivisorSlider.value_changed.connect(set_snap_divisor)
 	if !timeline.initialObjectOCull:
 		timeline.initial_object_cull()
+	get_object_pass()
 
 func set_snap_divisor(value):
 	EditorManager.SNAP_DIVISOR_CHANGED.emit()
@@ -55,9 +57,29 @@ func set_snap_divisor(value):
 			EditorManager.editorSnapDivisor = 16
 			return
 
-func play_hitsounds():
-	print(CurrentMap.globalMapTimeInSeconds)
-	print(CurrentMap.hitObjects[0]["hitTime"])
+func get_object_pass() -> void:
+	if !CurrentMap.mapIsPlaying:
+		return
+	while currentObjectIndex < CurrentMap.hitObjects.size() and CurrentMap.globalMapTimeInSeconds >= CurrentMap.hitObjects[currentObjectIndex]["hitTime"]:
+		#print(currentObjectIndex)
+		handle_object_pass(CurrentMap.hitObjects[currentObjectIndex]["hitTime"])
+		currentObjectIndex += 1
+
+func update_object_index():
+	var left:int = 0
+	var right:int = CurrentMap.hitObjects.size()
+
+	while left < right:
+		@warning_ignore("integer_division")
+		var mid  = (left+right)/2
+		if CurrentMap.hitObjects[mid] <= CurrentMap.globalMapTimeInSeconds:
+			left = mid + 1
+		else:
+			right = mid
+	
+
+func handle_object_pass(time:float):
+	MaestroSingleton.play_hitsound()
 
 func on_button_pressed(id:int, _button:Button):
 	match id:

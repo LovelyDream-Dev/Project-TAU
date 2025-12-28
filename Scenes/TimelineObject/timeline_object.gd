@@ -8,6 +8,8 @@ var releaseTime:float
 var isHoldNote:bool
 var side:int
 
+var dragStartPosition:Vector2
+
 func _enter_tree() -> void:
 	if releaseTime > hitTime:
 		isHoldNote = true

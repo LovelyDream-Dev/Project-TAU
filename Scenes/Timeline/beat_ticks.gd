@@ -29,7 +29,7 @@ func _process(_delta: float) -> void:
 
 func draw_beat_ticks(BeatTime:float, tickHeight:float, tickWidth:float, tickColor:Color, rounded:bool):
 	var xPosition = GlobalFunctions.get_timeline_position_x_from_seconds(BeatTime, timeline.pixelsPerSecond, timeline.playheadOffset)
-	var yCenter = timeline.position.y + EditorManager.yPos
+	var yCenter = EditorManager.globalYPos
 	
 	#  \/ --- BEAT TICK CULLING WITH MARGIN --- \/
 

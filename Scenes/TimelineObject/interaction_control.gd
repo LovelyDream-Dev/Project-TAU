@@ -11,13 +11,13 @@ func _ready() -> void:
 		menu.get_popup().add_theme_stylebox_override("panel", create_popup_button_style())
 		menu.get_popup().id_pressed.connect(on_popup_button_pressed)
 
-func _gui_input(_event: InputEvent) -> void:
-	if Input.is_action_pressed("LMB"):
-		if EditorManager.currentMode == EditorManager.modes.SELECT:
-			drag_object(Vector2(EditorManager.snappedPixel, EditorManager.yPos))
-
-func drag_object(newPositon:Vector2):
-	parent.position = newPositon
+#func _gui_input(_event: InputEvent) -> void:
+	#if Input.is_action_pressed("LMB"):
+		#if EditorManager.currentMode == EditorManager.modes.SELECT:
+			#drag_object(Vector2(EditorManager.snappedPixel, EditorManager.localYPos))
+#
+#func drag_object(newPositon:Vector2):
+	#parent.position = newPositon
 
 func create_popup_button_style() -> StyleBoxFlat:
 	var newStyle:StyleBoxFlat = StyleBoxFlat.new()
