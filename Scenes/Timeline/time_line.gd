@@ -84,6 +84,7 @@ func _process(_delta: float) -> void:
 	if !CurrentMap.is_map_loaded():
 		return
 
+	timelineObjects = timelineObjectContainer.get_children()
 	# set some important values
 	songLengthInSeconds = CurrentMap.songLengthInSeconds
 	bpm = CurrentMap.bpm
@@ -114,7 +115,11 @@ func _process(_delta: float) -> void:
 
 	set_base_control_length()
 
-
+func timeline_objects_loaded() -> bool:
+	if timelineObjects.size() == CurrentMap.hitObjectCount:
+		return true
+	else:
+		return false
 
 ## Returns an [member Array] of all [member Node2D]'s within [member list] that are located at [member point].
 func get_timeline_note_from_list_at_point(point:Vector2, list:Array) -> Array:
@@ -162,7 +167,6 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	return timelineObject
 
 # ----- TIMELINE POSITION FUNCTIONS -----
-
 
 func cull_notes():
 	var timelineScrollerRect:Rect2 = timelineScroller.get_rect()

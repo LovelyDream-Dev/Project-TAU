@@ -25,6 +25,12 @@ sixteenthBeatTickColor = Color(0.4862745, 0.1764706, 0.7607843, 1)
 hideScrollBar = true
 noteTexture = ExtResource("2_gk61m")
 
+[node name="TimelineMouseComponent" parent="." node_paths=PackedStringArray("timeline") instance=ExtResource("5_euvy4")]
+layout_mode = 1
+offset_right = -50.0
+offset_bottom = -150.0
+timeline = NodePath("..")
+
 [node name="TimelineScroller" type="ScrollContainer" parent="." node_paths=PackedStringArray("timeline")]
 z_as_relative = false
 clip_contents = false
@@ -44,11 +50,6 @@ mouse_filter = 2
 color = Color(0.0313726, 0.141176, 0.215686, 1)
 script = ExtResource("4_a3fgb")
 timeline = NodePath("../..")
-
-[node name="TimelineMouseComponent" parent="TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline") instance=ExtResource("5_euvy4")]
-layout_mode = 1
-offset_bottom = -150.0
-timeline = NodePath("../../..")
 
 [node name="TimelineObjectContainer" type="Node2D" parent="TimelineScroller/TimelineContent"]
 z_index = 2

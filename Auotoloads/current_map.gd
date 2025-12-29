@@ -56,6 +56,8 @@ var rotationDirection:int = 1
 var radiusInPixels
 var scrollSpeed = PlayerData.scrollSpeed
 
+var hitObjectCount:int
+
 func _ready() -> void:
 	radiusInPixels = GameData.radiusInPixels
 	InputManager.KEY_SPACE_PRESSED.connect(play_and_pause_map)

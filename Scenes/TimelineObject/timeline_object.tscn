@@ -34,7 +34,6 @@ popup/item_0/text = "Delete"
 popup/item_0/id = 0
 
 [node name="TimelineObjectArea" type="Area2D" parent="."]
-collision_mask = 0
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TimelineObjectArea"]

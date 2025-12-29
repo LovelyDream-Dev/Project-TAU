@@ -127,7 +127,9 @@ static func load_tau_file(filePath:String, folderPath:String):
 					"releaseTime": float(parts[1].strip_edges()),
 					"side": int(parts[2].strip_edges())
 				}
+				CurrentMap.hitObjectCount += 1
 				CurrentMap.hitObjects.append(hitObject)
+
 
 func init_new_map(songFilePath:String):
 	var originalAudioFileName = songFilePath.get_file().get_basename()

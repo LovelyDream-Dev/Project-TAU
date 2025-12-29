@@ -17,6 +17,7 @@ var nextObjectTime:float = CurrentMap.hitObjects[0]["hitTime"]
 var defaultButtonColor:Color
 
 var currentObjectIndex:int = 0
+var objectsResnapped:bool = false
 
 func _enter_tree() -> void:
 	MaestroSingleton.pause_songs()
@@ -28,15 +29,29 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	CurrentMap.radiusInPixels /= 2
-	FileLoader.load_map("user://maps/xaev for tau")
+	if !CurrentMap.is_map_loaded():
+		FileLoader.load_map("user://maps/xaev for tau")
 	connect_buttons()
 
 func _process(_delta: float) -> void:
+	if CurrentMap.is_map_loaded() and timeline.timeline_objects_loaded() and !objectsResnapped:
+		resnap_timeline_objects()
+		objectsResnapped = true
+
 	if snapDivisorSlider and !snapDivisorSlider.value_changed.is_connected(set_snap_divisor):
 		snapDivisorSlider.value_changed.connect(set_snap_divisor)
 	if !timeline.initialObjectOCull:
 		timeline.initial_object_cull()
 	get_object_pass()
+
+func resnap_timeline_objects():
+	for object:TimelineObject in timeline.timelineObjects:
+		var snapInterval = CurrentMap.secondsPerBeat/EditorManager.editorSnapDivisor
+		var time = object.hitTime
+		var snappedTime = round(time/snapInterval) * snapInterval
+		object.hitTime = snappedTime
+		object.position.x = GlobalFunctions.get_timeline_position_x_from_seconds(snappedTime, timeline.pixelsPerSecond, timeline.playheadOffset)
+		object.dragStartPosition.x = object.position.x
 
 func set_snap_divisor(value):
 	EditorManager.SNAP_DIVISOR_CHANGED.emit()
@@ -61,7 +76,6 @@ func get_object_pass() -> void:
 	if !CurrentMap.mapIsPlaying:
 		return
 	while currentObjectIndex < CurrentMap.hitObjects.size() and CurrentMap.globalMapTimeInSeconds >= CurrentMap.hitObjects[currentObjectIndex]["hitTime"]:
-		#print(currentObjectIndex)
 		handle_object_pass(CurrentMap.hitObjects[currentObjectIndex]["hitTime"])
 		currentObjectIndex += 1
 
@@ -78,7 +92,7 @@ func update_object_index():
 			right = mid
 	
 
-func handle_object_pass(time:float):
+func handle_object_pass(_time:float):
 	MaestroSingleton.play_hitsound()
 
 func on_button_pressed(id:int, _button:Button):
