@@ -33,10 +33,11 @@ class_name Timeline
 @export var timelinePlacement:bool = true
 ## If it is set to true, the scroll bar will be hidden
 @export var hideScrollBar:bool
-
 @export_group("Textures")
 ## Texture of the note that will be placed on the timeline
 @export var noteTexture:Texture
+@export_category("Nodes")
+@export var editor:Editor
 
 var wholeBeatTimes:Array = []
 var halfBeatTimes:Array = []
@@ -157,13 +158,14 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	timelineObject.dragStartPosition = pos
 	timelineObject.texture = texture
 	timelineObject.lastObjectDict = dict
+	timelineObject.objectDict = dict
 	timelineObject.hitTime = hitTime
 	timelineObject.releaseTime = releaseTime
 	timelineObject.side = side
 	if side == GlobalFunctions.side.LEFT:
-		timelineObject.modulate = PlayerData.color1
+		timelineObject.self_modulate = PlayerData.color1
 	elif side == GlobalFunctions.side.RIGHT:
-		timelineObject.modulate = PlayerData.color2
+		timelineObject.self_modulate = PlayerData.color2
 	return timelineObject
 
 # ----- TIMELINE POSITION FUNCTIONS -----

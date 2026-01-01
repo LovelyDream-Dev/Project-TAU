@@ -397,7 +397,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="Timeline" parent="TimelineMarginContainer/TimeLinePanel" instance=ExtResource("2_dftp8")]
+[node name="Timeline" parent="TimelineMarginContainer/TimeLinePanel" node_paths=PackedStringArray("editor") instance=ExtResource("2_dftp8")]
 clip_contents = true
 custom_minimum_size = Vector2(1920, 100)
 layout_mode = 0
@@ -405,3 +405,4 @@ offset_right = 1920.0
 offset_bottom = 150.0
 tickHeight = 120.0
 pixelsPerSecond = 300.0
+editor = NodePath("../../..")

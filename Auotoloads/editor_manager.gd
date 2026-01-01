@@ -13,6 +13,7 @@ enum modes {
 var currentMode:int = 0
 var editorSnapDivisor:int = 2
 var editorSnapInterval:float = 0.0
+var linkMap:LinkMap = LinkMap.new()
 
 ## The global y positon of notes on the timeline.
 var globalYPos:float

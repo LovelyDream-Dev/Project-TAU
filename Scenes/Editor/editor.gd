@@ -19,7 +19,10 @@ var defaultButtonColor:Color
 var currentObjectIndex:int = 0
 var objectsResnapped:bool = false
 
+var objectMap:LinkMap = LinkMap.new()
+
 func _enter_tree() -> void:
+	EditorManager.linkMap.clear()
 	MaestroSingleton.pause_songs()
 	CurrentMap.globalMapTimeInSeconds = 0.0
 	CurrentMap.mapIsPlaying = false

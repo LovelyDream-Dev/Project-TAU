@@ -1,14 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://he8m4vmf82lk"]
+[gd_scene load_steps=7 format=3 uid="uid://he8m4vmf82lk"]
 
 [ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Editor/Timeline/timeline-note.png" id="1_eayod"]
 [ext_resource type="Script" uid="uid://dfmp6kgwbwoaf" path="res://Scenes/TimelineObject/timeline_object.gd" id="2_i00dh"]
 [ext_resource type="Script" uid="uid://dudc3p60rhipf" path="res://Scenes/TimelineObject/interaction_control.gd" id="3_skji5"]
 [ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="4_i00dh"]
+[ext_resource type="Script" uid="uid://cmn73jt68c6jb" path="res://Scenes/TimelineObject/highlight_manager.gd" id="5_skji5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i00dh"]
 radius = 30.016663
 
 [node name="TimelineObject" type="Sprite2D"]
+texture_filter = 2
 texture = ExtResource("1_eayod")
 script = ExtResource("2_i00dh")
 
@@ -33,10 +35,14 @@ item_count = 1
 popup/item_0/text = "Delete"
 popup/item_0/id = 0
 
+[node name="HighlightManager" type="Node2D" parent="."]
+script = ExtResource("5_skji5")
+
 [node name="TimelineObjectArea" type="Area2D" parent="."]
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TimelineObjectArea"]
+visible = false
 shape = SubResource("CircleShape2D_i00dh")
 
 [connection signal="about_to_popup" from="InteractionControl/MenuButton" to="InteractionControl" method="_on_menu_button_about_to_popup"]
