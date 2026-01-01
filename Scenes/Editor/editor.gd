@@ -5,9 +5,7 @@ class_name Editor
 @export var spinner:Spinner
 @export_category("LeftPanel")
 @export_group("Buttons")
-@export var selectButton:Button
-@export var noteButon:Button
-@export var holdNoteButton:Button
+
 @export_category("RightPanel")
 @export_group("Sliders")
 @export var snapDivisorSlider:HSlider
@@ -34,7 +32,6 @@ func _ready() -> void:
 	CurrentMap.radiusInPixels /= 2
 	if !CurrentMap.is_map_loaded():
 		FileLoader.load_map("user://maps/xaev for tau")
-	connect_buttons()
 
 func _process(_delta: float) -> void:
 	if CurrentMap.is_map_loaded() and timeline.timeline_objects_loaded() and !objectsResnapped:
@@ -43,6 +40,7 @@ func _process(_delta: float) -> void:
 
 	if snapDivisorSlider and !snapDivisorSlider.value_changed.is_connected(set_snap_divisor):
 		snapDivisorSlider.value_changed.connect(set_snap_divisor)
+
 	if !timeline.initialObjectOCull:
 		timeline.initial_object_cull()
 	get_object_pass()
@@ -98,13 +96,11 @@ func update_object_index():
 func handle_object_pass(_time:float):
 	MaestroSingleton.play_hitsound()
 
-func on_button_pressed(id:int, _button:Button):
-	match id:
-		EditorManager.modes.SELECT:
+func on_button_pressed(actionID:String):
+	match actionID:
+		"editorModeSelect":
 			EditorManager.currentMode = EditorManager.modes.SELECT
-
-func connect_buttons():
-	var id:int = 0
-	for button:Button in [selectButton, noteButon, holdNoteButton]:
-		button.pressed.connect(on_button_pressed.bind(id, button))
-		id += 1
+		"editorModeNote":
+			EditorManager.currentMode = EditorManager.modes.NOTE
+		"editorModeHoldNote":
+			EditorManager.currentMode = EditorManager.modes.HOLDNOTE

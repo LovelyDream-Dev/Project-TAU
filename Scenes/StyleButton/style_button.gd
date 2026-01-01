@@ -5,13 +5,15 @@ class_name StyleButton
 signal ENTER_HOVER
 signal LEAVE_HOVER
 
+@export var actionID:StringName
+@export_category("Nodes")
+@export var editor:Editor
 @export_category("Texture")
 @export var texture:Texture
 
 @export_category("Hover")
 ## The radius of the button that the mouse will need to be within to trigger the hover animation.
 @export var hoverRadius:float = 0.0
-
 @export_category("Animations")
 @export_group("Background")
 @export var toggleBackground:bool = false
@@ -47,29 +49,35 @@ var initialScale:Vector2
 
 var bgTween:Tween
 
-@onready var panel:Panel = $Panel
+@onready var panel:Panel = $HighlightPanel
 @onready var textureRect:TextureRect = $TextureRect
 
 func _ready() -> void:
 	if backgroundColorRect:
 		backgroundColorRect.color = backgroundColor
 		backgroundColorRect.color.a = minAlpha
+
 	if panel.has_theme_stylebox_override("panel"):
 		panel.get_theme_stylebox("panel").bg_color = highlightColor
-	pivot_offset = size/2
-	initialScale = scale
 	set_panel()
+
+	initialScale = scale
+
+	if editor:
+		pressed.connect(editor.on_button_pressed.bind(actionID))
 
 func _process(_delta: float) -> void:
 	if texture and textureRect.texture != texture:
-			set_texture()
-			custom_minimum_size = textureRect.size
+		set_texture()
+		custom_minimum_size = textureRect.size
+
+	pivot_offset = size/2
+	size = textureRect.size
+	panel.pivot_offset = panel.size/2
+	textureRect.pivot_offset = textureRect.size/2
 
 	if Engine.is_editor_hint():
 		return
-
-	if panel and panel.size != size:
-		panel.size = size
 
 	# --- Hovering ---
 	if hoverRadius == 0.0:

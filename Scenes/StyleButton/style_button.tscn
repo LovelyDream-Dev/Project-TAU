@@ -21,8 +21,8 @@ corner_radius_bottom_left = 4
 
 [node name="StyleButton" type="Button"]
 custom_minimum_size = Vector2(40, 40)
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 40.0
+offset_bottom = 40.0
 pivot_offset = Vector2(20, 20)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2l3d5")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_4hxns")
@@ -31,11 +31,12 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_ti81b")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4ylee")
 script = ExtResource("1_4ylee")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="HighlightPanel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+pivot_offset = Vector2(20, 20)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4ylee")
 
@@ -52,6 +53,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(20, 20)
 mouse_filter = 2
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]
