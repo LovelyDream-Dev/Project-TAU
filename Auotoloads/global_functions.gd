@@ -41,6 +41,10 @@ func get_beat_from_song_position(songPosition:float, beatsPerSecond:float) -> fl
 func get_position_on_circumference(circleCenter:Vector2, circleRadius:float, angle:float) -> Vector2:
 	return circleCenter + Vector2(cos(angle), sin(angle)) * circleRadius
 
+## Returns the [Vector2] coordinates of a the position opposite that of [member pos] on a circle's circumference, given the circle's [member center] position.
+func get_opposite_position_on_circumference(pos:Vector2, center:Vector2) -> Vector2:
+	return center * 2 - pos
+
 ## Returns a [float] value, representing an x position along a timeline, from a time in seconds. 
 ## Allows for an offset in position to account for a scrolling playhead.
 func get_timeline_position_x_from_seconds(seconds:float, pixelsPerSecond:float, offset:float) -> float:

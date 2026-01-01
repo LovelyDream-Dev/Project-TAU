@@ -106,8 +106,13 @@ func create_hit_object(dict:Dictionary) -> HitObject:
 	var angle = fmod(hitBeat, beatsPerRotation) * (TAU/beatsPerRotation)
 	var spawnDistanceFromCenter = spawnSide * radiusInPixels * 2 * scrollSpeed
 	var hitRadiusFromCenter = spawnSide * radiusInPixels
+
 	var spawnPosition = GlobalFunctions.get_position_on_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
-	var hitPosition = GlobalFunctions.get_position_on_circumference(center, hitRadiusFromCenter, rotationDirection * angle)
+	var hitPosition:Vector2 = GlobalFunctions.get_position_on_circumference(center, hitRadiusFromCenter, rotationDirection * angle)
+	if side == GlobalFunctions.side.RIGHT:
+		hitPosition = GlobalFunctions.get_opposite_position_on_circumference(hitPosition, center)
+		spawnPosition = GlobalFunctions.get_opposite_position_on_circumference(spawnPosition, center)
+
 	var hitObject:HitObject = HitObject.new()
 	var hitNoteTexture:Texture  = load("res://Skins/Default Skin/hit-note.png")
 	var hitNoteOutlineTexture:Texture = load("res://Skins/Default Skin/hit-note-outline.png")
