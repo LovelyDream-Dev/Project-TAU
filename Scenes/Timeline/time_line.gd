@@ -1,6 +1,11 @@
 extends Control
 class_name Timeline
 
+
+@export_category("Nodes")
+@export var timelineScroller:TimelineScroller
+@export var timelineContent:TimelineContent 
+@export var timelineObjectContainer:Node2D
 @export_group("Colors")
 ## The color of the timeline background
 @export var backgroundColor:Color = Color("082437b3")
@@ -63,16 +68,14 @@ var timelineObjects:Array
 var initialObjectOCull:bool
 var initialNotesSpawned:bool
 
-@onready var playheadOffset:float = $PlayHead.position.x
-@onready var timelineScroller:TimelineScroller = $TimelineScroller
-@onready var timelineContent:TimelineContent = $TimelineScroller/TimelineContent
-@onready var timelineObjectContainer:Node2D = $TimelineScroller/TimelineContent/TimelineObjectContainer
+@export var playheadOffset:float = 500.0
 @onready var camera = get_viewport().get_camera_2d()
 
 func _ready() -> void:
 	EditorManager.playheadOffset = playheadOffset
 	EditorManager.localYPos = get_rect().size.y/2
-	EditorManager.globalYPos = position.y + (get_rect().size.y/2)
+	EditorManager.globalYPos = global_position.y + (get_rect().size.y/2)
+	
 
 func _input(_event: InputEvent) -> void:
 	if !CurrentMap.is_map_loaded():
@@ -153,8 +156,16 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	var hitTime = dict["hitTime"]
 	var releaseTime = dict["releaseTime"]
 	var side = GlobalFunctions.side_from_raw(dict["side"])
-	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.localYPos)
-	timelineObject.position = pos
+	
+	var ypos:float = 0.0
+	if side == GlobalFunctions.side.LEFT:
+		ypos += 10
+	elif side == GlobalFunctions.side.RIGHT:
+		ypos -= 10
+	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.localYPos + ypos)
+	
+	
+	timelineObject.position = pos 
 	timelineObject.dragStartPosition = pos
 	timelineObject.texture = texture
 	timelineObject.lastObjectDict = dict

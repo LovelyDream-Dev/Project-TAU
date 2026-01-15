@@ -5,6 +5,9 @@ var noteContainerParent:Node2D
 
 var hitNoteTexture:Texture = null
 var hitNoteOutlineTexture:Texture = null
+var hitNote = Sprite2D.new()
+var hitNoteOutline = Sprite2D.new()
+var color:Color
 
 var objectDict:Dictionary
 var spawnPosition:Vector2
@@ -18,14 +21,12 @@ var missed:bool
 
 func _enter_tree() -> void:
 	noteContainerParent = get_parent()
-	var hitNote = Sprite2D.new()
-	var hitNoteOutline = Sprite2D.new()
 	hitNote.texture = hitNoteTexture
 	hitNoteOutline.texture = hitNoteOutlineTexture
-	
-	if side == GlobalFunctions.side.LEFT: hitNote.modulate = PlayerData.color1
-	elif side == GlobalFunctions.side.RIGHT: hitNote.modulate = PlayerData.color2
-	
+	if side == GlobalFunctions.side.LEFT: 
+		color = PlayerData.color1
+	elif side == GlobalFunctions.side.RIGHT: 
+		color = PlayerData.color2
 	add_child(hitNote)
 	add_child(hitNoteOutline)
 
@@ -35,8 +36,9 @@ func _process(_delta: float) -> void:
 
 	manage_self_in_editor()
 
-	animate_self()
-	is_active()
+	if hitNote and hitNoteOutline:
+		animate_self()
+		is_active()
 
 func manage_self_in_editor():
 	if CurrentMap.inEditor:
@@ -48,8 +50,12 @@ func animate_self():
 	hitAnimation()
 
 func spawn_animation():
-	MTween.mtween_property(self, "modulate:a",0, 1, spawnTime, CurrentMap.spawnWindowInSeconds)
+	# Position
 	MTween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, CurrentMap.spawnWindowInSeconds)
+	# alpha modulate
+	MTween.mtween_property(hitNote, "modulate",Color(color.r, color.g, color.b ,0), color, spawnTime, CurrentMap.spawnWindowInSeconds)
+	MTween.mtween_property(hitNoteOutline, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, CurrentMap.spawnWindowInSeconds)
+	
 
 func hitAnimation():
 	MTween.mtween_property(self, "modulate", Color(1,1,1,1), Color(Color.GREEN, 0), hitTime, 0.5)

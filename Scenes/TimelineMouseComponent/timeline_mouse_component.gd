@@ -36,7 +36,7 @@ func _input(_event: InputEvent) -> void:
 			if !dragSelectStarted and !dragging and timelineObjectsUnderMouse.size() == 0:
 				deselect_objects()
 				var pos:Vector2 = mousePos
-				dragSelectPos = Vector2(pos.x, EditorManager.globalYPos - 50)
+				dragSelectPos = Vector2(pos.x, position.y + 10)
 				dragSelectStarted = true
 
 		if Input.is_action_just_released("LMB"):
@@ -72,7 +72,7 @@ func _draw() -> void:
 			draw_selection_rectangle()
 
 func draw_selection_rectangle():
-	var movingCorner = Vector2(mousePos.x - dragSelectPos.x, EditorManager.globalYPos + 25)
+	var movingCorner = Vector2(mousePos.x - dragSelectPos.x, (position.y + timeline.size.y-20))
 	var dragSelectionRect = Rect2(dragSelectPos, movingCorner)
 	draw_rect(dragSelectionRect, Color(1.0, 1.0, 1.0, 0.337), true)
 	cArea.position = dragSelectPos + (dragSelectionRect.size/2)

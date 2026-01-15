@@ -11,6 +11,7 @@ radius = 30.016663
 
 [node name="TimelineObject" type="Sprite2D"]
 texture_filter = 2
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_eayod")
 script = ExtResource("2_i00dh")
 
@@ -42,7 +43,6 @@ script = ExtResource("5_skji5")
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TimelineObjectArea"]
-visible = false
 shape = SubResource("CircleShape2D_i00dh")
 
 [connection signal="about_to_popup" from="InteractionControl/MenuButton" to="InteractionControl" method="_on_menu_button_about_to_popup"]

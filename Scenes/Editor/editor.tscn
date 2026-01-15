@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=8 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Timeline/time_line.tscn" id="2_dftp8"]
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
+[ext_resource type="ButtonGroup" uid="uid://dbxhe2gmph5f4" path="res://Resources/EditorModeButtons.tres" id="6_wwoqk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6172c"]
+bg_color = Color(0.054803655, 0.18849233, 0.2783202, 1)
 
 [node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner")]
 custom_minimum_size = Vector2(1920, 1080)
@@ -16,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_ub1o7")
-timeline = NodePath("TimelineMarginContainer/TimeLinePanel/Timeline")
+timeline = NodePath("VBoxContainer/TimelineMarginContainer/TimeLinePanel/Timeline")
 spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Control/Spinner")
 
 [node name="BackgroundImage" type="TextureRect" parent="."]
@@ -42,15 +46,15 @@ mouse_filter = 1
 color = Color(0.13333334, 0.17254902, 0.2, 0.7607843)
 
 [node name="PlayFieldMarginContainer" type="MarginContainer" parent="."]
+clip_contents = true
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -960.0
-offset_right = 960.0
-offset_bottom = 784.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_constants/margin_top = 64
+grow_vertical = 2
+size_flags_vertical = 10
 
 [node name="PlayFieldBackground" type="ColorRect" parent="PlayFieldMarginContainer"]
 custom_minimum_size = Vector2(960, 540)
@@ -88,39 +92,77 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl/Control" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
-position = Vector2(480, 360)
-timeline = NodePath("../../../../TimelineMarginContainer/TimeLinePanel/Timeline")
+timeline = NodePath("../../../../VBoxContainer/TimelineMarginContainer/TimeLinePanel/Timeline")
 
-[node name="TimelineMarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(1920, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -960.0
-offset_top = -40.0
-offset_right = 960.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_constants/margin_bottom = 32
+offset_top = 80.0
+offset_right = 1920.0
+offset_bottom = 160.0
+theme_override_constants/separation = 12
 
-[node name="TimeLinePanel" type="Panel" parent="TimelineMarginContainer"]
-custom_minimum_size = Vector2(1920, 150)
+[node name="TimelineMarginContainer" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(1920, 0)
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="TimeLinePanel" type="Panel" parent="VBoxContainer/TimelineMarginContainer"]
+custom_minimum_size = Vector2(1920, 80)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="Timeline" parent="TimelineMarginContainer/TimeLinePanel" node_paths=PackedStringArray("editor") instance=ExtResource("2_dftp8")]
-clip_contents = true
-custom_minimum_size = Vector2(1920, 100)
+[node name="Timeline" parent="VBoxContainer/TimelineMarginContainer/TimeLinePanel" node_paths=PackedStringArray("editor") instance=ExtResource("2_dftp8")]
+custom_minimum_size = Vector2(1920, 80)
 layout_mode = 0
 offset_right = 1920.0
-offset_bottom = 150.0
-tickHeight = 120.0
+offset_bottom = 80.0
 pixelsPerSecond = 300.0
-editor = NodePath("../../..")
+editor = NodePath("../../../..")
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6172c")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
+custom_minimum_size = Vector2(1920, 50)
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 8.0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="Select" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("6_wwoqk")
+text = "Select"
+
+[node name="Note" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("6_wwoqk")
+text = "Note
+"
+
+[node name="HoldNote" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("6_wwoqk")
+text = "HitNote
+"
+
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/HoldNote" to="." method="on_button_pressed"]
 
 [editable path="PlayFieldMarginContainer/SpinnerControl/Control/Spinner"]
