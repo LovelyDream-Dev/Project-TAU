@@ -24,7 +24,7 @@ signal LEAVE_HOVER
 @export var fadetInTime:float = 0.1
 @export var fadeOutTime:float = 0.25
 @export_group("Highlight")
-@export var highlightColor:Color = Color("ffffff00")
+@export var highlightColor:Color = Color("96969689")
 @export var enableHighlight:bool = true
 @export var highlightInTime:float = 0.1
 @export var highlightOutTime:float = 0.25
@@ -59,7 +59,8 @@ func _ready() -> void:
 
 	if panel.has_theme_stylebox_override("panel"):
 		panel.get_theme_stylebox("panel").bg_color = highlightColor
-	set_panel()
+	if panel.has_theme_stylebox("panel"):
+			panel.get_theme_stylebox("panel").duplicate(true)
 
 	initialScale = scale
 
@@ -73,6 +74,7 @@ func _process(_delta: float) -> void:
 
 	pivot_offset = size/2
 	size = textureRect.size
+	panel.size = size
 	panel.pivot_offset = panel.size/2
 	textureRect.pivot_offset = textureRect.size/2
 
@@ -149,15 +151,17 @@ func backgroundAnimation(fadeIn:bool, bgt:Tween) -> void:
 	bgt = create_tween()
 	bgt.tween_property(backgroundColorRect, "color:a", targetAlpha, fadeTime).from(backgroundColorRect.color.a)
 
-func set_panel():
-	if panel:
-		if panel.has_theme_stylebox("panel"):
-			panel.get_theme_stylebox("panel").duplicate(true)
-
 func set_texture():
 	if texture:
 		textureRect.texture = texture
 
 func _on_pressed() -> void:
-	if sceneSwitch and scene:
-		get_tree().change_scene_to_file(scene.resource_path)
+	if toggle_mode == false:
+		if sceneSwitch and scene:
+			get_tree().change_scene_to_file(scene.resource_path)
+
+func _on_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		highlight_tween(1.0, highlightInTime)
+	else:
+		highlight_tween(0.0, highlightOutTime)

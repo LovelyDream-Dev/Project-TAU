@@ -1,33 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=6 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
 [ext_resource type="PackedScene" uid="uid://bybn6e8ggh00o" path="res://Scenes/Timeline/time_line.tscn" id="2_dftp8"]
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
-[ext_resource type="PackedScene" uid="uid://cgr7sk7ooyr1t" path="res://Scenes/StyleButton/style_button.tscn" id="5_1xg6d"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
-[ext_resource type="Texture2D" uid="uid://dx0bcf0ih0kdw" path="res://Images/Editor/Icons/select-icon.png" id="6_o25bw"]
-[ext_resource type="StyleBox" uid="uid://b2hvwavqeckxv" path="res://Resources/ButtonStyleBox.tres" id="7_l58k3"]
-[ext_resource type="FontVariation" uid="uid://dyxaql4v2lcso" path="res://Fonts/MainFont/MainFont.tres" id="8_l58k3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvxkh"]
-bg_color = Color(0.019607844, 0.101960786, 0.16078432, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.29803923)
-shadow_size = 16
-shadow_offset = Vector2(0, 8)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1xg6d"]
-bg_color = Color(0.02745098, 0.1254902, 0.19215687, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner", "snapDivisorSlider")]
+[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner")]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
@@ -38,8 +17,7 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_ub1o7")
 timeline = NodePath("TimelineMarginContainer/TimeLinePanel/Timeline")
-spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Spinner")
-snapDivisorSlider = NodePath("RightPanelMarginContainer/RightPanel/SnapDivisorPanel/SnapDivisorVbox/SnapDivisorSlider")
+spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Control/Spinner")
 
 [node name="BackgroundImage" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(1920, 1080)
@@ -68,8 +46,8 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -480.0
-offset_right = 480.0
+offset_left = -960.0
+offset_right = 960.0
 offset_bottom = 784.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 64
@@ -82,156 +60,36 @@ color = Color(0, 0, 0, 0.49803922)
 [node name="SpinnerControl" type="Control" parent="PlayFieldMarginContainer"]
 layout_mode = 2
 
-[node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl" instance=ExtResource("5_wwoqk")]
-position = Vector2(480, 360)
+[node name="Control" type="Control" parent="PlayFieldMarginContainer/SpinnerControl"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl/Control" instance=ExtResource("5_wwoqk")]
 scale = Vector2(0.5, 0.5)
 
 [node name="HitObjectContainerControl" type="Control" parent="PlayFieldMarginContainer"]
 clip_contents = true
 layout_mode = 2
 
-[node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
+[node name="Control" type="Control" parent="PlayFieldMarginContainer/HitObjectContainerControl"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl/Control" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
 position = Vector2(480, 360)
-timeline = NodePath("../../../TimelineMarginContainer/TimeLinePanel/Timeline")
-
-[node name="LeftPanelMarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(480, 0)
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 32
-
-[node name="LeftPanel" type="Panel" parent="LeftPanelMarginContainer"]
-custom_minimum_size = Vector2(384, 720)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
-
-[node name="ButtonsMargin" type="MarginContainer" parent="LeftPanelMarginContainer/LeftPanel"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -162.0
-offset_right = 162.0
-offset_bottom = 100.0
-grow_horizontal = 2
-theme_override_constants/margin_top = 24
-
-[node name="ModeButtonGrid" type="GridContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin"]
-layout_mode = 2
-columns = 2
-
-[node name="Panel" type="Panel" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid"]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("7_l58k3")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -33.0
-offset_right = 33.0
-offset_bottom = 96.0
-grow_horizontal = 2
-theme_override_constants/separation = -22
-
-[node name="Select" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Panel/VBoxContainer" node_paths=PackedStringArray("editor") instance=ExtResource("5_1xg6d")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_vertical = 3
-actionID = &"editorModeSelect"
-editor = NodePath("../../../../../../..")
-texture = ExtResource("6_o25bw")
-enableHighlight = false
-
-[node name="TextureRect" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Panel/VBoxContainer/Select" index="1"]
-texture_filter = 2
-offset_left = -33.0
-offset_top = -41.0
-offset_right = 33.0
-offset_bottom = 25.0
-pivot_offset = Vector2(33, 33)
-texture = ExtResource("6_o25bw")
-
-[node name="Label" type="Label" parent="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Panel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 2
-theme_override_fonts/font = ExtResource("8_l58k3")
-theme_override_font_sizes/font_size = 20
-text = "Select"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RightPanelMarginContainer" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(480, 0)
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -480.0
-offset_bottom = 784.0
-grow_horizontal = 0
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 32
-
-[node name="RightPanel" type="Panel" parent="RightPanelMarginContainer"]
-custom_minimum_size = Vector2(384, 720)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_kvxkh")
-
-[node name="SnapDivisorPanel" type="Panel" parent="RightPanelMarginContainer/RightPanel"]
-clip_contents = true
-custom_minimum_size = Vector2(125, 50)
-layout_mode = 0
-offset_right = 140.0
-offset_bottom = 50.0
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
-
-[node name="SnapDivisorVbox" type="VBoxContainer" parent="RightPanelMarginContainer/RightPanel/SnapDivisorPanel"]
-clip_contents = true
-custom_minimum_size = Vector2(125, 25)
-layout_mode = 0
-offset_left = 8.0
-offset_right = 133.0
-offset_bottom = 51.0
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="SnapDivisorText" type="RichTextLabel" parent="RightPanelMarginContainer/RightPanel/SnapDivisorPanel/SnapDivisorVbox"]
-layout_mode = 2
-mouse_filter = 1
-theme_override_fonts/normal_font = ExtResource("8_l58k3")
-theme_override_font_sizes/normal_font_size = 20
-text = "Snap Divisor"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-shortcut_keys_enabled = false
-horizontal_alignment = 1
-vertical_alignment = 1
-deselect_on_focus_loss_enabled = false
-drag_and_drop_selection_enabled = false
-
-[node name="SnapDivisorSlider" type="HSlider" parent="RightPanelMarginContainer/RightPanel/SnapDivisorPanel/SnapDivisorVbox"]
-layout_mode = 2
-min_value = 1.0
-max_value = 5.0
-value = 2.0
-rounded = true
-tick_count = 5
-ticks_position = 3
+timeline = NodePath("../../../../TimelineMarginContainer/TimeLinePanel/Timeline")
 
 [node name="TimelineMarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(1920, 0)
@@ -249,7 +107,6 @@ grow_vertical = 0
 theme_override_constants/margin_bottom = 32
 
 [node name="TimeLinePanel" type="Panel" parent="TimelineMarginContainer"]
-visible = false
 custom_minimum_size = Vector2(1920, 150)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -266,4 +123,4 @@ tickHeight = 120.0
 pixelsPerSecond = 300.0
 editor = NodePath("../../..")
 
-[editable path="LeftPanelMarginContainer/LeftPanel/ButtonsMargin/ModeButtonGrid/Panel/VBoxContainer/Select"]
+[editable path="PlayFieldMarginContainer/SpinnerControl/Control/Spinner"]

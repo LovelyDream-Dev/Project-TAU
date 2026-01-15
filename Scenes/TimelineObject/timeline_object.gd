@@ -3,8 +3,6 @@ class_name TimelineObject
 
 signal OBJECT_DICT_CHANGED
 
-var parent:TimelineObjectContainer
-
 var lastObjectDict:Dictionary
 var objectDict:Dictionary:
 	set(value):
@@ -20,10 +18,10 @@ var dragStartPosition:Vector2
 var selected:bool
 
 func _enter_tree() -> void:
+	get_parent().sortedHitTimes.append(hitTime)
+	get_parent().sortedHitTimes.sort()
 	if releaseTime > hitTime:
 		isHoldNote = true
-
-	parent  = get_parent()
 
 	EditorManager.linkMap.add(self)
 	OBJECT_DICT_CHANGED.connect(func(): EditorManager.linkMap.update(self))
@@ -65,5 +63,8 @@ func manage_stack():
 func set_object_dict():
 	if !isHoldNote:
 		hitTime = (position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
+		get_parent().sortedHitTimes.append(hitTime)
+		get_parent().sortedHitTimes.erase(lastObjectDict["hitTime"])
+		get_parent().sortedHitTimes.sort()
 		releaseTime = hitTime
 		objectDict = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}

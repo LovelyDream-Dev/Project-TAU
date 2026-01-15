@@ -124,6 +124,7 @@ texture = ExtResource("6_mdh17")
 toggleBackground = true
 backgroundColorRect = NodePath("../ColorRect")
 maxAlpha = 0.8
+enableHighlight = false
 enableExpand = true
 expandTransition = 0
 

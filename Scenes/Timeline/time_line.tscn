@@ -51,10 +51,11 @@ color = Color(0.0313726, 0.141176, 0.215686, 1)
 script = ExtResource("4_a3fgb")
 timeline = NodePath("../..")
 
-[node name="TimelineObjectContainer" type="Node2D" parent="TimelineScroller/TimelineContent"]
+[node name="TimelineObjectContainer" type="Node2D" parent="TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline")]
 z_index = 2
 z_as_relative = false
 script = ExtResource("6_ccvc1")
+timeline = NodePath("../../..")
 
 [node name="BeatTicks" type="Node2D" parent="TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline", "timelineScroller")]
 z_index = 1

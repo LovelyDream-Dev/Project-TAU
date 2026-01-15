@@ -2,12 +2,19 @@ extends Node
 
 signal READY_TO_SPAWN_HIT_OBJECTS
 signal SPAWN_HIT_OBJECT
+signal MAP_TIME_CHANGED
 
 # --- MAP VARIABLES ---
 
 var audioFilePath:StringName
 
-var globalMapTimeInSeconds:float
+var _globalMapTimeInSeconds:float
+var globalMapTimeInSeconds:float:
+	set(value):
+		_globalMapTimeInSeconds = value
+		MAP_TIME_CHANGED.emit(_globalMapTimeInSeconds)
+	get:
+		return _globalMapTimeInSeconds
 
 var maestro:Maestro = MaestroSingleton
 

@@ -48,7 +48,7 @@ func animate_self():
 	hitAnimation()
 
 func spawn_animation():
-	MTween.mtween_property(self, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, CurrentMap.spawnWindowInSeconds)
+	MTween.mtween_property(self, "modulate:a",0, 1, spawnTime, CurrentMap.spawnWindowInSeconds)
 	MTween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, CurrentMap.spawnWindowInSeconds)
 
 func hitAnimation():
