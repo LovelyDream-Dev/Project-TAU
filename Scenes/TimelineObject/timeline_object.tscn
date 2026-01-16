@@ -9,11 +9,12 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_i00dh"]
 radius = 30.016663
 
-[node name="TimelineObject" type="Sprite2D"]
+[node name="TimelineObject" type="Sprite2D" node_paths=PackedStringArray("interactionControl")]
 texture_filter = 2
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_eayod")
 script = ExtResource("2_i00dh")
+interactionControl = NodePath("InteractionControl")
 
 [node name="InteractionControl" type="Control" parent="." node_paths=PackedStringArray("parent", "menu")]
 layout_mode = 3

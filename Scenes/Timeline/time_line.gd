@@ -49,6 +49,7 @@ var halfBeatTimes:Array = []
 var quarterBeatTimes:Array = []
 var eighthBeatTimes:Array = []
 var sixteenthBeatTimes:Array = []
+var firstBeatTickPositionX:float
 
 var songLengthInSeconds:float
 var bpm:float 
@@ -116,6 +117,7 @@ func _process(_delta: float) -> void:
 	get_quarter_beat_times()
 	get_eighth_beat_times()
 	get_sixteenth_beat_times()
+	firstBeatTickPositionX = GlobalFunctions.get_timeline_position_x_from_seconds(wholeBeatTimes[0], pixelsPerSecond, playheadOffset)
 
 	set_base_control_length()
 
@@ -146,8 +148,7 @@ func get_highest_timeline_note_z_index(list:Array) -> Node2D:
 
 ## Places notes on the timeline at the correct position using [member dict].
 func place_timeline_objects(dict:Dictionary):
-	var timelineObjectTexture = load("res://Images/Editor/Timeline/timeline-note.png")
-	timelineObjectContainer.add_child(create_timeline_object(dict, timelineObjectTexture))
+	timelineObjectContainer.add_child(create_timeline_object(dict, noteTexture))
 
 ## Creates timeline objects from the appropriate dictionary format; 
 ## [code]{hitTime: seconds, releaseTime: seconds, side: -1 or 1}[/code].
@@ -201,12 +202,12 @@ func cull_notes():
 
 
 
-## Uses [method valueInSeconds] to find the related pixel position on the timeline. [br]Returns [code]0.0[/code] if [method valueInSeconds] is greater than [method songLengthInSeconds].
-func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
-	if valueinSeconds <= songLengthInSeconds:
-		return ((valueinSeconds + (CurrentMap.LeadInTimeMS/1000.0)) * pixelsPerSecond) + timelineScroller.playheadOffset
-	else: 
-		return 0.0
+### Uses [method valueInSeconds] to find the related pixel position on the timeline. [br]Returns [code]0.0[/code] if [method valueInSeconds] is greater than [method songLengthInSeconds].
+#func get_timeline_position_x_from_song_position(valueinSeconds:float) -> float:
+	#if valueinSeconds <= songLengthInSeconds:
+		#return ((valueinSeconds + (CurrentMap.LeadInTimeMS/1000.0)) * pixelsPerSecond) + timelineScroller.playheadOffset
+	#else: 
+		#return 0.0
 	
 func initial_object_cull():
 	initialObjectOCull = true

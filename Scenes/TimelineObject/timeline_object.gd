@@ -3,6 +3,8 @@ class_name TimelineObject
 
 signal OBJECT_DICT_CHANGED
 
+@export var interactionControl:Control
+
 var lastObjectDict:Dictionary
 var objectDict:Dictionary:
 	set(value):

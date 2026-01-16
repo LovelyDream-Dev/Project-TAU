@@ -16,6 +16,11 @@ var dragSelectStarted:bool = false
 var dragging:bool
 var dragStartPosX:float
 
+# object placement
+var obj:TimelineObject = null
+var objectCreated:bool
+var objectPlaced:bool
+
 func _ready() -> void:
 	EditorManager.SNAPPED_PIXEL_CHANGED.connect(drag_objects)
 
@@ -48,6 +53,7 @@ func _input(_event: InputEvent) -> void:
 func _process(_delta: float) -> void: 
 	queue_redraw()
 	mousePos = get_local_mouse_position()
+	place_timeline_object()
 	if timeline:
 		size = timeline.size
 
@@ -125,3 +131,7 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 				object.remove_from_group("selectedObjects")
 		_:
 			return
+
+func place_timeline_object():
+	if EditorManager.currentMode == EditorManager.modes.NOTE:
+		pass

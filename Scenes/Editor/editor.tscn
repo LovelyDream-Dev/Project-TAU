@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=9 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ccnlo71607y2a" path="res://Scenes/HitObjectContainer/hit_object_container.tscn" id="4_6172c"]
 [ext_resource type="PackedScene" uid="uid://7mgaervmad11" path="res://Scenes/Spinner/spinner.tscn" id="5_wwoqk"]
 [ext_resource type="ButtonGroup" uid="uid://dbxhe2gmph5f4" path="res://Resources/EditorModeButtons.tres" id="6_wwoqk"]
+[ext_resource type="Script" uid="uid://cl132oyqk273t" path="res://Scenes/Editor/label.gd" id="7_1xg6d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6172c"]
 bg_color = Color(0.054803655, 0.18849233, 0.2783202, 1)
@@ -160,6 +161,10 @@ toggle_mode = true
 button_group = ExtResource("6_wwoqk")
 text = "HitNote
 "
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+script = ExtResource("7_1xg6d")
 
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed" binds= ["editorModeSelect"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed" binds= ["editorModeNote"]]

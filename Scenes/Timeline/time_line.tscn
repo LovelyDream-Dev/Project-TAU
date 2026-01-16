@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://bybn6e8ggh00o"]
 
 [ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Timeline/time_line.gd" id="1_vkty0"]
+[ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Editor/Timeline/timeline-note.png" id="2_1r22w"]
 [ext_resource type="Script" uid="uid://7w8grgon3jya" path="res://Scenes/Timeline/beat_ticks.gd" id="2_1xed5"]
-[ext_resource type="Texture2D" uid="uid://dmvaqtjquryqk" path="res://icon.svg" id="2_gk61m"]
 [ext_resource type="Script" uid="uid://cw4ldwcrwobik" path="res://Scenes/Timeline/scroll_container.gd" id="3_rnvyw"]
 [ext_resource type="Script" uid="uid://bt1suinuntwpg" path="res://Scenes/Timeline/timeline_content.gd" id="4_a3fgb"]
 [ext_resource type="PackedScene" uid="uid://djdagixr4asl" path="res://Scenes/TimelineMouseComponent/timeline_mouse_component.tscn" id="5_euvy4"]
@@ -27,7 +27,7 @@ quarterBeatTickColor = Color(0.2509804, 0.4509804, 0.7764706, 1)
 eighthBeatTickColor = Color(0.7764706, 0.67058825, 0.2509804, 1)
 sixteenthBeatTickColor = Color(0.4862745, 0.1764706, 0.7607843, 1)
 hideScrollBar = true
-noteTexture = ExtResource("2_gk61m")
+noteTexture = ExtResource("2_1r22w")
 
 [node name="TimelineMouseComponent" parent="." node_paths=PackedStringArray("timeline") instance=ExtResource("5_euvy4")]
 z_index = 1000
