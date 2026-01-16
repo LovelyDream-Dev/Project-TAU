@@ -96,11 +96,11 @@ func update_object_index():
 func handle_object_pass(_time:float):
 	MaestroSingleton.play_hitsound()
 
-func on_button_pressed(button:Button):
-	match button.name:
-		"Select":
+func on_button_pressed(actionId:String):
+	match actionId:
+		"editorModeSelect":
 			EditorManager.currentMode = EditorManager.modes.SELECT
-		"Note":
+		"editorModeNote":
 			EditorManager.currentMode = EditorManager.modes.NOTE
-		"HoldNote":
+		"editorModeHoldNote":
 			EditorManager.currentMode = EditorManager.modes.HOLDNOTE

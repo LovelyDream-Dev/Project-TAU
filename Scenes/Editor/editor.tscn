@@ -161,8 +161,8 @@ button_group = ExtResource("6_wwoqk")
 text = "HitNote
 "
 
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/HoldNote" to="." method="on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed" binds= ["editorModeSelect"]]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed" binds= ["editorModeNote"]]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/HoldNote" to="." method="on_button_pressed" binds= ["editorModeHoldNote"]]
 
 [editable path="PlayFieldMarginContainer/SpinnerControl/Control/Spinner"]

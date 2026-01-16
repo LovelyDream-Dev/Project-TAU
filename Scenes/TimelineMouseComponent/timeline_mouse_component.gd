@@ -42,7 +42,7 @@ func _input(_event: InputEvent) -> void:
 		if Input.is_action_just_released("LMB"):
 			end_drag()
 	else:
-		deselect_objects()
+		#deselect_objects()
 		end_drag()
 
 func _process(_delta: float) -> void: 
@@ -113,5 +113,15 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		"TimelineObjectArea":
 			var object:TimelineObject = area.get_parent()
 			object.add_to_group("selectedObjects")
+		_:
+			return
+
+func _on_area_2d_area_exited(area: Area2D) -> void:
+	match area.name:
+		"TimelineObjectArea":
+			var object:TimelineObject = area.get_parent()
+			await get_tree().create_timer(0.05).timeout
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+				object.remove_from_group("selectedObjects")
 		_:
 			return
