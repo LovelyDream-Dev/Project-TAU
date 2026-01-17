@@ -24,9 +24,9 @@ func create_popup_button_style() -> StyleBoxFlat:
 	newStyle.bg_color = Color("072031")
 	newStyle.set_corner_radius_all(2)
 	newStyle.set_border_width_all(2)
-	if parent.side == GlobalFunctions.side.LEFT:
+	if parent.side == EditorManager.sides.LEFT:
 		newStyle.border_color = PlayerData.color1
-	elif parent.side == GlobalFunctions.side.RIGHT:
+	elif parent.side == EditorManager.sides.RIGHT:
 		newStyle.border_color = PlayerData.color2
 	return newStyle
 

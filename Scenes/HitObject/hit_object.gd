@@ -23,9 +23,9 @@ func _enter_tree() -> void:
 	noteContainerParent = get_parent()
 	hitNote.texture = hitNoteTexture
 	hitNoteOutline.texture = hitNoteOutlineTexture
-	if side == GlobalFunctions.side.LEFT: 
+	if side == EditorManager.sides.LEFT: 
 		color = PlayerData.color1
-	elif side == GlobalFunctions.side.RIGHT: 
+	elif side == EditorManager.sides.RIGHT: 
 		color = PlayerData.color2
 	add_child(hitNote)
 	add_child(hitNoteOutline)

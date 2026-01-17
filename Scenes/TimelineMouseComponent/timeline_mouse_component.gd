@@ -134,4 +134,32 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 
 func place_timeline_object():
 	if EditorManager.currentMode == EditorManager.modes.NOTE:
-		pass
+		if timeline.get_rect().has_point(mousePos):
+			var objectDict:Dictionary = {"hitTime": 0.0, "releaseTime": 0.0, "side": -1}
+			var hitTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
+			var releaseTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
+			var side:int = -1 # placeholder
+			objectDict["hitTime"] = hitTime
+			objectDict["releaseTime"] = releaseTime
+			objectDict["side"] = side
+			if obj == null:
+				obj = timeline.create_timeline_object(objectDict, timeline.noteTexture)
+				obj.interactionControl.queue_free()
+				obj.scale = Vector2(0.5, 0.5)
+				obj.isPlaceholder = true
+				match objectDict["side"]:
+					-1:
+						obj.self_modulate = PlayerData.color1
+					1:
+						obj.self_modulate = PlayerData.color2
+					_:
+						return
+				timeline.timelineObjectContainer.add_child(obj)
+			else:
+				obj.position = Vector2(EditorManager.snappedPixel + timeline.playheadOffset, EditorManager.localYPos)
+		else:
+			if obj != null:
+				obj.queue_free()
+	else:
+		if obj != null:
+			obj.queue_free()

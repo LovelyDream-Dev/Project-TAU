@@ -18,6 +18,7 @@ var side:int
 var dragStartPosition:Vector2
 
 var selected:bool
+var isPlaceholder:bool
 
 func _enter_tree() -> void:
 	get_parent().sortedHitTimes.append(hitTime)
@@ -49,6 +50,12 @@ func _process(_delta: float) -> void:
 
 func manage_object():
 	if !objectDict.is_empty():
+
+		if isPlaceholder:
+			if lastObjectDict not in CurrentMap.hitObjects:
+				CurrentMap.hitObjects.append(lastObjectDict)
+				CurrentMap.sort_hit_objects()
+
 		if lastObjectDict in CurrentMap.hitObjects and objectDict not in CurrentMap.hitObjects:
 			var index:int = CurrentMap.hitObjects.find(lastObjectDict)
 			CurrentMap.hitObjects[index] = objectDict
@@ -65,8 +72,8 @@ func manage_stack():
 func set_object_dict():
 	if !isHoldNote:
 		hitTime = (position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
+		releaseTime = hitTime
 		get_parent().sortedHitTimes.append(hitTime)
 		get_parent().sortedHitTimes.erase(lastObjectDict["hitTime"])
 		get_parent().sortedHitTimes.sort()
-		releaseTime = hitTime
 		objectDict = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}

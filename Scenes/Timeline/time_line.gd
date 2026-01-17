@@ -159,9 +159,9 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	var side = GlobalFunctions.side_from_raw(dict["side"])
 	
 	var ypos:float = 0.0
-	if side == GlobalFunctions.side.LEFT:
+	if side == EditorManager.sides.LEFT:
 		ypos += 10
-	elif side == GlobalFunctions.side.RIGHT:
+	elif side == EditorManager.sides.RIGHT:
 		ypos -= 10
 	var pos = Vector2(GlobalFunctions.get_timeline_position_x_from_seconds(hitTime, pixelsPerSecond, playheadOffset), EditorManager.localYPos + ypos)
 	
@@ -174,9 +174,9 @@ func create_timeline_object(dict:Dictionary, texture:Texture) -> TimelineObject:
 	timelineObject.hitTime = hitTime
 	timelineObject.releaseTime = releaseTime
 	timelineObject.side = side
-	if side == GlobalFunctions.side.LEFT:
+	if side == EditorManager.sides.LEFT:
 		timelineObject.self_modulate = PlayerData.color1
-	elif side == GlobalFunctions.side.RIGHT:
+	elif side == EditorManager.sides.RIGHT:
 		timelineObject.self_modulate = PlayerData.color2
 	return timelineObject
 

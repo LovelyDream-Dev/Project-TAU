@@ -159,7 +159,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
 button_group = ExtResource("6_wwoqk")
-text = "HitNote
+text = "Hold Note
 "
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]

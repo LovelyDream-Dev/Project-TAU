@@ -4,6 +4,11 @@ extends Node
 signal SNAP_DIVISOR_CHANGED
 signal SNAPPED_PIXEL_CHANGED
 
+enum sides {
+	LEFT = -1,
+	RIGHT = 1
+}
+
 enum modes {
 	SELECT = 0,
 	NOTE = 1,
@@ -11,6 +16,7 @@ enum modes {
 	RAPID = 3
 }
 var currentMode:int = 0
+var currentSide:int = -1
 var editorSnapDivisor:int = 2
 var editorSnapInterval:float = 0.0
 var linkMap:LinkMap = LinkMap.new()

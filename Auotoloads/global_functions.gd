@@ -1,10 +1,5 @@
 extends Node
 
-enum side {
-	LEFT = -1,
-	RIGHT = 1
-}
-
 enum direction {
 	CW = -1,
 	CCW = 1
@@ -15,12 +10,12 @@ enum direction {
 ## Sides are used for various mechanics, notably hit objects.
 func side_from_raw(rawValue:int):
 	if rawValue == -1:
-		return side.LEFT
+		return EditorManager.sides.LEFT
 	elif rawValue == 1:
-		return side.RIGHT
+		return EditorManager.sides.RIGHT
 	else:
 		push_error("Invalid side %s; defaulting to LEFT" % str(rawValue))
-		return side.LEFT
+		return EditorManager.sides.LEFT
 
 ## Returns a [HitObjectParser] class; used for calling hit object values such as; 
 ## [br][member HitObjectParser.hitTime], 

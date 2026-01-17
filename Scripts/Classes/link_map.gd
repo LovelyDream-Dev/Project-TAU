@@ -55,7 +55,7 @@ func unregister(obj:TimelineObject):
 	if obj.OBJECT_DICT_CHANGED.is_connected(update):
 		obj.OBJECT_DICT_CHANGED.disconnect(update)
 
-	var key:Dictionary = reverseMap[obj]
+	var key = reverseMap[obj]
 	map[key].erase(obj)
 
 	if map[key].is_empty():

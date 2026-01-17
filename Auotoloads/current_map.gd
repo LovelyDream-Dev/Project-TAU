@@ -58,7 +58,7 @@ var spinnerLoaded:bool
 var center:Vector2
 var spawnWindowInSeconds:float = 1.0
 var beatsPerRotation:float = 4
-var spawnSide:int = GlobalFunctions.side.LEFT
+var spawnSide:int = EditorManager.sides.LEFT
 var rotationDirection:int = 1
 var radiusInPixels
 var scrollSpeed = PlayerData.scrollSpeed
@@ -116,7 +116,7 @@ func create_hit_object(dict:Dictionary) -> HitObject:
 
 	var spawnPosition = GlobalFunctions.get_position_on_circumference(center, spawnDistanceFromCenter, rotationDirection * angle)
 	var hitPosition:Vector2 = GlobalFunctions.get_position_on_circumference(center, hitRadiusFromCenter, rotationDirection * angle)
-	if side == GlobalFunctions.side.RIGHT:
+	if side == EditorManager.sides.RIGHT:
 		hitPosition = GlobalFunctions.get_opposite_position_on_circumference(hitPosition, center)
 		spawnPosition = GlobalFunctions.get_opposite_position_on_circumference(spawnPosition, center)
 
