@@ -24,7 +24,7 @@ var mapIsPlaying:bool
 var mapFinished:bool
 
 var activeObjects:Array = []
-var hitObjects:Array = []
+var hitObjectDicts:Array = []
 var timingPoints:Array = []
 var rotationPoints:Array = []
 var speedPoints:Array = []
@@ -69,7 +69,7 @@ func _ready() -> void:
 	radiusInPixels = GameData.radiusInPixels
 	InputManager.KEY_SPACE_PRESSED.connect(play_and_pause_map)
 
-	if hitObjects.size() > 0:
+	if hitObjectDicts.size() > 0:
 		sort_hit_objects()
 	if timingPoints.size() > 0:
 		sort_timing_points()
@@ -92,14 +92,14 @@ func _process(delta: float) -> void:
 
 func spawn_hit_objects(index:int = -1):
 	if index == -1:
-		if spawnedObjectCounter < hitObjects.size():
-			SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjects[spawnedObjectCounter]))
+		if spawnedObjectCounter < hitObjectDicts.size():
+			SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[spawnedObjectCounter]))
 			sort_hit_objects()
 			spawnedObjectCounter += 1
-		elif spawnedObjectCounter > hitObjects.size():
-			spawnedObjectCounter = hitObjects.size()
+		elif spawnedObjectCounter > hitObjectDicts.size():
+			spawnedObjectCounter = hitObjectDicts.size()
 	else:
-		SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjects[index]))
+		SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[index]))
 		sort_hit_objects()
 		spawnedObjectCounter += 1
 
@@ -183,13 +183,13 @@ func sort_timing_points():
 			return 0)
 
 func sort_hit_objects():
-	hitObjects.sort_custom(func(a,b): 
+	hitObjectDicts.sort_custom(func(a,b): 
 		if a["hitTime"] < b["hitTime"]:
-			return -1
+			return true
 		elif a["hitTime"] > b["hitTime"]:
-			return 1
+			return false
 		else:
-			return 0)
+			return false)
 
 func is_map_loaded():
 	sort_timing_points()
@@ -206,7 +206,7 @@ func unload_map():
 	mapIsPlaying = false
 	mapFinished = false
 	activeObjects.clear()
-	hitObjects.clear()
+	hitObjectDicts.clear()
 	timingPoints.clear()
 	rotationPoints.clear()
 	speedPoints.clear()

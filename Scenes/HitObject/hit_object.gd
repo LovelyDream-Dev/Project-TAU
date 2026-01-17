@@ -42,7 +42,7 @@ func _process(_delta: float) -> void:
 
 func manage_self_in_editor():
 	if CurrentMap.inEditor:
-		if objectDict not in CurrentMap.hitObjects:
+		if objectDict not in CurrentMap.hitObjectDicts:
 			queue_free()
 
 func animate_self():

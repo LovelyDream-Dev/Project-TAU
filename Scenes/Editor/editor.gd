@@ -11,7 +11,7 @@ class_name Editor
 @export var snapDivisorSlider:HSlider
 
 var nextObjectIndex:int = 0
-var nextObjectTime:float = CurrentMap.hitObjects[0]["hitTime"]
+var nextObjectTime:float = CurrentMap.hitObjectDicts[0]["hitTime"]
 var defaultButtonColor:Color
 
 var currentObjectIndex:int = 0
@@ -43,7 +43,6 @@ func _process(_delta: float) -> void:
 
 	if !timeline.initialObjectOCull:
 		timeline.initial_object_cull()
-	get_object_pass()
 
 func resnap_timeline_objects():
 	for object:TimelineObject in timeline.timelineObjects:
@@ -73,13 +72,6 @@ func set_snap_divisor(value):
 			EditorManager.editorSnapDivisor = 16
 			return
 
-func get_object_pass() -> void:
-	if !CurrentMap.mapIsPlaying:
-		return
-	while currentObjectIndex < CurrentMap.hitObjects.size() and CurrentMap.globalMapTimeInSeconds >= CurrentMap.hitObjects[currentObjectIndex]["hitTime"]:
-		handle_object_pass(CurrentMap.hitObjects[currentObjectIndex]["hitTime"])
-		currentObjectIndex += 1
-
 func update_object_index():
 	var left:int = 0
 	var right:int = CurrentMap.hitObjects.size()
@@ -91,10 +83,6 @@ func update_object_index():
 			left = mid + 1
 		else:
 			right = mid
-	
-
-func handle_object_pass(_time:float):
-	MaestroSingleton.play_hitsound()
 
 func on_button_pressed(actionId:String):
 	match actionId:

@@ -116,9 +116,9 @@ static func load_tau_file(filePath:String, folderPath:String):
 				}
 				CurrentMap.timingPoints.append(timingPoint)
 
-		# Format for hit objects in the tau file: "Note start, Note end, Note type"
-		# Note type 0 is left and note type 1 is right
-		# Format for hit objects as a dictionary: {"start" : value, "end" : value, "type": value}
+		# Format for hit objects in the tau file: "hit time, release time, Note side"
+		# Note side -1 is left and note type 1 is right
+		# Format for hit objects as a dictionary: {"hitTime" : value, "reelaseTime" : value, "side": value}
 		if inHitObjects:
 			var parts = line.split(",")
 			if parts.size() == 3:
@@ -128,7 +128,7 @@ static func load_tau_file(filePath:String, folderPath:String):
 					"side": int(parts[2].strip_edges())
 				}
 				CurrentMap.hitObjectCount += 1
-				CurrentMap.hitObjects.append(hitObject)
+				CurrentMap.hitObjectDicts.append(hitObject)
 
 
 func init_new_map(songFilePath:String):

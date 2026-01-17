@@ -107,7 +107,7 @@ func _process(_delta: float) -> void:
 		timelineScroller.horizontal_scroll_mode = timelineScroller.SCROLL_MODE_SHOW_ALWAYS
 
 	# Spawn timeline objects at load time in the editor
-	for dict:Dictionary in CurrentMap.hitObjects:
+	for dict:Dictionary in CurrentMap.hitObjectDicts:
 		if !initialNotesSpawned:
 			place_timeline_objects(dict)
 	initialNotesSpawned = true

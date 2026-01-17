@@ -31,7 +31,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	EditorManager.linkMap.unregister(self)
-	CurrentMap.hitObjects.erase(objectDict)
+	CurrentMap.hitObjectDicts.erase(objectDict)
 
 func _ready() -> void:
 	set_object_dict()
@@ -50,13 +50,13 @@ func _process(_delta: float) -> void:
 
 func manage_object():
 	if !objectDict.is_empty():
-		if lastObjectDict not in CurrentMap.hitObjects:
-			CurrentMap.hitObjects.append(lastObjectDict)
+		if lastObjectDict not in CurrentMap.hitObjectDicts:
+			CurrentMap.hitObjectDicts.append(lastObjectDict)
 			CurrentMap.sort_hit_objects()
 
-		if lastObjectDict in CurrentMap.hitObjects and objectDict not in CurrentMap.hitObjects:
-			var index:int = CurrentMap.hitObjects.find(lastObjectDict)
-			CurrentMap.hitObjects[index] = objectDict
+		if lastObjectDict in CurrentMap.hitObjectDicts and objectDict not in CurrentMap.hitObjectDicts:
+			var index:int = CurrentMap.hitObjectDicts.find(lastObjectDict)
+			CurrentMap.hitObjectDicts[index] = objectDict
 			CurrentMap.spawn_hit_objects(index)
 			lastObjectDict = objectDict
 
