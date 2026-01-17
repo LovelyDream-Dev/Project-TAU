@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=10 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
@@ -10,6 +10,13 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6172c"]
 bg_color = Color(0.054803655, 0.18849233, 0.2783202, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1xg6d"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner")]
 custom_minimum_size = Vector2(1920, 1080)
@@ -162,6 +169,22 @@ button_group = ExtResource("6_wwoqk")
 text = "Hold Note
 "
 
+[node name="Panel" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
+
+[node name="Left" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Left"
+
+[node name="Right" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Right
+"
+
 [node name="Label" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 script = ExtResource("7_1xg6d")
@@ -169,5 +192,7 @@ script = ExtResource("7_1xg6d")
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed" binds= ["editorModeSelect"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed" binds= ["editorModeNote"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/HoldNote" to="." method="on_button_pressed" binds= ["editorModeHoldNote"]]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Left" to="." method="on_button_pressed" binds= ["editorSideLeft"]]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Right" to="." method="on_button_pressed" binds= ["editorSideRight"]]
 
 [editable path="PlayFieldMarginContainer/SpinnerControl/Control/Spinner"]

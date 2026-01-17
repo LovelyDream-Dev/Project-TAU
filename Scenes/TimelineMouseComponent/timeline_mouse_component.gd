@@ -18,8 +18,6 @@ var dragStartPosX:float
 
 # object placement
 var obj:TimelineObject = null
-var objectCreated:bool
-var objectPlaced:bool
 
 func _ready() -> void:
 	EditorManager.SNAPPED_PIXEL_CHANGED.connect(drag_objects)
@@ -29,6 +27,7 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ESCAPE"):
 		deselect_objects()
 
+	# dragging
 	if EditorManager.currentMode == EditorManager.modes.SELECT and (timeline.get_rect().has_point(mousePos) or (dragSelectStarted and get_tree().get_node_count_in_group("selectedObjects") > 0)):
 		if Input.is_action_just_pressed("LMB"):
 			if !dragSelectStarted and timelineObjectsUnderMouse.size() > 0:
@@ -37,6 +36,7 @@ func _input(_event: InputEvent) -> void:
 				get_collision_nodes_under_mouse(1)[0]["collider"].get_parent().add_to_group("selectedObjects")
 				start_drag()
 
+		# dragging
 		if Input.is_action_pressed("LMB"): 
 			if !dragSelectStarted and !dragging and timelineObjectsUnderMouse.size() == 0:
 				deselect_objects()
@@ -44,6 +44,17 @@ func _input(_event: InputEvent) -> void:
 				dragSelectPos = Vector2(pos.x, position.y + 10)
 				dragSelectStarted = true
 
+	# object placement
+	if timeline.get_rect().has_point(mousePos) and EditorManager.currentMode == EditorManager.modes.NOTE and obj != null:
+		if Input.is_action_just_pressed("LMB"):
+			var hitTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
+			var releaseTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
+			var side = EditorManager.currentSide
+			var objectDict:Dictionary = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
+			var placedObj:TimelineObject = timeline.create_timeline_object(objectDict, timeline.noteTexture)
+			timeline.timelineObjectContainer.add_child(placedObj)
+
+		# end drag
 		if Input.is_action_just_released("LMB"):
 			end_drag()
 	else:
@@ -53,7 +64,7 @@ func _input(_event: InputEvent) -> void:
 func _process(_delta: float) -> void: 
 	queue_redraw()
 	mousePos = get_local_mouse_position()
-	place_timeline_object()
+	create_hovering_timeline_object()
 	if timeline:
 		size = timeline.size
 
@@ -132,25 +143,24 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 		_:
 			return
 
-func place_timeline_object():
+func create_hovering_timeline_object():
 	if EditorManager.currentMode == EditorManager.modes.NOTE:
 		if timeline.get_rect().has_point(mousePos):
-			var objectDict:Dictionary = {"hitTime": 0.0, "releaseTime": 0.0, "side": -1}
 			var hitTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
 			var releaseTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
-			var side:int = -1 # placeholder
+			var side:int = EditorManager.currentSide
+			var objectDict:Dictionary = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
 			objectDict["hitTime"] = hitTime
 			objectDict["releaseTime"] = releaseTime
 			objectDict["side"] = side
 			if obj == null:
 				obj = timeline.create_timeline_object(objectDict, timeline.noteTexture)
 				obj.interactionControl.queue_free()
-				obj.scale = Vector2(0.5, 0.5)
 				obj.isPlaceholder = true
-				match objectDict["side"]:
-					-1:
+				match EditorManager.currentSide:
+					EditorManager.sides.LEFT:
 						obj.self_modulate = PlayerData.color1
-					1:
+					EditorManager.sides.RIGHT:
 						obj.self_modulate = PlayerData.color2
 					_:
 						return

@@ -50,11 +50,9 @@ func _process(_delta: float) -> void:
 
 func manage_object():
 	if !objectDict.is_empty():
-
-		if isPlaceholder:
-			if lastObjectDict not in CurrentMap.hitObjects:
-				CurrentMap.hitObjects.append(lastObjectDict)
-				CurrentMap.sort_hit_objects()
+		if lastObjectDict not in CurrentMap.hitObjects:
+			CurrentMap.hitObjects.append(lastObjectDict)
+			CurrentMap.sort_hit_objects()
 
 		if lastObjectDict in CurrentMap.hitObjects and objectDict not in CurrentMap.hitObjects:
 			var index:int = CurrentMap.hitObjects.find(lastObjectDict)
@@ -70,6 +68,8 @@ func manage_stack():
 	position.y = EditorManager.localYPos + (idx * 10)
 
 func set_object_dict():
+	if isPlaceholder:
+		side = EditorManager.currentSide
 	if !isHoldNote:
 		hitTime = (position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
 		releaseTime = hitTime

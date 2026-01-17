@@ -104,3 +104,7 @@ func on_button_pressed(actionId:String):
 			EditorManager.currentMode = EditorManager.modes.NOTE
 		"editorModeHoldNote":
 			EditorManager.currentMode = EditorManager.modes.HOLDNOTE
+		"editorSideLeft":
+			EditorManager.currentSide = EditorManager.sides.LEFT
+		"editorSideRight":
+			EditorManager.currentSide = EditorManager.sides.RIGHT
