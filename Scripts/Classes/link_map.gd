@@ -4,7 +4,7 @@ class_name LinkMap
 var map:Dictionary = {}
 var reverseMap:Dictionary = {}
 
-func get_hashable(data:Dictionary) -> Vector3:
+static func get_hashable(data:Dictionary) -> Vector3:
 	return Vector3 (
 		data["hitTime"],
 		data["releaseTime"],

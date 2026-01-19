@@ -42,7 +42,8 @@ func _process(_delta: float) -> void:
 
 func manage_self_in_editor():
 	if CurrentMap.inEditor:
-		if objectDict not in CurrentMap.hitObjectDicts:
+		var vec3:Vector3 = LinkMap.get_hashable(objectDict)
+		if vec3 not in EditorManager.linkMap.reverseMap.values():
 			queue_free()
 
 func animate_self():
@@ -52,6 +53,7 @@ func animate_self():
 func spawn_animation():
 	# Position
 	MTween.mtween_property(self, "global_position",spawnPosition, hitPosition, spawnTime, CurrentMap.spawnWindowInSeconds)
+
 	# alpha modulate
 	MTween.mtween_property(hitNote, "modulate",Color(color.r, color.g, color.b ,0), color, spawnTime, CurrentMap.spawnWindowInSeconds)
 	MTween.mtween_property(hitNoteOutline, "modulate",Color(1,1,1,0), Color(1,1,1,1), spawnTime, CurrentMap.spawnWindowInSeconds)

@@ -17,6 +17,7 @@ var globalMapTimeInSeconds:float:
 		return _globalMapTimeInSeconds
 
 var maestro:Maestro = MaestroSingleton
+var linkMap:LinkMap = EditorManager.linkMap
 
 var inEditor:bool
 var mapStarted:bool
@@ -92,16 +93,35 @@ func _process(delta: float) -> void:
 
 func spawn_hit_objects(index:int = -1):
 	if index == -1:
-		if spawnedObjectCounter < hitObjectDicts.size():
-			SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[spawnedObjectCounter]))
+		if spawnedObjectCounter < linkMap.reverseMap.values().size():
+			var vec3:Vector3 = linkMap.reverseMap.values()[spawnedObjectCounter]
+			var objectDict:Dictionary = {"hitTime": vec3[0], "releaseTime": vec3[1], "side": vec3[2]}
+			SPAWN_HIT_OBJECT.emit(create_hit_object(objectDict))
 			sort_hit_objects()
 			spawnedObjectCounter += 1
 		elif spawnedObjectCounter > hitObjectDicts.size():
 			spawnedObjectCounter = hitObjectDicts.size()
 	else:
-		SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[index]))
+		var vec3:Vector3 = linkMap.reverseMap.values()[index]
+		var objectDict:Dictionary = {"hitTime": vec3[0], "releaseTime": vec3[1], "side": vec3[2]}
+		SPAWN_HIT_OBJECT.emit(create_hit_object(objectDict))
 		sort_hit_objects()
+		#NOTICE Not sure if this is needed, if bugs come up with spawning the correct amount of objects, experiment with this
 		spawnedObjectCounter += 1
+
+	# --- OLD SPAWNING LOGIC --- #
+
+	#if index == -1:
+		#if spawnedObjectCounter < hitObjectDicts.size():
+			#SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[spawnedObjectCounter]))
+			#sort_hit_objects()
+			#spawnedObjectCounter += 1
+		#elif spawnedObjectCounter > hitObjectDicts.size():
+			#spawnedObjectCounter = hitObjectDicts.size()
+	#else:
+		#SPAWN_HIT_OBJECT.emit(create_hit_object(hitObjectDicts[index]))
+		#sort_hit_objects()
+		#spawnedObjectCounter += 1
 
 
 func create_hit_object(dict:Dictionary) -> HitObject:
