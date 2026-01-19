@@ -1,9 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://d011trtcheu4c"]
 
 [ext_resource type="Script" uid="uid://cos1bq2x1ak51" path="res://Auotoloads/Maestro/maestro.gd" id="1_ica8m"]
-[ext_resource type="AudioStream" uid="uid://cg0uq4wapiked" path="res://Audio Files/Metronome Click.wav" id="2_vluqj"]
 
 [sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_na6xd"]
+
+[sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_o7lie"]
 
 [node name="Maestro" type="Node"]
 script = ExtResource("1_ica8m")
@@ -14,7 +15,7 @@ stream = SubResource("AudioStreamPolyphonic_na6xd")
 bus = &"Metronome"
 
 [node name="HitSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_vluqj")
+stream = SubResource("AudioStreamPolyphonic_o7lie")
 
 [node name="MainSong" type="AudioStreamPlayer" parent="."]
 volume_db = -80.0

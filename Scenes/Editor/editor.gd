@@ -52,6 +52,7 @@ func resnap_timeline_objects():
 		object.hitTime = snappedTime
 		object.position.x = GlobalFunctions.get_timeline_position_x_from_seconds(snappedTime, timeline.pixelsPerSecond, timeline.playheadOffset)
 		object.dragStartPosition.x = object.position.x
+		
 
 func set_snap_divisor(value):
 	EditorManager.SNAP_DIVISOR_CHANGED.emit()

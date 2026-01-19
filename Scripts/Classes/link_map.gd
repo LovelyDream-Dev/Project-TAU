@@ -6,9 +6,9 @@ var reverseMap:Dictionary = {}
 
 func get_hashable(data:Dictionary) -> Vector3:
 	return Vector3 (
-		data.hitTime,
-		data.releaseTime,
-		data.side
+		data["hitTime"],
+		data["releaseTime"],
+		data["side"]
 	)
 
 func add(obj:TimelineObject):

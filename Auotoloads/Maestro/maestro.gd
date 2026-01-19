@@ -14,6 +14,7 @@ signal OFFSET_WHOLE_BEAT
 
 var audioFilePath:StringName
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
+var polyphonicHitSound:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
 var currentMeasure:int
 var beatsPerMeasure:int = 4
@@ -37,6 +38,7 @@ func _ready() -> void:
 	mapFilePath = "res://TestMaps/xaev for tau/"
 	OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
+	init_hitsound()
 
 func _process(_delta: float) -> void:
 	if !CurrentMap.is_map_loaded():
@@ -128,12 +130,18 @@ func init_metronome():
 	metronome.play()
 	polyphonicMetronome = metronome.get_stream_playback()
 
-func play_hitsound():
-	hitSound.play()
-
 func play_metronome(beatIndex:int):
 	if metronomeIsOn:
 		var offsetBeat:int = beatIndex - metronomeLeadInBeats
 		if offsetBeat > -1:
 			var pitch = 2.0 ** (2.0/12.0) if offsetBeat % 4 == 0 else 1.0
 			polyphonicMetronome.play_stream(metronomeClick, 0.0, 0.0, pitch)
+
+func init_hitsound():
+	if hitSound.stream == null or not (hitSound.stream is AudioStreamPolyphonic):
+		hitSound.stream = AudioStreamPolyphonic.new()
+	hitSound.play()
+	polyphonicHitSound = hitSound.get_stream_playback()
+
+func play_hitsound():
+	polyphonicHitSound.play_stream(metronomeClick)

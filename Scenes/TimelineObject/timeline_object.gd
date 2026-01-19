@@ -6,10 +6,13 @@ signal OBJECT_DICT_CHANGED
 @export var interactionControl:Control
 
 var lastObjectDict:Dictionary
+var _objectDict:Dictionary
 var objectDict:Dictionary:
 	set(value):
-		objectDict = value
+		_objectDict = value
 		OBJECT_DICT_CHANGED.emit()
+	get:
+		return _objectDict
 var hitTime:float
 var releaseTime:float
 var isHoldNote:bool
@@ -50,11 +53,15 @@ func _process(_delta: float) -> void:
 
 func manage_object():
 	if !objectDict.is_empty():
-		if lastObjectDict not in CurrentMap.hitObjectDicts:
-			CurrentMap.hitObjectDicts.append(lastObjectDict)
-			CurrentMap.sort_hit_objects()
+		if isPlaceholder:
+			if lastObjectDict not in CurrentMap.hitObjectDicts:
+				CurrentMap.hitObjectDicts.append(lastObjectDict)
+				CurrentMap.sort_hit_objects()
 
 		if lastObjectDict in CurrentMap.hitObjectDicts and objectDict not in CurrentMap.hitObjectDicts:
+			get_parent().sortedHitTimes.append(hitTime)
+			get_parent().sortedHitTimes.erase(lastObjectDict["hitTime"])
+			get_parent().sortedHitTimes.sort()
 			var index:int = CurrentMap.hitObjectDicts.find(lastObjectDict)
 			CurrentMap.hitObjectDicts[index] = objectDict
 			CurrentMap.spawn_hit_objects(index)
@@ -73,7 +80,4 @@ func set_object_dict():
 	if !isHoldNote:
 		hitTime = (position.x - EditorManager.playheadOffset) / CurrentMap.pixelsPerSecond
 		releaseTime = hitTime
-		get_parent().sortedHitTimes.append(hitTime)
-		get_parent().sortedHitTimes.erase(lastObjectDict["hitTime"])
-		get_parent().sortedHitTimes.sort()
 		objectDict = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}

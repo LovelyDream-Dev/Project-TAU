@@ -176,11 +176,11 @@ func sort_timing_points():
 
 	timingPoints.sort_custom(func(a,b): 
 		if a["time"] < b["time"]:
-			return -1
+			return true
 		elif a["time"] > b["time"]:
-			return 1
+			return false
 		else:
-			return 0)
+			return false)
 
 func sort_hit_objects():
 	hitObjectDicts.sort_custom(func(a,b): 

@@ -30,13 +30,13 @@ func _input(_event: InputEvent) -> void:
 	# dragging
 	if EditorManager.currentMode == EditorManager.modes.SELECT and (timeline.get_rect().has_point(mousePos) or (dragSelectStarted and get_tree().get_node_count_in_group("selectedObjects") > 0)):
 		if Input.is_action_just_pressed("LMB"):
-			if !dragSelectStarted and timelineObjectsUnderMouse.size() > 0:
+			if !dragSelectStarted and timelineObjectsUnderMouse.size() > 0: 
 				if !get_collision_nodes_under_mouse(1)[0]["collider"].get_parent().is_in_group("selectedObjects"):
 					deselect_objects()
 				get_collision_nodes_under_mouse(1)[0]["collider"].get_parent().add_to_group("selectedObjects")
 				start_drag()
 
-		# dragging
+		# drag select
 		if Input.is_action_pressed("LMB"): 
 			if !dragSelectStarted and !dragging and timelineObjectsUnderMouse.size() == 0:
 				deselect_objects()
@@ -44,7 +44,14 @@ func _input(_event: InputEvent) -> void:
 				dragSelectPos = Vector2(pos.x, position.y + 10)
 				dragSelectStarted = true
 
-	# object placement
+		# end drag
+		if Input.is_action_just_released("LMB"):
+			end_drag()
+	else:
+		#deselect_objects()
+		end_drag()
+
+		# object placement
 	if timeline.get_rect().has_point(mousePos) and EditorManager.currentMode == EditorManager.modes.NOTE and obj != null:
 		if Input.is_action_just_pressed("LMB"):
 			var hitTime:float = EditorManager.snappedPixel / timeline.pixelsPerSecond
@@ -53,13 +60,6 @@ func _input(_event: InputEvent) -> void:
 			var objectDict:Dictionary = {"hitTime": hitTime, "releaseTime": releaseTime, "side": side}
 			var placedObj:TimelineObject = timeline.create_timeline_object(objectDict, timeline.noteTexture)
 			timeline.timelineObjectContainer.add_child(placedObj)
-
-		# end drag
-		if Input.is_action_just_released("LMB"):
-			end_drag()
-	else:
-		#deselect_objects()
-		end_drag()
 
 func _process(_delta: float) -> void: 
 	queue_redraw()
