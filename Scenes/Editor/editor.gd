@@ -3,21 +3,20 @@ class_name Editor
 
 @export var timeline:Timeline
 @export var spinner:Spinner
-@export_category("LeftPanel")
-@export_group("Buttons")
+@export var mapSetupPanel:Panel
+@export var textEdits:Array[TextEdit]
 
-@export_category("RightPanel")
-@export_group("Sliders")
-@export var snapDivisorSlider:HSlider
+var fileDialog:FileDialog = FileDialog.new()
 
 var nextObjectIndex:int = 0
-var nextObjectTime:float = CurrentMap.hitObjectDicts[0]["hitTime"]
+var nextObjectTime:float = 0.0
 var defaultButtonColor:Color
 
 var currentObjectIndex:int = 0
 var objectsResnapped:bool = false
 
 var objectMap:LinkMap = LinkMap.new()
+var mapSetup:bool
 
 func _enter_tree() -> void:
 	EditorManager.linkMap.clear()
@@ -26,20 +25,33 @@ func _enter_tree() -> void:
 	CurrentMap.mapIsPlaying = false
 	var buttonStyleBox:StyleBoxFlat = preload("res://Resources/ButtonStyleBox.tres")
 	defaultButtonColor = buttonStyleBox.bg_color
-	CurrentMap.inEditor = true
+	#CurrentMap.inEditor = true
 
 func _ready() -> void:
+	if CurrentMap.hitObjectDicts.size() > 0: 
+		nextObjectTime = CurrentMap.hitObjectDicts[0]["hitTime"]
 	CurrentMap.radiusInPixels /= 2
 	if !CurrentMap.is_map_loaded():
-		FileLoader.load_map("user://maps/xaev for tau")
+		if !MaestroSingleton.hasAudioFilePath: 
+			mapSetup = true
+			fileDialog.access = FileDialog.ACCESS_FILESYSTEM
+			fileDialog.use_native_dialog = true
+			fileDialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+			fileDialog.add_filter("*.mp3, *.ogg", "Audio Files")
+			add_child(fileDialog)
+			fileDialog.file_selected.connect(handle_loaded_audio_file)
+		else:
+			#"user://maps/xaev for tau"
+			FileLoader.load_map(MaestroSingleton.mapFilePath)
 
 func _process(_delta: float) -> void:
+	on_text_edit_text_set()
+	if MaestroSingleton.hasAudioFilePath:
+		mapSetup = false
+	mapSetupPanel.visible = mapSetup
 	if CurrentMap.is_map_loaded() and timeline.timeline_objects_loaded() and !objectsResnapped:
 		resnap_timeline_objects()
 		objectsResnapped = true
-
-	if snapDivisorSlider and !snapDivisorSlider.value_changed.is_connected(set_snap_divisor):
-		snapDivisorSlider.value_changed.connect(set_snap_divisor)
 
 	if !timeline.initialObjectOCull:
 		timeline.initial_object_cull()
@@ -52,7 +64,10 @@ func resnap_timeline_objects():
 		object.hitTime = snappedTime
 		object.position.x = GlobalFunctions.get_timeline_position_x_from_seconds(snappedTime, timeline.pixelsPerSecond, timeline.playheadOffset)
 		object.dragStartPosition.x = object.position.x
-		
+
+func handle_loaded_audio_file(path:String):
+	MaestroSingleton.audioFilePath = path
+	mapSetup = false
 
 func set_snap_divisor(value):
 	EditorManager.SNAP_DIVISOR_CHANGED.emit()
@@ -85,6 +100,42 @@ func update_object_index():
 		else:
 			right = mid
 
+func on_text_edit_text_set():
+	for textEdit:TextEdit in textEdits:
+		var text:String = textEdit.text
+		match textEdit.name:
+			"Title":
+				if text.is_empty():
+					return
+				CurrentMap.title = text
+			"Artist":
+				if text.is_empty():
+					return
+				CurrentMap.artist = text
+			"Creator":
+				if text.is_empty():
+					return
+				CurrentMap.creator = text
+			"Version":
+				if text.is_empty():
+					return
+				CurrentMap.version = text
+			"LeadInMs":
+				if text.is_empty():
+					return
+				CurrentMap.LeadInTimeMS = int(text)
+			"BPM":
+				if text.is_empty():
+					return
+				CurrentMap.bpm = float(text)
+			_:
+				pass
+
+func on_slider_value_changed(value:float, actionId:String):
+	match actionId:
+		"editorHpDrainRate":
+			CurrentMap.hpDrainRate = value
+
 func on_button_pressed(actionId:String):
 	match actionId:
 		"editorModeSelect":
@@ -97,3 +148,7 @@ func on_button_pressed(actionId:String):
 			EditorManager.currentSide = EditorManager.sides.LEFT
 		"editorSideRight":
 			EditorManager.currentSide = EditorManager.sides.RIGHT
+		"editorSaveMap":
+			FileSaver.save_tau_data(CurrentMap.tauFilePath)
+		"editorSelectAudioFile":
+			fileDialog.popup_centered()

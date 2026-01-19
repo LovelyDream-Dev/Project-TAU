@@ -30,21 +30,28 @@ var mapFilePath:StringName
 var songQueue:Array 
 var streamsSet:bool = false
 var songsPlaying:bool
+var hasAudioFilePath:bool
+
+var loadMapCalled:bool = false
 
 func _ready() -> void:
 	queue_songs()
 	metronomeClick = load("res://Audio Files/Metronome Click.wav")
 	# MAP FILE NAME USED FOR _TESTING
-	mapFilePath = "res://TestMaps/xaev for tau/"
+	#mapFilePath = "res://TestMaps/xaev for tau/"
 	OFFSET_WHOLE_BEAT.connect(play_metronome)
 	init_metronome()
 	init_hitsound()
 
 func _process(_delta: float) -> void:
+	if !audioFilePath.is_empty() and !loadMapCalled:
+		mapFilePath = "user://maps/".path_join(audioFilePath)
+		loadMapCalled = true
+	
 	if !CurrentMap.is_map_loaded():
 		return
 
-	if !streamsSet:
+	if !streamsSet and audioFilePath:
 		set_streams()
 
 	LeadInTimeMS = CurrentMap.LeadInTimeMS
@@ -69,6 +76,11 @@ func connect_signals():
 	offsetSong.finished.connect(CurrentMap.on_sonngs_finished)
 
 func set_streams():
+	if audioFilePath == "":
+		push_error("Song file path missing")
+		hasAudioFilePath = false
+		return
+	hasAudioFilePath = true
 	mainSong.stream = FileLoader.load_song(audioFilePath).duplicate()
 	offsetSong.stream = FileLoader.load_song(audioFilePath).duplicate()
 	streamsSet = true

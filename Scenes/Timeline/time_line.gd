@@ -117,7 +117,8 @@ func _process(_delta: float) -> void:
 	get_quarter_beat_times()
 	get_eighth_beat_times()
 	get_sixteenth_beat_times()
-	firstBeatTickPositionX = GlobalFunctions.get_timeline_position_x_from_seconds(wholeBeatTimes[0], pixelsPerSecond, playheadOffset)
+	if wholeBeatTimes.size() > 0:
+		firstBeatTickPositionX = GlobalFunctions.get_timeline_position_x_from_seconds(wholeBeatTimes[0], pixelsPerSecond, playheadOffset)
 
 	set_base_control_length()
 
@@ -223,11 +224,12 @@ func set_control_heights():
 		timelineContent.size.y = size.y
 
 func set_base_control_length():
-	var leadInMS = CurrentMap.LeadInTimeMS
-	var lastTickTime:float = sixteenthBeatTimes.back()
-	var lastTickPositionX:float = ((lastTickTime + (leadInMS)) * pixelsPerSecond)
-	timelineContent.custom_minimum_size.x = lastTickPositionX + 1920.0
-	timelineContent.size.x = lastTickPositionX + 1920.0
+	if !CurrentMap.is_map_loaded():
+		var leadInMS = CurrentMap.LeadInTimeMS
+		var lastTickTime:float = sixteenthBeatTimes.back()
+		var lastTickPositionX:float = ((lastTickTime + (leadInMS)) * pixelsPerSecond)
+		timelineContent.custom_minimum_size.x = lastTickPositionX + 1920.0
+		timelineContent.size.x = lastTickPositionX + 1920.0
 
 # ----- BEAT TIME FUNCTIONS -----
 

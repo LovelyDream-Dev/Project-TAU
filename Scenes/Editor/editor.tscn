@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene load_steps=11 format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
@@ -18,7 +18,10 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o25bw"]
+bg_color = Color(0.0704, 0.076373324, 0.16, 1)
+
+[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner", "mapSetupPanel", "textEdits")]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
@@ -30,6 +33,8 @@ mouse_filter = 1
 script = ExtResource("1_ub1o7")
 timeline = NodePath("VBoxContainer/TimelineMarginContainer/TimeLinePanel/Timeline")
 spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Control/Spinner")
+mapSetupPanel = NodePath("MapSetup")
+textEdits = [NodePath("MapSetup/MarginContainer/VBoxContainer/Title"), NodePath("MapSetup/MarginContainer/VBoxContainer/Artist"), NodePath("MapSetup/MarginContainer/VBoxContainer/Creator"), NodePath("MapSetup/MarginContainer/VBoxContainer/Version"), NodePath("MapSetup/MarginContainer/VBoxContainer/LeadInMS"), NodePath("MapSetup/MarginContainer/VBoxContainer/BPM")]
 
 [node name="BackgroundImage" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(1920, 1080)
@@ -185,14 +190,122 @@ layout_mode = 2
 text = "Right
 "
 
-[node name="Label" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Panel2" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
+
+[node name="SaveMap" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Save Map"
+
+[node name="MapTime" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 script = ExtResource("7_1xg6d")
+
+[node name="MapSetup" type="Panel" parent="."]
+visible = false
+z_index = 1001
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o25bw")
+
+[node name="MarginContainer" type="MarginContainer" parent="MapSetup"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+offset_right = 500.0
+offset_bottom = 1080.0
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MapSetup/MarginContainer"]
+layout_mode = 2
+
+[node name="SelectAudioFile" type="Button" parent="MapSetup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select Audio FIle"
+
+[node name="Title" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Title"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="Artist" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Artist"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="Creator" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Creator
+"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="Version" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Version
+"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="LeadInMS" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Lead in time (ms)"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="BPM" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "BPM"
+context_menu_enabled = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+tab_input_mode = false
+
+[node name="hpDrainRate" type="HSlider" parent="MapSetup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 10.0
+tick_count = 5
 
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Select" to="." method="on_button_pressed" binds= ["editorModeSelect"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Note" to="." method="on_button_pressed" binds= ["editorModeNote"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/HoldNote" to="." method="on_button_pressed" binds= ["editorModeHoldNote"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Left" to="." method="on_button_pressed" binds= ["editorSideLeft"]]
 [connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/Right" to="." method="on_button_pressed" binds= ["editorSideRight"]]
+[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/HBoxContainer/SaveMap" to="." method="on_button_pressed" binds= ["editorSaveMap"]]
+[connection signal="pressed" from="MapSetup/MarginContainer/VBoxContainer/SelectAudioFile" to="." method="on_button_pressed" binds= ["editorSelectAudioFile"]]
+[connection signal="value_changed" from="MapSetup/MarginContainer/VBoxContainer/hpDrainRate" to="." method="on_slider_value_changed" binds= ["editorHpDrainRate"]]
 
 [editable path="PlayFieldMarginContainer/SpinnerControl/Control/Spinner"]

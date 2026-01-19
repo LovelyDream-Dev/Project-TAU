@@ -56,6 +56,9 @@ static func load_tau_file(filePath:String, folderPath:String):
 		push_error("Could not open .tau file: "+filePath)
 		return
 
+	# return if the file is empty
+	if file.get_as_text() == "": return
+
 	var inGeneral = false
 	var inMetadata = false
 	var inDifficulty = false

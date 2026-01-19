@@ -38,13 +38,14 @@ static func save_tau_data(filePath:String):
 	file.store_line("")
 	file.store_line("[Difficulty]")
 	file.store_line("HpDrainRate: "+str(CurrentMap.hpDrainRate))
-	file.store_line("HitWindow: "+str(CurrentMap.hitWindow*1000))
+	file.store_line("HitWindow: "+str(CurrentMap.hitWindowInSeconds))
 	file.store_line("")
 	file.store_line("[TimingPoints]")
 	for tp:Dictionary in CurrentMap.timingPoints:
 		file.store_line("time: "+str(tp["time"])+","+"bpm: "+ str(tp["bpm"]))
 	file.store_line("")
 	file.store_line("[HitObjects]")
-	for obj:Dictionary in CurrentMap.hitObjects:
-		file.store_line(str(obj["hitTime"])+","+str(obj["releaseTime"])+","+str(obj["side"]))
+	for vec3:Vector3 in EditorManager.linkMap.reverseMap.values():
+		var objectDict:Dictionary = {"hitTime": vec3[0], "releaseTime": vec3[1], "side": vec3[2]}
+		file.store_line(str(objectDict["hitTime"])+","+str(objectDict["releaseTime"])+","+str(objectDict["side"]))
 	

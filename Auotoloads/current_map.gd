@@ -4,10 +4,6 @@ signal READY_TO_SPAWN_HIT_OBJECTS
 signal SPAWN_HIT_OBJECT
 signal MAP_TIME_CHANGED
 
-# --- MAP VARIABLES ---
-
-var audioFilePath:StringName
-
 var _globalMapTimeInSeconds:float
 var globalMapTimeInSeconds:float:
 	set(value):
@@ -70,8 +66,8 @@ func _ready() -> void:
 	radiusInPixels = GameData.radiusInPixels
 	InputManager.KEY_SPACE_PRESSED.connect(play_and_pause_map)
 
-	if hitObjectDicts.size() > 0:
-		sort_hit_objects()
+	#if hitObjectDicts.size() > 0:
+		#sort_hit_objects()
 	if timingPoints.size() > 0:
 		sort_timing_points()
 
@@ -86,7 +82,8 @@ func _process(delta: float) -> void:
 		spawn_hit_objects()
 
 	mapStarted = maestro.songsPlaying
-	mapFinished = globalMapTimeInSeconds >= MaestroSingleton.offsetSong.stream.get_length() + (PlayerData.audioOffsetInMs/1000.0)
+	if MaestroSingleton.offsetSong.stream:
+		mapFinished = globalMapTimeInSeconds >= MaestroSingleton.offsetSong.stream.get_length() + (PlayerData.audioOffsetInMs/1000.0)
 	if mapStarted:
 		globalMapTimeInSeconds += delta
 
@@ -99,8 +96,8 @@ func spawn_hit_objects(index:int = -1):
 			SPAWN_HIT_OBJECT.emit(create_hit_object(objectDict))
 			sort_hit_objects()
 			spawnedObjectCounter += 1
-		elif spawnedObjectCounter > hitObjectDicts.size():
-			spawnedObjectCounter = hitObjectDicts.size()
+		elif spawnedObjectCounter > linkMap.reverseMap.values().size():
+			spawnedObjectCounter = linkMap.reverseMap.values().size()
 	else:
 		var vec3:Vector3 = linkMap.reverseMap.values()[index]
 		var objectDict:Dictionary = {"hitTime": vec3[0], "releaseTime": vec3[1], "side": vec3[2]}
@@ -214,6 +211,7 @@ func sort_hit_objects():
 func is_map_loaded():
 	sort_timing_points()
 	if !tauFilePath.is_empty():
+		print(tauFilePath)
 		return true
 	else: 
 		return false
@@ -226,7 +224,6 @@ func unload_map():
 	mapIsPlaying = false
 	mapFinished = false
 	activeObjects.clear()
-	hitObjectDicts.clear()
 	timingPoints.clear()
 	rotationPoints.clear()
 	speedPoints.clear()

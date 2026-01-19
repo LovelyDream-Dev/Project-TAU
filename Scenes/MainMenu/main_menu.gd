@@ -35,10 +35,10 @@ func _ready() -> void:
 	for button in buttons:
 		if button.name == "QuitButton":
 			button.pressed.connect(quit_button)
-	if !CurrentMap.is_map_loaded():
-		var path = "user://maps/xaev for tau"
-		FileLoader.load_map(path)
-		CurrentMap.timing_points()
+	#if !CurrentMap.is_map_loaded():
+		#var path = "user://maps/xaev for tau"
+		#FileLoader.load_map(path)
+		#CurrentMap.timing_points()
 
 	GlobalFunctions.toggle_borderless()
 
