@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cgr7sk7ooyr1t"]
+[gd_scene format=3 uid="uid://cgr7sk7ooyr1t"]
 
 [ext_resource type="Script" uid="uid://crvackudtdb6r" path="res://Scenes/StyleButton/style_button.gd" id="1_4ylee"]
 
@@ -19,7 +19,7 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="StyleButton" type="Button"]
+[node name="StyleButton" type="Button" unique_id=1498581700]
 custom_minimum_size = Vector2(40, 40)
 offset_right = 40.0
 offset_bottom = 40.0
@@ -31,7 +31,7 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_ti81b")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4ylee")
 script = ExtResource("1_4ylee")
 
-[node name="HighlightPanel" type="Panel" parent="."]
+[node name="HighlightPanel" type="Panel" parent="." unique_id=2049162031]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_right = 40.0
@@ -40,7 +40,7 @@ pivot_offset = Vector2(20, 20)
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4ylee")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1499571859]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

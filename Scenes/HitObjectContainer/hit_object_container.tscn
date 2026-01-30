@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ccnlo71607y2a"]
+[gd_scene format=3 uid="uid://ccnlo71607y2a"]
 
 [ext_resource type="Script" uid="uid://bm6auxa4p2lm" path="res://Scenes/HitObjectContainer/hit_object_container.gd" id="1_qv33r"]
 
-[node name="HitObjectContainer" type="Node2D"]
+[node name="HitObjectContainer" type="Node2D" unique_id=558710568]
 script = ExtResource("1_qv33r")

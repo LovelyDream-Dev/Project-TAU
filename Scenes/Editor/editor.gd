@@ -31,25 +31,34 @@ func _ready() -> void:
 	if CurrentMap.hitObjectDicts.size() > 0: 
 		nextObjectTime = CurrentMap.hitObjectDicts[0]["hitTime"]
 	CurrentMap.radiusInPixels /= 2
-	if !CurrentMap.is_map_loaded():
-		if !MaestroSingleton.hasAudioFilePath: 
-			mapSetup = true
-			fileDialog.access = FileDialog.ACCESS_FILESYSTEM
-			fileDialog.use_native_dialog = true
-			fileDialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-			fileDialog.add_filter("*.mp3, *.ogg", "Audio Files")
-			add_child(fileDialog)
-			fileDialog.file_selected.connect(handle_loaded_audio_file)
-		else:
-			#"user://maps/xaev for tau"
-			FileLoader.load_map(MaestroSingleton.mapFilePath)
+	fileDialog.access = FileDialog.ACCESS_FILESYSTEM
+	fileDialog.use_native_dialog = true
+	fileDialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	fileDialog.add_filter("*.mp3, *.ogg", "Audio Files")
+	add_child(fileDialog)
 
 func _process(_delta: float) -> void:
 	on_text_edit_text_set()
-	if MaestroSingleton.hasAudioFilePath:
-		mapSetup = false
+	# Load map
+	if !CurrentMap.is_taumap_loaded():
+		if CurrentMap.audioFilePath.is_empty(): 
+			mapSetup = true
+			fileDialog.file_selected.connect(func(path:String):
+				CurrentMap.audioFilePath = path)
+		else:
+			var song := FileLoader.load_song(CurrentMap.audioFilePath)
+			# This block runs on successful load # 
+			if song is AudioStream:
+				MaestroSingleton.mainSong.stream = song.duplicate()
+				MaestroSingleton.offsetSong.stream = song.duplicate()
+				CurrentMap.init_taumap()
+				mapSetup = false
+			else:
+				push_error("Failed to load song. Song is not AudioStream")
+	
+
 	mapSetupPanel.visible = mapSetup
-	if CurrentMap.is_map_loaded() and timeline.timeline_objects_loaded() and !objectsResnapped:
+	if CurrentMap.is_taumap_loaded() and timeline.timeline_objects_loaded() and !objectsResnapped:
 		resnap_timeline_objects()
 		objectsResnapped = true
 
@@ -64,10 +73,6 @@ func resnap_timeline_objects():
 		object.hitTime = snappedTime
 		object.position.x = GlobalFunctions.get_timeline_position_x_from_seconds(snappedTime, timeline.pixelsPerSecond, timeline.playheadOffset)
 		object.dragStartPosition.x = object.position.x
-
-func handle_loaded_audio_file(path:String):
-	MaestroSingleton.audioFilePath = path
-	mapSetup = false
 
 func set_snap_divisor(value):
 	EditorManager.SNAP_DIVISOR_CHANGED.emit()

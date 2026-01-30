@@ -20,11 +20,10 @@ var mapStarted:bool
 var mapIsPlaying:bool
 var mapFinished:bool
 
+var audioFilePath:String = ""
 var activeObjects:Array = []
 var hitObjectDicts:Array = []
-var timingPoints:Array = []
-var rotationPoints:Array = []
-var speedPoints:Array = []
+var timingPoints:Array[Dictionary] = [{"time": 0.0, "bpm": 128.0}] # TEST VALUES FOR XAEV TAU
 
 var spawnedObjectCounter:int = 0
 var songLengthInSeconds:float
@@ -34,7 +33,7 @@ var beatsPerSecond:float = 0.0
 var mainSongPosition:float = 0.0
 var offsetSongPosition:float = 0.0
 var pixelsPerSecond:float = 0.0
-var LeadInTimeMS:int = 0
+var LeadInTimeMS:int = 0 
 
 var mainSongIsPlaying:bool
 var offsetSongIsPlaying:bool
@@ -72,7 +71,7 @@ func _ready() -> void:
 		sort_timing_points()
 
 func _process(delta: float) -> void:
-	if !is_map_loaded():
+	if !is_taumap_loaded():
 		return
 
 	timing_points()
@@ -87,6 +86,20 @@ func _process(delta: float) -> void:
 	if mapStarted:
 		globalMapTimeInSeconds += delta
 
+func init_taumap():
+	songLengthInSeconds = MaestroSingleton.mainSong.stream.get_length()
+	beatsPerSecond = bpm/songLengthInSeconds
+	secondsPerBeat = songLengthInSeconds/bpm
+	LeadInTimeMS = secondsPerBeat * 1000 # TEST VALUE FOR XAEV TAU
+
+
+func is_taumap_loaded():
+	if (MaestroSingleton.mainSong.stream == null
+	and MaestroSingleton.offsetSong.stream == null):
+		return false
+	else:
+		if !timingPoints.is_empty():
+			return true
 
 func spawn_hit_objects(index:int = -1):
 	if index == -1:
@@ -167,14 +180,6 @@ func on_songs_finished():
 		maestro.pause_songs()
 		globalMapTimeInSeconds = 0.0
 
-
-# NEEDS FILEDIALOG "fileloaded" SIGNAL. CURRENTLY UNUSED
-func handle_loaded_file(path:String):
-	var ext := path.get_extension().to_lower()
-	if ext not in ["mp3", "ogg"]:
-		push_error("Unsupported audio format: " + ext)
-		return
-
 func timing_points():
 	if len(timingPoints) == 0:
 		return
@@ -208,16 +213,8 @@ func sort_hit_objects():
 		else:
 			return false)
 
-func is_map_loaded():
-	sort_timing_points()
-	if !tauFilePath.is_empty():
-		print(tauFilePath)
-		return true
-	else: 
-		return false
-
-
 func unload_map():
+	audioFilePath = ""
 	pixelsPerSecond = 0.0
 	spawnedObjectCounter = 0
 	mapStarted = false
@@ -225,8 +222,6 @@ func unload_map():
 	mapFinished = false
 	activeObjects.clear()
 	timingPoints.clear()
-	rotationPoints.clear()
-	speedPoints.clear()
 	bpm = 120.0 # Default value
 	secondsPerBeat = 0.0
 	beatsPerSecond = 0.0

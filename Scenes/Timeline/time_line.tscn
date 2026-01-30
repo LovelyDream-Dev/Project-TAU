@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bybn6e8ggh00o"]
+[gd_scene format=3 uid="uid://bybn6e8ggh00o"]
 
 [ext_resource type="Script" uid="uid://dq28igni4l6u0" path="res://Scenes/Timeline/time_line.gd" id="1_vkty0"]
 [ext_resource type="Texture2D" uid="uid://cqpsihxavdnte" path="res://Images/Editor/Timeline/timeline-note.png" id="2_1r22w"]
@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://cihjj5jqq810o" path="res://Scenes/Timeline/timeline_object_container.gd" id="6_ccvc1"]
 [ext_resource type="Script" uid="uid://bjbg2bjgkwqdu" path="res://Scenes/Timeline/play_head.gd" id="8_1r22w"]
 
-[node name="Timeline" type="Control" node_paths=PackedStringArray("timelineScroller", "timelineContent", "timelineObjectContainer")]
+[node name="Timeline" type="Control" unique_id=67850355 node_paths=PackedStringArray("timelineScroller", "timelineContent", "timelineObjectContainer")]
 z_index = 3
 z_as_relative = false
 custom_minimum_size = Vector2(50, 150)
@@ -29,7 +29,7 @@ sixteenthBeatTickColor = Color(0.4862745, 0.1764706, 0.7607843, 1)
 hideScrollBar = true
 noteTexture = ExtResource("2_1r22w")
 
-[node name="TimelineMouseComponent" parent="." node_paths=PackedStringArray("timeline") instance=ExtResource("5_euvy4")]
+[node name="TimelineMouseComponent" parent="." unique_id=1185576014 node_paths=PackedStringArray("timeline") instance=ExtResource("5_euvy4")]
 z_index = 1000
 z_as_relative = true
 clip_contents = true
@@ -43,7 +43,7 @@ grow_horizontal = 1
 grow_vertical = 1
 timeline = NodePath("..")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1066953001]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,7 +51,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TimelineScroller" type="ScrollContainer" parent="Control" node_paths=PackedStringArray("timeline")]
+[node name="TimelineScroller" type="ScrollContainer" parent="Control" unique_id=1056180160 node_paths=PackedStringArray("timeline")]
 z_as_relative = false
 clip_contents = false
 layout_mode = 1
@@ -64,7 +64,7 @@ horizontal_scroll_mode = 2
 script = ExtResource("3_rnvyw")
 timeline = NodePath("../..")
 
-[node name="TimelineContent" type="ColorRect" parent="Control/TimelineScroller" node_paths=PackedStringArray("timeline")]
+[node name="TimelineContent" type="ColorRect" parent="Control/TimelineScroller" unique_id=1832090130 node_paths=PackedStringArray("timeline")]
 z_as_relative = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -74,19 +74,19 @@ color = Color(0.0313726, 0.141176, 0.215686, 1)
 script = ExtResource("4_a3fgb")
 timeline = NodePath("../../..")
 
-[node name="TimelineObjectContainer" type="Node2D" parent="Control/TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline")]
+[node name="TimelineObjectContainer" type="Node2D" parent="Control/TimelineScroller/TimelineContent" unique_id=1869159325 node_paths=PackedStringArray("timeline")]
 z_index = 4
 z_as_relative = false
 script = ExtResource("6_ccvc1")
 timeline = NodePath("../../../..")
 
-[node name="BeatTicks" type="Node2D" parent="Control/TimelineScroller/TimelineContent" node_paths=PackedStringArray("timeline", "timelineScroller")]
+[node name="BeatTicks" type="Node2D" parent="Control/TimelineScroller/TimelineContent" unique_id=1662652969 node_paths=PackedStringArray("timeline", "timelineScroller")]
 z_index = 3
 script = ExtResource("2_1xed5")
 timeline = NodePath("../../../..")
 timelineScroller = NodePath("../..")
 
-[node name="PlayHead" type="Control" parent="." node_paths=PackedStringArray("timeline")]
+[node name="PlayHead" type="Control" parent="." unique_id=807954482 node_paths=PackedStringArray("timeline")]
 z_index = 1
 z_as_relative = false
 layout_mode = 1

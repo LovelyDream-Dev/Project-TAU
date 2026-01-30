@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d3lsrsgfoy1pf"]
+[gd_scene format=3 uid="uid://d3lsrsgfoy1pf"]
 
 [ext_resource type="Script" uid="uid://b56dtuitwo00c" path="res://Scenes/BlurTexture/blur_texture.gd" id="1_0sldl"]
 [ext_resource type="Texture2D" uid="uid://3on3osnvioa7" path="res://Images/Main Menu/temp/spy_family_background.png" id="2_reskv"]
@@ -22,7 +22,7 @@ viewport_path = NodePath("BlurViewportH")
 [sub_resource type="ViewportTexture" id="ViewportTexture_fhfm5"]
 viewport_path = NodePath("BlurViewportV")
 
-[node name="BlurTexture" type="Control" node_paths=PackedStringArray("displayTextureRect", "vpCapture", "vpCaptureSprite", "vpHorizontal", "vpHorizontalSprite", "vpVertical", "vpVerticalSprite")]
+[node name="BlurTexture" type="Control" unique_id=563966106 node_paths=PackedStringArray("displayTextureRect", "vpCapture", "vpCaptureSprite", "vpHorizontal", "vpHorizontalSprite", "vpVertical", "vpVerticalSprite")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,31 +39,31 @@ vpHorizontalSprite = NodePath("BlurViewportH/Sprite2D")
 vpVertical = NodePath("BlurViewportV")
 vpVerticalSprite = NodePath("BlurViewportV/Sprite2D")
 
-[node name="CaptureViewport" type="SubViewport" parent="."]
+[node name="CaptureViewport" type="SubViewport" parent="." unique_id=1532435899]
 size = Vector2i(1920, 1080)
 
-[node name="Sprite2D" type="Sprite2D" parent="CaptureViewport"]
+[node name="Sprite2D" type="Sprite2D" parent="CaptureViewport" unique_id=1370008502]
 texture_filter = 2
 texture = ExtResource("2_reskv")
 centered = false
 
-[node name="BlurViewportH" type="SubViewport" parent="."]
+[node name="BlurViewportH" type="SubViewport" parent="." unique_id=1119184186]
 size = Vector2i(1920, 1080)
 
-[node name="Sprite2D" type="Sprite2D" parent="BlurViewportH"]
+[node name="Sprite2D" type="Sprite2D" parent="BlurViewportH" unique_id=1568626165]
 material = SubResource("ShaderMaterial_fhfm5")
 texture = SubResource("ViewportTexture_reskv")
 centered = false
 
-[node name="BlurViewportV" type="SubViewport" parent="."]
+[node name="BlurViewportV" type="SubViewport" parent="." unique_id=357689590]
 size = Vector2i(1920, 1080)
 
-[node name="Sprite2D" type="Sprite2D" parent="BlurViewportV"]
+[node name="Sprite2D" type="Sprite2D" parent="BlurViewportV" unique_id=1227643208]
 material = SubResource("ShaderMaterial_ahxiv")
 texture = SubResource("ViewportTexture_ieojq")
 centered = false
 
-[node name="DisplayTexture" type="TextureRect" parent="."]
+[node name="DisplayTexture" type="TextureRect" parent="." unique_id=2007992376]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 anchors_preset = 15

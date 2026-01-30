@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 	bpm = CurrentMap.bpm
 	secondsPerBeat = CurrentMap.secondsPerBeat
 	beatsPerSecond = CurrentMap.beatsPerSecond
-	if CurrentMap.is_map_loaded():
+	if CurrentMap.is_taumap_loaded():
 		rotate_spinner()
 		rotate_hit_ring()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d011trtcheu4c"]
+[gd_scene format=3 uid="uid://d011trtcheu4c"]
 
 [ext_resource type="Script" uid="uid://cos1bq2x1ak51" path="res://Auotoloads/Maestro/maestro.gd" id="1_ica8m"]
 
@@ -6,19 +6,19 @@
 
 [sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_o7lie"]
 
-[node name="Maestro" type="Node"]
+[node name="Maestro" type="Node" unique_id=2096648409]
 script = ExtResource("1_ica8m")
 metronomeLeadInBeats = 1
 
-[node name="Metronome" type="AudioStreamPlayer" parent="."]
+[node name="Metronome" type="AudioStreamPlayer" parent="." unique_id=1824268827]
 stream = SubResource("AudioStreamPolyphonic_na6xd")
 bus = &"Metronome"
 
-[node name="HitSound" type="AudioStreamPlayer" parent="."]
+[node name="HitSound" type="AudioStreamPlayer" parent="." unique_id=1081655919]
 stream = SubResource("AudioStreamPolyphonic_o7lie")
 
-[node name="MainSong" type="AudioStreamPlayer" parent="."]
+[node name="MainSong" type="AudioStreamPlayer" parent="." unique_id=451558822]
 volume_db = -80.0
 
-[node name="OffsetSong" type="AudioStreamPlayer" parent="."]
+[node name="OffsetSong" type="AudioStreamPlayer" parent="." unique_id=809693970]
 bus = &"OffsetSong"

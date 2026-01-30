@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dhi8nlbytnk8v"]
+[gd_scene format=3 uid="uid://dhi8nlbytnk8v"]
 
 [ext_resource type="Script" uid="uid://cvgb2yql67a33" path="res://Scenes/Editor/editor.gd" id="1_ub1o7"]
 [ext_resource type="Texture2D" uid="uid://dvsk2v5dkmfs0" path="res://Images/WallpaperDog-10731419.png" id="2_6172c"]
@@ -21,7 +21,7 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o25bw"]
 bg_color = Color(0.0704, 0.076373324, 0.16, 1)
 
-[node name="Editor" type="Control" node_paths=PackedStringArray("timeline", "spinner", "mapSetupPanel", "textEdits")]
+[node name="Editor" type="Control" unique_id=1886414899 node_paths=PackedStringArray("timeline", "spinner", "mapSetupPanel", "textEdits")]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
@@ -36,7 +36,7 @@ spinner = NodePath("PlayFieldMarginContainer/SpinnerControl/Control/Spinner")
 mapSetupPanel = NodePath("MapSetup")
 textEdits = [NodePath("MapSetup/MarginContainer/VBoxContainer/Title"), NodePath("MapSetup/MarginContainer/VBoxContainer/Artist"), NodePath("MapSetup/MarginContainer/VBoxContainer/Creator"), NodePath("MapSetup/MarginContainer/VBoxContainer/Version"), NodePath("MapSetup/MarginContainer/VBoxContainer/LeadInMS"), NodePath("MapSetup/MarginContainer/VBoxContainer/BPM")]
 
-[node name="BackgroundImage" type="TextureRect" parent="."]
+[node name="BackgroundImage" type="TextureRect" parent="." unique_id=931786721]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 anchors_preset = 15
@@ -47,7 +47,7 @@ grow_vertical = 2
 texture = ExtResource("2_6172c")
 expand_mode = 1
 
-[node name="BaseBackground" type="ColorRect" parent="."]
+[node name="BaseBackground" type="ColorRect" parent="." unique_id=1872380958]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 anchors_preset = 15
@@ -58,7 +58,7 @@ grow_vertical = 2
 mouse_filter = 1
 color = Color(0.13333334, 0.17254902, 0.2, 0.7607843)
 
-[node name="PlayFieldMarginContainer" type="MarginContainer" parent="."]
+[node name="PlayFieldMarginContainer" type="MarginContainer" parent="." unique_id=1894248311]
 clip_contents = true
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
@@ -69,15 +69,15 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 10
 
-[node name="PlayFieldBackground" type="ColorRect" parent="PlayFieldMarginContainer"]
+[node name="PlayFieldBackground" type="ColorRect" parent="PlayFieldMarginContainer" unique_id=1711791535]
 custom_minimum_size = Vector2(960, 540)
 layout_mode = 2
 color = Color(0, 0, 0, 0.49803922)
 
-[node name="SpinnerControl" type="Control" parent="PlayFieldMarginContainer"]
+[node name="SpinnerControl" type="Control" parent="PlayFieldMarginContainer" unique_id=686168325]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="PlayFieldMarginContainer/SpinnerControl"]
+[node name="Control" type="Control" parent="PlayFieldMarginContainer/SpinnerControl" unique_id=2028050611]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -87,14 +87,14 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl/Control" instance=ExtResource("5_wwoqk")]
+[node name="Spinner" parent="PlayFieldMarginContainer/SpinnerControl/Control" unique_id=1494320538 instance=ExtResource("5_wwoqk")]
 scale = Vector2(0.5, 0.5)
 
-[node name="HitObjectContainerControl" type="Control" parent="PlayFieldMarginContainer"]
+[node name="HitObjectContainerControl" type="Control" parent="PlayFieldMarginContainer" unique_id=1138160127]
 clip_contents = true
 layout_mode = 2
 
-[node name="Control" type="Control" parent="PlayFieldMarginContainer/HitObjectContainerControl"]
+[node name="Control" type="Control" parent="PlayFieldMarginContainer/HitObjectContainerControl" unique_id=1680039395]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -104,29 +104,29 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl/Control" node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
+[node name="HitObjectContainer" parent="PlayFieldMarginContainer/HitObjectContainerControl/Control" unique_id=944458623 node_paths=PackedStringArray("timeline") instance=ExtResource("4_6172c")]
 timeline = NodePath("../../../../VBoxContainer/TimelineMarginContainer/TimeLinePanel/Timeline")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1730198537]
 layout_mode = 1
 offset_top = 80.0
 offset_right = 1920.0
 offset_bottom = 160.0
 theme_override_constants/separation = 12
 
-[node name="TimelineMarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="TimelineMarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=548739381]
 custom_minimum_size = Vector2(1920, 0)
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="TimeLinePanel" type="Panel" parent="VBoxContainer/TimelineMarginContainer"]
+[node name="TimeLinePanel" type="Panel" parent="VBoxContainer/TimelineMarginContainer" unique_id=2078834566]
 custom_minimum_size = Vector2(1920, 80)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="Timeline" parent="VBoxContainer/TimelineMarginContainer/TimeLinePanel" node_paths=PackedStringArray("editor") instance=ExtResource("2_dftp8")]
+[node name="Timeline" parent="VBoxContainer/TimelineMarginContainer/TimeLinePanel" unique_id=1456868592 node_paths=PackedStringArray("editor") instance=ExtResource("2_dftp8")]
 custom_minimum_size = Vector2(1920, 80)
 layout_mode = 0
 offset_right = 1920.0
@@ -134,12 +134,12 @@ offset_bottom = 80.0
 pixelsPerSecond = 300.0
 editor = NodePath("../../../..")
 
-[node name="Panel" type="Panel" parent="VBoxContainer"]
+[node name="Panel" type="Panel" parent="VBoxContainer" unique_id=1592643736]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6172c")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel" unique_id=2079949353]
 custom_minimum_size = Vector2(1920, 50)
 layout_mode = 0
 offset_right = 1920.0
@@ -148,17 +148,17 @@ theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Panel/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Panel/MarginContainer" unique_id=112085327]
 layout_mode = 2
 
-[node name="Select" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Select" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=930423375]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
 button_group = ExtResource("6_wwoqk")
 text = "Select"
 
-[node name="Note" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Note" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1074140512]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
@@ -166,7 +166,7 @@ button_group = ExtResource("6_wwoqk")
 text = "Note
 "
 
-[node name="HoldNote" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="HoldNote" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1349296212]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 toggle_mode = true
@@ -174,37 +174,37 @@ button_group = ExtResource("6_wwoqk")
 text = "Hold Note
 "
 
-[node name="Panel" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Panel" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1208882413]
 custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
 
-[node name="Left" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Left" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=130310392]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Left"
 
-[node name="Right" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Right" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1064813575]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Right
 "
 
-[node name="Panel2" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="Panel2" type="Panel" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=804996171]
 custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_1xg6d")
 
-[node name="SaveMap" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="SaveMap" type="Button" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1653781670]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Save Map"
 
-[node name="MapTime" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+[node name="MapTime" type="Label" parent="VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=30501712]
 layout_mode = 2
 script = ExtResource("7_1xg6d")
 
-[node name="MapSetup" type="Panel" parent="."]
+[node name="MapSetup" type="Panel" parent="." unique_id=1204878096]
 visible = false
 z_index = 1001
 layout_mode = 1
@@ -215,7 +215,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_o25bw")
 
-[node name="MarginContainer" type="MarginContainer" parent="MapSetup"]
+[node name="MarginContainer" type="MarginContainer" parent="MapSetup" unique_id=2055745322]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
 offset_right = 500.0
@@ -225,14 +225,14 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MapSetup/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MapSetup/MarginContainer" unique_id=375374924]
 layout_mode = 2
 
-[node name="SelectAudioFile" type="Button" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="SelectAudioFile" type="Button" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=876552008]
 layout_mode = 2
 text = "Select Audio FIle"
 
-[node name="Title" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="Title" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=1283724405]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Title"
@@ -242,7 +242,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="Artist" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="Artist" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=1368755156]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Artist"
@@ -252,7 +252,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="Creator" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="Creator" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=543288725]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Creator
@@ -263,7 +263,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="Version" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="Version" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=839672957]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Version
@@ -274,7 +274,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="LeadInMS" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="LeadInMS" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=1180939457]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Lead in time (ms)"
@@ -284,7 +284,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="BPM" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="BPM" type="TextEdit" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=1829422577]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "BPM"
@@ -294,7 +294,7 @@ shortcut_keys_enabled = false
 drag_and_drop_selection_enabled = false
 tab_input_mode = false
 
-[node name="hpDrainRate" type="HSlider" parent="MapSetup/MarginContainer/VBoxContainer"]
+[node name="hpDrainRate" type="HSlider" parent="MapSetup/MarginContainer/VBoxContainer" unique_id=1198541836]
 layout_mode = 2
 max_value = 10.0
 tick_count = 5

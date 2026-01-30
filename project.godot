@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Project TAU"
 run/main_scene="uid://cbrru1tp4t2uk"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [audio]

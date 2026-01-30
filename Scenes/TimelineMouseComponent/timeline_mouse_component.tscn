@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://djdagixr4asl"]
+[gd_scene format=3 uid="uid://djdagixr4asl"]
 
 [ext_resource type="Script" uid="uid://vd8lh8aass2c" path="res://Scenes/TimelineMouseComponent/timeline_mouse_component.gd" id="1_u5rw0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f0gwv"]
 size = Vector2(0, 0)
 
-[node name="TimelineMouseComponent" type="Control"]
+[node name="TimelineMouseComponent" type="Control" unique_id=1237491552]
 z_index = 3
 z_as_relative = false
 layout_mode = 3
@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u5rw0")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=715705832]
 z_index = 1
 z_as_relative = false
 collision_layer = 0
@@ -26,7 +26,7 @@ input_pickable = false
 monitorable = false
 priority = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=740288196]
 z_index = 1
 z_as_relative = false
 shape = SubResource("RectangleShape2D_f0gwv")

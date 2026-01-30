@@ -12,7 +12,6 @@ signal OFFSET_WHOLE_BEAT
 @export var metronomeIsOn:bool = false
 @export var metronomeLeadInBeats:int
 
-var audioFilePath:StringName
 var polyphonicMetronome:AudioStreamPlaybackPolyphonic
 var polyphonicHitSound:AudioStreamPlaybackPolyphonic
 var metronomeClick:AudioStream
@@ -22,15 +21,8 @@ var lastWholeBeat:float = -1.0
 var currentWholeBeat:float
 var nextWholeBeat:float
 var nextOffsetWholeBeat:float
-var secondsPerBeat:float
-var beatsPerSecond:float
-var LeadInTimeMS:int
-var leadInBeats:float
-var mapFilePath:StringName
 var songQueue:Array 
-var streamsSet:bool = false
 var songsPlaying:bool
-var hasAudioFilePath:bool
 
 var loadMapCalled:bool = false
 
@@ -44,19 +36,8 @@ func _ready() -> void:
 	init_hitsound()
 
 func _process(_delta: float) -> void:
-	if !audioFilePath.is_empty() and !loadMapCalled:
-		mapFilePath = "user://maps/".path_join(audioFilePath)
-		loadMapCalled = true
-	
-	if !CurrentMap.is_map_loaded():
+	if !CurrentMap.is_taumap_loaded():
 		return
-
-	if !streamsSet and audioFilePath:
-		set_streams()
-
-	LeadInTimeMS = CurrentMap.LeadInTimeMS
-	secondsPerBeat = CurrentMap.secondsPerBeat
-	beatsPerSecond = CurrentMap.beatsPerSecond
 
 	if mainSong and mainSong.playing:
 		CurrentMap.mainSongPosition = mainSong.get_playback_position() 
@@ -74,16 +55,6 @@ func _process(_delta: float) -> void:
 func connect_signals():
 	mainSong.finished.connect(CurrentMap.on_sonngs_finished)
 	offsetSong.finished.connect(CurrentMap.on_sonngs_finished)
-
-func set_streams():
-	if audioFilePath == "":
-		push_error("Song file path missing")
-		hasAudioFilePath = false
-		return
-	hasAudioFilePath = true
-	mainSong.stream = FileLoader.load_song(audioFilePath).duplicate()
-	offsetSong.stream = FileLoader.load_song(audioFilePath).duplicate()
-	streamsSet = true
 
 func queue_songs():
 	var mapFolderPath:String
@@ -119,18 +90,18 @@ func pause_songs():
 	songsPlaying = false
 
 func emit_beat_signals():
-	currentWholeBeat = beatsPerSecond * CurrentMap.mainSongPosition
+	currentWholeBeat = CurrentMap.beatsPerSecond  * CurrentMap.mainSongPosition
 	while CurrentMap.mainSongPosition >= nextWholeBeat:
-		var beatIndex = int(round(nextWholeBeat * beatsPerSecond))
+		var beatIndex = int(round(nextWholeBeat * CurrentMap.beatsPerSecond ))
 		WHOLE_BEAT.emit(beatIndex)
 		get_measure(beatIndex)
-		nextWholeBeat += secondsPerBeat
+		nextWholeBeat += CurrentMap.secondsPerBeat
 
 func emit_offset_beat_signals():
 	while CurrentMap.offsetSongPosition >= nextOffsetWholeBeat:
-		var beatIndex = int(round(nextOffsetWholeBeat * beatsPerSecond))
+		var beatIndex = int(round(nextOffsetWholeBeat * CurrentMap.beatsPerSecond ))
 		OFFSET_WHOLE_BEAT.emit(beatIndex)
-		nextOffsetWholeBeat += secondsPerBeat
+		nextOffsetWholeBeat += CurrentMap.secondsPerBeat
 
 func get_measure(beatIndex:int):
 	if beatIndex % beatsPerMeasure == 0:

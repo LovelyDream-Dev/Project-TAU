@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cbrru1tp4t2uk"]
+[gd_scene format=3 uid="uid://cbrru1tp4t2uk"]
 
 [ext_resource type="Script" uid="uid://bdejo30ytx346" path="res://Scenes/MainMenu/main_menu.gd" id="1_qgdf6"]
 [ext_resource type="Script" uid="uid://bll14v81mmy73" path="res://Scenes/ParallaxGUI/parallax_gui.gd" id="2_0qgbs"]
@@ -59,7 +59,7 @@ corner_radius_bottom_left = 8
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5buf"]
 texture = ExtResource("12_rlg4b")
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("parallax", "buttons", "settingsIconLarge")]
+[node name="MainMenu" type="Control" unique_id=393584061 node_paths=PackedStringArray("parallax", "buttons", "settingsIconLarge")]
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
@@ -74,7 +74,7 @@ blurShaderMaterial = ExtResource("3_adu2g")
 buttons = [NodePath("NavBarPanel/HBoxContainer/Settings/SettingsButton"), NodePath("BottomBarPanel/HBoxContainer/PlayButton"), NodePath("BottomBarPanel/HBoxContainer/EditButton"), NodePath("QuitButtonControl/QuitButton")]
 settingsIconLarge = NodePath("SettingsIconLarge")
 
-[node name="ParallaxGUI" type="Control" parent="." node_paths=PackedStringArray("controls")]
+[node name="ParallaxGUI" type="Control" parent="." unique_id=117340571 node_paths=PackedStringArray("controls")]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -87,13 +87,13 @@ script = ExtResource("2_0qgbs")
 controls = [NodePath("BlurTexture")]
 metadata/_custom_type_script = "uid://bll14v81mmy73"
 
-[node name="BlurTexture" parent="ParallaxGUI" instance=ExtResource("4_xt57n")]
+[node name="BlurTexture" parent="ParallaxGUI" unique_id=841289664 instance=ExtResource("4_xt57n")]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 scale = Vector2(1.15, 1.15)
 mouse_filter = 2
 
-[node name="QuitButtonControl" type="Control" parent="."]
+[node name="QuitButtonControl" type="Control" parent="." unique_id=584433178]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -103,7 +103,7 @@ offset_bottom = 142.0
 grow_horizontal = 0
 mouse_filter = 1
 
-[node name="ColorRect" type="ColorRect" parent="QuitButtonControl"]
+[node name="ColorRect" type="ColorRect" parent="QuitButtonControl" unique_id=961606041]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -113,7 +113,7 @@ offset_bottom = 142.0
 grow_horizontal = 0
 color = Color(1, 0, 0, 0)
 
-[node name="QuitButton" parent="QuitButtonControl" node_paths=PackedStringArray("backgroundColorRect") instance=ExtResource("5_mdp32")]
+[node name="QuitButton" parent="QuitButtonControl" unique_id=1270867780 node_paths=PackedStringArray("backgroundColorRect") instance=ExtResource("5_mdp32")]
 texture_filter = 2
 layout_mode = 0
 offset_left = 77.0
@@ -128,7 +128,7 @@ enableHighlight = false
 enableExpand = true
 expandTransition = 0
 
-[node name="NavBarPanel" type="Panel" parent="."]
+[node name="NavBarPanel" type="Panel" parent="." unique_id=1840265554]
 texture_filter = 2
 clip_contents = true
 custom_minimum_size = Vector2(1693, 127)
@@ -137,23 +137,23 @@ offset_right = 1693.0
 offset_bottom = 127.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_os7au")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="NavBarPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="NavBarPanel" unique_id=1930355396]
 layout_mode = 0
 offset_right = 1566.0
 offset_bottom = 127.0
 theme_override_constants/separation = 32
 alignment = 2
 
-[node name="Settings" type="MarginContainer" parent="NavBarPanel/HBoxContainer"]
+[node name="Settings" type="MarginContainer" parent="NavBarPanel/HBoxContainer" unique_id=661261065]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="SettingsButton" parent="NavBarPanel/HBoxContainer/Settings" instance=ExtResource("5_mdp32")]
+[node name="SettingsButton" parent="NavBarPanel/HBoxContainer/Settings" unique_id=1174946330 instance=ExtResource("5_mdp32")]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton"]
+[node name="Control" type="Control" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton" unique_id=829282556]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchors_preset = 8
@@ -171,14 +171,14 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="SettingsIcon" type="TextureRect" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton/Control"]
+[node name="SettingsIcon" type="TextureRect" parent="NavBarPanel/HBoxContainer/Settings/SettingsButton/Control" unique_id=2136156501]
 layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
 texture = ExtResource("5_agesy")
 stretch_mode = 2
 
-[node name="BottomBarPanel" type="Panel" parent="."]
+[node name="BottomBarPanel" type="Panel" parent="." unique_id=1268278212]
 texture_filter = 2
 custom_minimum_size = Vector2(1693, 127)
 layout_mode = 1
@@ -193,7 +193,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_xt57n")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BottomBarPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomBarPanel" unique_id=439594182]
 custom_minimum_size = Vector2(800, 127)
 layout_mode = 0
 offset_left = 127.0
@@ -201,7 +201,7 @@ offset_right = 927.0
 offset_bottom = 127.0
 theme_override_constants/separation = 48
 
-[node name="PlayButton" parent="BottomBarPanel/HBoxContainer" instance=ExtResource("5_mdp32")]
+[node name="PlayButton" parent="BottomBarPanel/HBoxContainer" unique_id=1163392545 instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(113, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -211,7 +211,7 @@ enableExpand = true
 sceneSwitch = true
 scene = ExtResource("9_os7au")
 
-[node name="play" type="Label" parent="BottomBarPanel/HBoxContainer/PlayButton"]
+[node name="play" type="Label" parent="BottomBarPanel/HBoxContainer/PlayButton" unique_id=1866174362]
 layout_mode = 1
 offset_right = 113.0
 offset_bottom = 46.0
@@ -220,7 +220,7 @@ theme_override_fonts/font = ExtResource("8_2r307")
 theme_override_font_sizes/font_size = 48
 text = "PLAY"
 
-[node name="EditButton" parent="BottomBarPanel/HBoxContainer" instance=ExtResource("5_mdp32")]
+[node name="EditButton" parent="BottomBarPanel/HBoxContainer" unique_id=301584227 instance=ExtResource("5_mdp32")]
 custom_minimum_size = Vector2(98, 40)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -230,7 +230,7 @@ enableExpand = true
 sceneSwitch = true
 scene = ExtResource("11_37xt4")
 
-[node name="edit" type="Label" parent="BottomBarPanel/HBoxContainer/EditButton"]
+[node name="edit" type="Label" parent="BottomBarPanel/HBoxContainer/EditButton" unique_id=52257771]
 layout_mode = 1
 offset_right = 99.0
 offset_bottom = 46.0
@@ -239,7 +239,7 @@ theme_override_fonts/font = ExtResource("8_2r307")
 theme_override_font_sizes/font_size = 48
 text = "EDIT"
 
-[node name="Foreground" type="Control" parent="."]
+[node name="Foreground" type="Control" parent="." unique_id=208384777]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -248,7 +248,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CornerRects" type="Control" parent="Foreground"]
+[node name="CornerRects" type="Control" parent="Foreground" unique_id=678234240]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 1
 anchors_preset = 15
@@ -258,7 +258,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BL" type="TextureRect" parent="Foreground/CornerRects"]
+[node name="BL" type="TextureRect" parent="Foreground/CornerRects" unique_id=1894779824]
 texture_filter = 2
 layout_mode = 1
 anchors_preset = 2
@@ -269,7 +269,7 @@ offset_right = 354.0
 grow_vertical = 0
 texture = ExtResource("10_os7au")
 
-[node name="TR" type="TextureRect" parent="Foreground/CornerRects"]
+[node name="TR" type="TextureRect" parent="Foreground/CornerRects" unique_id=1371069533]
 texture_filter = 2
 layout_mode = 1
 anchors_preset = 1
@@ -281,7 +281,7 @@ grow_horizontal = 0
 mouse_filter = 2
 texture = ExtResource("11_n0kcp")
 
-[node name="Logo" parent="Foreground" instance=ExtResource("5_mdp32")]
+[node name="Logo" parent="Foreground" unique_id=1315991912 instance=ExtResource("5_mdp32")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -299,7 +299,7 @@ hoverRadius = 325.0
 enableHighlight = false
 enableExpand = true
 
-[node name="Circle" type="TextureRect" parent="Foreground/Logo"]
+[node name="Circle" type="TextureRect" parent="Foreground/Logo" unique_id=943530025]
 texture_filter = 2
 layout_mode = 1
 anchors_preset = 8
@@ -315,7 +315,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_fo6ee")
 
-[node name="Text" type="TextureRect" parent="Foreground/Logo"]
+[node name="Text" type="TextureRect" parent="Foreground/Logo" unique_id=334978179]
 texture_filter = 2
 material = SubResource("ShaderMaterial_fo6ee")
 layout_mode = 1
@@ -332,7 +332,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("12_fo6ee")
 
-[node name="OuterRing" type="TextureRect" parent="Foreground/Logo"]
+[node name="OuterRing" type="TextureRect" parent="Foreground/Logo" unique_id=1579702563]
 texture_filter = 2
 material = SubResource("ShaderMaterial_nqd6t")
 layout_mode = 1
@@ -350,7 +350,7 @@ grow_vertical = 2
 pivot_offset = Vector2(325, 325)
 texture = ExtResource("14_nqd6t")
 
-[node name="SettingsIconLarge" type="TextureRect" parent="."]
+[node name="SettingsIconLarge" type="TextureRect" parent="." unique_id=1404949284]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -366,7 +366,7 @@ grow_vertical = 2
 pivot_offset = Vector2(125, 125)
 texture = ExtResource("13_w5buf")
 
-[node name="SettingsMargin" type="MarginContainer" parent="."]
+[node name="SettingsMargin" type="MarginContainer" parent="." unique_id=173777250]
 custom_minimum_size = Vector2(1920, 390)
 layout_mode = 1
 anchors_preset = 8
@@ -381,17 +381,17 @@ offset_bottom = 195.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMargin"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMargin" unique_id=1045844542]
 layout_mode = 2
 theme_override_constants/separation = -30
 
-[node name="Control" type="Control" parent="SettingsMargin/HBoxContainer"]
+[node name="Control" type="Control" parent="SettingsMargin/HBoxContainer" unique_id=211273479]
 clip_contents = true
 custom_minimum_size = Vector2(270, 390)
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="ControlPanel" type="Panel" parent="SettingsMargin/HBoxContainer/Control"]
+[node name="ControlPanel" type="Panel" parent="SettingsMargin/HBoxContainer/Control" unique_id=1069249714]
 z_index = 1
 custom_minimum_size = Vector2(250, 390)
 layout_mode = 0
@@ -400,28 +400,28 @@ offset_bottom = 390.0
 size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rlg4b")
 
-[node name="MarginContainer" type="MarginContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel" unique_id=842467583]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 0
 offset_right = 250.0
 offset_bottom = 402.0
 theme_override_constants/margin_top = 12
 
-[node name="ScrollContainer" type="ScrollContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer" unique_id=2043972979]
 custom_minimum_size = Vector2(200, 390)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer" unique_id=1515026108]
 custom_minimum_size = Vector2(150, 390)
 layout_mode = 2
 
-[node name="AudioTabButton" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("5_mdp32")]
+[node name="AudioTabButton" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1558154941 instance=ExtResource("5_mdp32")]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/normal = SubResource("StyleBoxFlat_w5buf")
 
-[node name="Label" type="Label" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer/AudioTabButton"]
+[node name="Label" type="Label" parent="SettingsMargin/HBoxContainer/Control/ControlPanel/MarginContainer/ScrollContainer/VBoxContainer/AudioTabButton" unique_id=1813226524]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -434,7 +434,7 @@ text = "Audio"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ParameterPanel" type="Panel" parent="SettingsMargin/HBoxContainer"]
+[node name="ParameterPanel" type="Panel" parent="SettingsMargin/HBoxContainer" unique_id=388709434]
 texture_filter = 2
 custom_minimum_size = Vector2(1670, 390)
 layout_mode = 2

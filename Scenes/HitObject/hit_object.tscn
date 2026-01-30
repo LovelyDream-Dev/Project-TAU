@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjfh3wcdfekd3"]
+[gd_scene format=3 uid="uid://bjfh3wcdfekd3"]
 
 [ext_resource type="Script" uid="uid://b0t4q7tv4wsgj" path="res://Scenes/HitObject/hit_object.gd" id="1_sntnk"]
 
-[node name="HitObject" type="Node2D"]
+[node name="HitObject" type="Node2D" unique_id=756825961]
 script = ExtResource("1_sntnk")
